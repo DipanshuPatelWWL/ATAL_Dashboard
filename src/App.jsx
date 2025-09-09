@@ -24,6 +24,8 @@ import Testimonials from "./page/testimonials/Testimonials";
 import EyewearTips from "./page/eyewearTips/EyewearTips";
 import Inquiry from "./page/inquiries/Inquiry";
 import UpdateVendorProfile from "./page/vender/UpdateVendorProfile";
+import Disclaimer from "./page/disclaimer/Disclaimer";
+import EyeService from "./page/ourEyeServices/EyeServices";
 
 function App() {
   return (
@@ -61,6 +63,8 @@ function App() {
           <Route path="testimonials" element={<Testimonials />} />
           <Route path="eyewearTips" element={<EyewearTips />} />
           <Route path="inquiries" element={<Inquiry />} />
+          <Route path="disclaimer" element={<Disclaimer />} />
+          <Route path="eye-services" element={<EyeService />} />
         </Route>
 
         <Route
