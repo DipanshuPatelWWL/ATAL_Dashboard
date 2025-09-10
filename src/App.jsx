@@ -17,7 +17,7 @@ import AdminHome from "./page/admin/AdminHome";
 import EyeCheck from "./page/eyeCheck/Eyecheck";
 import VendorHome from "./page/vender/VendorHome";
 // import VendorRegistrationForm from "./page/vender/VendorRegistrationForm";
-import CompanyRegistrationForm from "./page/company/CompanyRegister";
+// import CompanyRegistrationForm from "./page/company/CompanyRegister";
 import VendorPage from "./page/vender/VendorPage";
 // import Register from "./page/login/Register";
 import Testimonials from "./page/testimonials/Testimonials";
@@ -27,7 +27,7 @@ import UpdateVendorProfile from "./page/vender/UpdateVendorProfile";
 import Disclaimer from "./page/disclaimer/Disclaimer";
 import EyeService from "./page/ourEyeServices/EyeServices";
 import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
-import CompanyHome from "./page/company/CompanyHome";
+import CompanyHome from "./page/company/CompanyHome"
 
 function App() {
   return (
@@ -91,6 +91,7 @@ function App() {
             <ProtectedRoute allowedRoles={["company"]}>
               <CompanyDashboard />
             </ProtectedRoute>
+
           }
         >
           <Route index element={<Navigate to="home" replace />} />
@@ -101,10 +102,6 @@ function App() {
           <Route path="team" element={<CompanyHome />} />
           <Route path="faq" element={<CompanyHome />} />
         </Route>
-
-
-
-
 
 
         <Route path="*" element={<ErrorPage />} />

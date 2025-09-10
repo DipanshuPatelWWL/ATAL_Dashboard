@@ -3,8 +3,9 @@ import Swal from "sweetalert2";
 import { FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
-import API from "../../API/Api";
+import API, { IMAGE_URL } from "../../API/Api";
 import { useEffect } from "react";
+
 
 const Disclaimer = () => {
     const [showModal, setShowModal] = useState(false)
