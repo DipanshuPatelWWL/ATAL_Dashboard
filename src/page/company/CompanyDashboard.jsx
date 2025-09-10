@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation, } from 'react-router-dom';
 
 const CompanyDashboard = () => {
-
+    const location = useLocation()
     const menuItems = [
-        { name: "Home", path: "/company/Chome" },
+        { name: "Home", path: "/company/home" },
         { name: "Services", path: "/company/services" },
         { name: "Project", path: "/company/project" },
         { name: "Team", path: "/company/team" },
@@ -14,11 +14,11 @@ const CompanyDashboard = () => {
 
     return (
         <>
-            <div className="flex min-h-screen bg-gray-100">
+            <div className="flex bg-gray-100">
                 {/* Sidebar */}
-                <div className="w-64 bg-white shadow-lg p-5">
+                <div className="fixed left-0 h-screen w-64 bg-white shadow-lg p-5 pt-20 overflow-y-auto">
                     {/* <h2 className="text-xl font-bold mb-6"></h2> */}
-                    <nav className="space-y-2 text-center text-lg font-semibold mt-4">
+                    <nav className="space-y-2 text-center text-lg font-semibold mt-10">
                         {menuItems.map((item) => (
                             <Link
                                 key={item.path}
@@ -34,9 +34,9 @@ const CompanyDashboard = () => {
                     </nav>
                 </div>
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col">
+                <div className="flex-1 ml-64 flex flex-col pt-20">
                     {/* Page Content */}
-                    <main className="flex-1 p-4">
+                    <main className="flex-1 p-6 pt-10">
                         <Outlet />
                     </main>
                 </div>

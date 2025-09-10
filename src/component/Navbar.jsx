@@ -1,20 +1,26 @@
 import React from "react";
 import { useAuth } from "../authContext/AuthContext";
-import logo from '../assets/image/logo.png'
+import logo from "../assets/image/logo.png";
+
 const Navbar = () => {
     const { user, logout } = useAuth();
 
     return (
-        <nav className="bg-white shadow-md px-6 py-5 items-center">
+        <nav className="fixed left-0 w-full z-50 bg-white shadow-md px-6 py-4">
             {user && (
-                <div className="d-flex align-items-center flex justify-between">
+                <div className="flex justify-between items-center">
+                    {/* Logo */}
                     <div>
-                        <img src={logo} className="w-36 ml-10" />
+                        <img src={logo} alt="Logo" className="w-36 ml-4" />
                     </div>
-                    <div className="items-center space-x-6 mt-4">
-                        <span className="text-gray-600 text-xl">Hello, {user.name}</span>
-                        <button onClick={logout}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xl hover:cursor-pointer">
+
+                    {/* Right side */}
+                    <div className="flex items-center space-x-6">
+                        <span className="text-gray-600 text-lg">Hello, {user.name}</span>
+                        <button
+                            onClick={logout}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg text-lg hover:bg-red-600 transition duration-200"
+                        >
                             Logout
                         </button>
                     </div>
