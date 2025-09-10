@@ -26,6 +26,8 @@ import Inquiry from "./page/inquiries/Inquiry";
 import UpdateVendorProfile from "./page/vender/UpdateVendorProfile";
 import Disclaimer from "./page/disclaimer/Disclaimer";
 import EyeService from "./page/ourEyeServices/EyeServices";
+import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
+import CompanyHome from "./page/company/CompanyHome";
 
 function App() {
   return (
@@ -59,7 +61,7 @@ function App() {
           <Route path="vendor" element={<VendorPage />} />
           {/* <Route path="register" element={<Register/>} /> */}
           {/* <Route path="register" element={<VendorRegistrationForm />} /> */}
-          {/* <Route path="company" element={<CompanyRegistrationForm />} /> */}
+          <Route path="company" element={<CompanyRegistrationForm />} />
           <Route path="testimonials" element={<Testimonials />} />
           <Route path="eyewearTips" element={<EyewearTips />} />
           <Route path="inquiries" element={<Inquiry />} />
@@ -84,13 +86,27 @@ function App() {
         </Route>
 
         <Route
-          path="/company-dashboard"
+          path="/company"
           element={
             <ProtectedRoute allowedRoles={["company"]}>
               <CompanyDashboard />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={<CompanyHome />} />
+          <Route path="services" element={<CompanyHome />} />
+          <Route path="project" element={<CompanyHome />} />
+          <Route path="profile" element={<UpdateCompanyProfile />} />
+          <Route path="team" element={<CompanyHome />} />
+          <Route path="faq" element={<CompanyHome />} />
+        </Route>
+
+
+
+
+
+
         <Route path="*" element={<ErrorPage />} />
       </Route>
     </Routes>

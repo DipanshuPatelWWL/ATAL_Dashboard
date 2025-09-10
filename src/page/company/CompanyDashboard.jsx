@@ -4,7 +4,7 @@ import { Link, Outlet } from 'react-router-dom';
 const CompanyDashboard = () => {
 
     const menuItems = [
-        { name: "Home", path: "/company/Chome" },
+        { name: "Home", path: "/company/home" },
         { name: "Services", path: "/company/services" },
         { name: "Project", path: "/company/project" },
         { name: "Team", path: "/company/team" },
