@@ -61,7 +61,7 @@ function App() {
           <Route path="vendor" element={<VendorPage />} />
           {/* <Route path="register" element={<Register/>} /> */}
           {/* <Route path="register" element={<VendorRegistrationForm />} /> */}
-          <Route path="company" element={<CompanyRegistrationForm />} />
+          {/* <Route path="company" element={<CompanyRegistrationForm />} /> */}
           <Route path="testimonials" element={<Testimonials />} />
           <Route path="eyewearTips" element={<EyewearTips />} />
           <Route path="inquiries" element={<Inquiry />} />
