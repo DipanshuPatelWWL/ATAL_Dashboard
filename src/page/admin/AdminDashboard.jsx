@@ -18,7 +18,8 @@ export default function AdminDashboard() {
     { name: "Eyewear Tips", path: "/admin/eyewearTips" },
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Disclaimer", path: "/admin/disclaimer" },
-    { name: "Eye Services", path: "/admin/eye-services" }
+    { name: "Eye Services", path: "/admin/eye-services" },
+    { name: "Frame Shape", path: "/admin/frame-shape" }
   ];
 
   return (
