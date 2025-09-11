@@ -9,6 +9,7 @@ const Inquiry = () => {
     const [showResponse, setShowResponse] = useState(false);
     const [formData, setFormData] = useState({ message: "" });
 
+    const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("All Inquiries");
     const dropdownRef = useRef(null);
@@ -56,6 +57,7 @@ const Inquiry = () => {
 
     // Send Response Only
     const handleSend = async () => {
+        setLoading(true); // show loader
         try {
             await API.post("/sendResponse", {
                 inquiryId: selectedInquiry._id,
@@ -67,18 +69,21 @@ const Inquiry = () => {
                 text: "Response sent successfully!",
                 icon: "success",
                 timer: 2000,
-                showConfirmButton: false
+                showConfirmButton: false,
             });
             setFormData({ message: "" });
             setShowResponse(false);
             getAllInquiry();
         } catch (error) {
             console.error("Error sending response", error);
+        } finally {
+            setLoading(false); // hide loader
         }
     };
 
     // Send Response + Register
     const handleSendNReg = async () => {
+        setLoading(true); // show loader
         try {
             await API.post("/sendResponseAndRegister", {
                 inquiryId: selectedInquiry._id,
@@ -89,13 +94,15 @@ const Inquiry = () => {
                 text: "Response sent & user registered successfully!",
                 icon: "success",
                 timer: 2000,
-                showConfirmButton: false
+                showConfirmButton: false,
             });
             setFormData({ message: "" });
             setShowResponse(false);
             getAllInquiry();
         } catch (error) {
             console.error("Error in Send & Register", error);
+        } finally {
+            setLoading(false); // hide loader
         }
     };
 
@@ -121,7 +128,7 @@ const Inquiry = () => {
             </h2>
             <hr className="w-42 border-t-2 border-red-600" />
 
-            {/* Dropdown + Total count in one row */}
+            {/* Dropdown + Total count */}
             <div className="flex items-center justify-between mt-4">
                 <div className="relative w-60" ref={dropdownRef}>
                     <button
@@ -214,7 +221,7 @@ const Inquiry = () => {
             {/* Response Modal */}
             {showResponse && selectedInquiry && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
                         <h2 className="text-xl font-semibold text-red-600 mb-4">
                             Response to {selectedInquiry.name}
                         </h2>
@@ -249,6 +256,13 @@ const Inquiry = () => {
                                 Cancel
                             </button>
                         </div>
+
+                        {/* Loader Overlay */}
+                        {loading && (
+                            <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-lg">
+                                <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
