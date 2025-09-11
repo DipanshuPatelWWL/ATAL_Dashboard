@@ -28,6 +28,7 @@ import Disclaimer from "./page/disclaimer/Disclaimer";
 import EyeService from "./page/ourEyeServices/EyeServices";
 import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
 import CompanyHome from "./page/company/CompanyHome"
+import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
 
 function App() {
   return (
@@ -56,9 +57,10 @@ function App() {
           <Route path="subCategory" element={<Subcategory />} />
           <Route path="product" element={<Products />} />
           <Route path="review" element={<Review />} />
-          <Route path="service" element={<Service />} />
+          {/* <Route path="service" element={<Service />} /> */}
           <Route path="eyeCheck" element={<EyeCheck />} />
           <Route path="vendor" element={<VendorPage />} />
+          <Route path="company" element={<AdminCompanyDetails />} />
           {/* <Route path="register" element={<Register/>} /> */}
           {/* <Route path="register" element={<VendorRegistrationForm />} /> */}
           {/* <Route path="company" element={<CompanyRegistrationForm />} /> */}

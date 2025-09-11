@@ -10,7 +10,7 @@ export default function AdminDashboard() {
     { name: "Sub-Category", path: "/admin/subCategory" },
     { name: "Product", path: "/admin/product" },
     { name: "Review", path: "/admin/review" },
-    { name: "Service", path: "/admin/service" },
+    // { name: "Service", path: "/admin/service" },
     { name: "Eye Check", path: "/admin/eyeCheck" },
     { name: "Vendor", path: "/admin/vendor" },
     { name: "Company", path: "/admin/company" },
