@@ -11,6 +11,7 @@ const UpdateVendorProfile = () => {
         contactTitle: "",
         contactEmail: "",
         contactPhone: "",
+        vendorPassword: "",
         address1: "",
         address2: "",
         city: "",
@@ -68,6 +69,7 @@ const UpdateVendorProfile = () => {
                     businessNumber: data.businessNumber || "",
                     contactTitle: data.contactTitle || "",
                     contactPhone: data.contactPhone || "",
+                    vendorPassword: data.vendorPassword || "",
                     address1: data.address1 || "",
                     address2: data.address2 || "",
                     city: data.city || "",
@@ -326,6 +328,19 @@ const UpdateVendorProfile = () => {
                             name="contactPhone"
                             placeholder="Phone"
                             value={formData.contactPhone}
+                            onChange={handleChange}
+                            className="input"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="vendorPassword" className="block font-medium text-gray-700">
+                            Password
+                        </label>
+                        <input
+                            id="vendorPassword"
+                            name="vendorPassword"
+                            placeholder="Password"
+                            value={formData.vendorPassword}
                             onChange={handleChange}
                             className="input"
                         />

@@ -82,7 +82,9 @@ function FAQ() {
   const handleSubmit = async () => {
     try {
       if (modalType === "add") {
-        await API.post("/createfaq", formData);
+        const res = await API.post("/createfaq", formData);
+        console.log(res);
+
         toast.success("FAQ created successfully");
       } else {
         await API.put(`/updatefaq/${formData.id}`, {

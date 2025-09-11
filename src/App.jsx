@@ -28,6 +28,8 @@ import Disclaimer from "./page/disclaimer/Disclaimer";
 import EyeService from "./page/ourEyeServices/EyeServices";
 import CompanyHome from "./page/company/CompanyHome";
 import FrameShapes from "./page/frameShape/FrameShapes";
+import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
+import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
 
 function App() {
   return (
@@ -56,9 +58,10 @@ function App() {
           <Route path="subCategory" element={<Subcategory />} />
           <Route path="product" element={<Products />} />
           <Route path="review" element={<Review />} />
-          <Route path="service" element={<Service />} />
+          {/* <Route path="service" element={<Service />} /> */}
           <Route path="eyeCheck" element={<EyeCheck />} />
           <Route path="vendor" element={<VendorPage />} />
+          <Route path="company" element={<AdminCompanyDetails />} />
           {/* <Route path="register" element={<Register/>} /> */}
           {/* <Route path="register" element={<VendorRegistrationForm />} /> */}
           {/* <Route path="company" element={<CompanyRegistrationForm />} /> */}
@@ -92,11 +95,18 @@ function App() {
             <ProtectedRoute allowedRoles={["company"]}>
               <CompanyDashboard />
             </ProtectedRoute>
-          }>
+
+          }
+        >
           <Route index element={<Navigate to="home" replace />} />
           <Route path="home" element={<CompanyHome />} />
           <Route path="services" element={<CompanyHome />} />
+          <Route path="project" element={<CompanyHome />} />
+          <Route path="profile" element={<UpdateCompanyProfile />} />
+          <Route path="team" element={<CompanyHome />} />
+          <Route path="faq" element={<CompanyHome />} />
         </Route>
+
 
         <Route path="*" element={<ErrorPage />} />
       </Route>
