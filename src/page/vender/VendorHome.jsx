@@ -7,13 +7,35 @@ import {
   Mail,
   MapPin,
   Banknote,
-  Globe,
   FileBadge,
-  ShieldCheck,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useState } from "react";
+import API from "../../API/Api";
 
 export default function VendorHome() {
   const { user } = useAuth();
+
+  const [vendorData, setVendorData] = useState([])
+
+  const getVendor = async () => {
+    try {
+      const vendorData = JSON.parse(localStorage.getItem("user"));
+      const vendorId = vendorData?._id;
+      const res = await API.get(`/getVendorById/${vendorId}`, {
+        withCredentials: true,
+      });
+      setVendorData(res.data.vendor)
+
+    } catch (error) {
+      console.log(error);
+
+    }
+
+  }
+  useEffect(() => {
+    getVendor()
+  }, [])
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -28,87 +50,67 @@ export default function VendorHome() {
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {/* Company Info */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg hover:shadow-red-600 transition border border-red-200 break-words">
           <div className="flex items-center gap-3">
             <Building2 className="text-blue-500" size={28} />
             <h2 className="text-lg font-semibold">Company</h2>
           </div>
-          <p className="text-xl font-bold mt-4">Optical Suppliers Canada Ltd</p>
-          <p className="text-gray-600 mt-1">Business No: 123456789</p>
+          <p className="text-xl font-bold mt-4">{vendorData.companyName}</p>
+          <p className="text-gray-600 mt-1">Business No: {vendorData.businessNumber}</p>
         </div>
 
         {/* Contact Info */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg hover:shadow-red-600 transition border border-red-200 break-words">
           <div className="flex items-center gap-3">
             <Phone className="text-green-500" size={28} />
             <h2 className="text-lg font-semibold">Contact</h2>
           </div>
-          <p className="text-xl font-bold mt-4">+1 (416) 555-1234</p>
-          <p className="text-gray-600 mt-1">Toronto Office</p>
+          <p className="text-xl font-bold mt-4">{vendorData.contactPhone}</p>
         </div>
 
         {/* Email */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg hover:shadow-red-600 transition border border-red-200 break-words">
           <div className="flex items-center gap-3">
             <Mail className="text-yellow-500" size={28} />
             <h2 className="text-lg font-semibold">Email</h2>
           </div>
-          <p className="text-xl font-bold mt-4">canada.vendor@email.com</p>
-          <p className="text-gray-600 mt-1">Support & Inquiries</p>
+          <p className="text-xl font-bold mt-4">{vendorData.contactEmail}</p>
         </div>
 
         {/* Address */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg hover:shadow-red-600 transition border border-red-200 break-words">
           <div className="flex items-center gap-3">
             <MapPin className="text-purple-500" size={28} />
             <h2 className="text-lg font-semibold">Address</h2>
           </div>
-          <p className="text-xl font-bold mt-4">123 Bay Street</p>
-          <p className="text-gray-600">Toronto, ON, M5J 2N8</p>
-          <p className="text-gray-600">Canada</p>
+          <p className="text-xl font-bold mt-4">{vendorData.address1}{vendorData.address2}</p>
+          <p className="text-gray-600">{vendorData.state}</p>
+          <p className="text-gray-600">{vendorData.country}{vendorData.postalCode}</p>
         </div>
 
         {/* Banking */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg hover:shadow-red-600 transition border border-red-200 break-words">
           <div className="flex items-center gap-3">
             <Banknote className="text-red-500" size={28} />
             <h2 className="text-lg font-semibold">Bank</h2>
           </div>
-          <p className="text-xl font-bold mt-4">RBC Royal Bank</p>
-          <p className="text-gray-600 mt-1">Transit: 00123 | Inst: 003</p>
-          <p className="text-gray-600">Acct: ****5678</p>
-        </div>
-
-        {/* Website */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
-          <div className="flex items-center gap-3">
-            <Globe className="text-indigo-500" size={28} />
-            <h2 className="text-lg font-semibold">Website</h2>
-          </div>
-          <p className="text-xl font-bold mt-4">www.opticalcanada.ca</p>
+          <p className="text-xl font-bold mt-4">{vendorData.bankName}</p>
+          <p className="text-gray-600 mt-1">Name: {vendorData.accountHolder}</p>
+          <p className="text-gray-600">Acct: {vendorData.accountNumber}</p>
         </div>
 
         {/* Certifications */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg hover:shadow-red-600 transition border border-red-200 break-words">
           <div className="flex items-center gap-3">
             <FileBadge className="text-teal-500" size={28} />
             <h2 className="text-lg font-semibold">Certifications</h2>
           </div>
-          <p className="text-xl font-bold mt-4">ISO 9001</p>
-          <p className="text-gray-600 mt-1">Health Canada Approved</p>
+          {vendorData?.certificates?.map((docs, idx) => (<p key={idx} className="text-xl font-bold mt-4">{docs}</p>))}
+
         </div>
 
-        {/* Compliance */}
-        <div className="bg-white p-3 rounded-2xl shadow hover:shadow-lg transition">
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="text-pink-500" size={28} />
-            <h2 className="text-lg font-semibold">Compliance</h2>
-          </div>
-          <p className="text-xl font-bold mt-4">GDPR, PIPEDA</p>
-          <p className="text-gray-600 mt-1">Privacy & Security Standards</p>
-        </div>
       </div>
 
       {/* Quick Navigation */}
