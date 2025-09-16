@@ -181,15 +181,13 @@ const ContactLens = () => {
             </div>
 
             <div className="overflow-x-auto w-full">
-                <div className="grid grid-cols-11 bg-black text-white py-2 px-4 font-semibold">
+                <div className="grid grid-cols-9 bg-black text-white py-2 px-4 font-semibold">
                     <div className="text-lg">Lens Name</div>
-                    <div className="text-lg">Brand Name</div>
                     <div className="text-lg">Total Price</div>
                     <div className="text-lg">Sale Price</div>
                     <div className="text-lg">Lens Type</div>
                     <div className="text-lg">Manufacturer</div>
-                    <div className="text-lg pl-5">Material</div>
-                    <div className="text-lg">Description</div>
+                    <div className="text-lg">Material</div>
                     <div className="text-lg">Water% of Content</div>
                     <div className="text-lg">Images</div>
                     <div className="text-lg">Action</div>
@@ -198,16 +196,14 @@ const ContactLens = () => {
                 {lens.map((data) => (
                     <div
                         key={data._id}
-                        className="grid grid-cols-11 items-start border-b border-gray-300 py-2 px-4"
+                        className="grid grid-cols-9 items-start border-b border-gray-300 py-2 px-4"
                     >
                         <p>{data.lens_name}</p>
-                        <p>{data.brand_name}</p>
                         <p>{data.total_price}</p>
                         <p>{data.sale_price}</p>
                         <p>{data.lens_type}</p>
                         <p>{data.manufacturer}</p>
-                        <p className="pl-6">{data.material}</p>
-                        <p>{data.description}</p>
+                        <p>{data.material}</p>
                         <p>{data.water_content}</p>
                         {data.lens_image_collection?.length ? (
                             <div className="grid grid-cols-3">
@@ -282,14 +278,6 @@ const ContactLens = () => {
                                 value={formData.lens_name}
                                 onChange={handleChange}
                                 placeholder="Lens Name"
-                                className="w-full border p-2 rounded"
-                            />
-                            <input
-                                type="text"
-                                name="brand_name"
-                                value={formData.brand_name}
-                                onChange={handleChange}
-                                placeholder="Brand Name"
                                 className="w-full border p-2 rounded"
                             />
 
