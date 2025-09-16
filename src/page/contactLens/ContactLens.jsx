@@ -21,6 +21,8 @@ const ContactLens = () => {
         lens_type: "",
         manufacturer: "",
         water_content: "",
+        material: "",
+        description: "",
         cat_sec: "Lense", // fixed
         subCategoryName: "Contact Lense", // fixed
     });
@@ -95,6 +97,8 @@ const ContactLens = () => {
             sale_price: "",
             lens_type: "",
             manufacturer: "",
+            material: "",
+            description: "",
             water_content: "",
             cat_sec: "Lense", // ✅ default fixed
             subCategoryName: "Contact Lense", // ✅ default fixed
@@ -177,13 +181,15 @@ const ContactLens = () => {
             </div>
 
             <div className="overflow-x-auto w-full">
-                <div className="grid grid-cols-9 gap-x-2 bg-black text-white py-2 px-4 font-semibold">
+                <div className="grid grid-cols-11 bg-black text-white py-2 px-4 font-semibold">
                     <div className="text-lg">Lens Name</div>
                     <div className="text-lg">Brand Name</div>
                     <div className="text-lg">Total Price</div>
                     <div className="text-lg">Sale Price</div>
                     <div className="text-lg">Lens Type</div>
                     <div className="text-lg">Manufacturer</div>
+                    <div className="text-lg pl-5">Material</div>
+                    <div className="text-lg">Description</div>
                     <div className="text-lg">Water% of Content</div>
                     <div className="text-lg">Images</div>
                     <div className="text-lg">Action</div>
@@ -192,7 +198,7 @@ const ContactLens = () => {
                 {lens.map((data) => (
                     <div
                         key={data._id}
-                        className="grid grid-cols-9 gap-x-10 items-start border-b border-gray-300 py-2 px-4"
+                        className="grid grid-cols-11 items-start border-b border-gray-300 py-2 px-4"
                     >
                         <p>{data.lens_name}</p>
                         <p>{data.brand_name}</p>
@@ -200,6 +206,8 @@ const ContactLens = () => {
                         <p>{data.sale_price}</p>
                         <p>{data.lens_type}</p>
                         <p>{data.manufacturer}</p>
+                        <p className="pl-6">{data.material}</p>
+                        <p>{data.description}</p>
                         <p>{data.water_content}</p>
                         {data.lens_image_collection?.length ? (
                             <div className="grid grid-cols-3">
@@ -305,17 +313,14 @@ const ContactLens = () => {
                             </div>
 
                             {/* Lens Type */}
-                            <select
+                            <input
+                                type="text"
                                 name="lens_type"
                                 value={formData.lens_type}
                                 onChange={handleChange}
+                                placeholder="Lens Type"
                                 className="w-full border p-2 rounded"
-                            >
-                                <option value="">Select Lens Type</option>
-                                <option value="Daily">Daily</option>
-                                <option value="Weekly">Weekly</option>
-                                <option value="Monthly">Monthly</option>
-                            </select>
+                            />
 
                             <input
                                 type="text"
@@ -325,6 +330,21 @@ const ContactLens = () => {
                                 placeholder="Manufacturer"
                                 className="w-full border p-2 rounded"
                             />
+                            <input
+                                type="text"
+                                name="material"
+                                value={formData.material}
+                                onChange={handleChange}
+                                placeholder="Material"
+                                className="w-full border p-2 rounded"
+                            />
+                            <textarea type="text"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                placeholder="Lens Description"
+                                className="w-full border p-2 rounded">
+                            </textarea>
 
                             <input
                                 type="text"
