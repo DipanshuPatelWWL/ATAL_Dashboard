@@ -10,7 +10,6 @@ import ProtectedRoute from "./component/ProtectedRoute";
 import FAQ from "./page/faq/FAQ";
 import Category from "./page/category/Category";
 import Review from "./page/review/Review";
-import Service from "./page/service/Service";
 import Subcategory from "./page/subcategory/Subcategory";
 import Products from "./page/product/Products";
 import AdminHome from "./page/admin/AdminHome";
@@ -70,7 +69,8 @@ function App() {
           <Route path="inquiries" element={<Inquiry />} />
           <Route path="disclaimer" element={<Disclaimer />} />
           <Route path="eye-services" element={<EyeService />} />
-          <Route path="frame-shape" element={<FrameShapes />} />
+          {/* <Route path="frame-shape" element={<FrameShapes />} /> */}
+          <Route path="/admin/frame-shape" element={<FrameShapes />} />
         </Route>
 
         <Route
@@ -110,7 +110,7 @@ function App() {
 
         <Route path="*" element={<ErrorPage />} />
       </Route>
-    </Routes>
+    </Routes >
   );
 }
 

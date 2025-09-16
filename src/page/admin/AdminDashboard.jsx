@@ -8,6 +8,7 @@ export default function AdminDashboard() {
     { name: "FAQ", path: "/admin/faq" },
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
+    { name: "Frame Shape", path: "/admin/frame-shape" },
     { name: "Product", path: "/admin/product" },
     { name: "Review", path: "/admin/review" },
     // { name: "Service", path: "/admin/service" },
@@ -19,7 +20,6 @@ export default function AdminDashboard() {
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Disclaimer", path: "/admin/disclaimer" },
     { name: "Eye Services", path: "/admin/eye-services" },
-    { name: "Frame Shape", path: "/admin/frame-shape" }
   ];
 
   return (
