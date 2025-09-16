@@ -10,7 +10,6 @@ import ProtectedRoute from "./component/ProtectedRoute";
 import FAQ from "./page/faq/FAQ";
 import Category from "./page/category/Category";
 import Review from "./page/review/Review";
-import Service from "./page/service/Service";
 import Subcategory from "./page/subcategory/Subcategory";
 import Products from "./page/product/Products";
 import AdminHome from "./page/admin/AdminHome";
@@ -110,7 +109,7 @@ function App() {
 
         <Route path="*" element={<ErrorPage />} />
       </Route>
-    </Routes>
+    </Routes >
   );
 }
 
