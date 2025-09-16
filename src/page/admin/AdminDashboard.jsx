@@ -20,6 +20,7 @@ export default function AdminDashboard() {
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Disclaimer", path: "/admin/disclaimer" },
     { name: "Eye Services", path: "/admin/eye-services" },
+    { name: "Contact Lens", path: "/admin/contact-lens" }
   ];
 
   return (

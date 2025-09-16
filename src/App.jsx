@@ -26,9 +26,9 @@ import UpdateVendorProfile from "./page/vender/UpdateVendorProfile";
 import Disclaimer from "./page/disclaimer/Disclaimer";
 import EyeService from "./page/ourEyeServices/EyeServices";
 import CompanyHome from "./page/company/CompanyHome";
-import FrameShapes from "./page/frameShape/FrameShapes";
 import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
 import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
+import ContactLens from "./page/contactLens/ContactLens";
 
 function App() {
   return (
@@ -69,8 +69,7 @@ function App() {
           <Route path="inquiries" element={<Inquiry />} />
           <Route path="disclaimer" element={<Disclaimer />} />
           <Route path="eye-services" element={<EyeService />} />
-          {/* <Route path="frame-shape" element={<FrameShapes />} /> */}
-          <Route path="/admin/frame-shape" element={<FrameShapes />} />
+          <Route path="contact-lens" element={<ContactLens />} />
         </Route>
 
         <Route
