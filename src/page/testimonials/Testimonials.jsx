@@ -3,6 +3,7 @@ import { FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import API, { IMAGE_URL } from '../../API/Api';
+import Swal from "sweetalert2";
 
 function Testimonial() {
     const [showModal, setShowModal] = useState(false)
@@ -93,12 +94,24 @@ function Testimonial() {
                 await API.post("/addTesimonial", formDataToSend, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
-                alert("Testimonial created successfully.");
+                Swal.fire({
+                    icon: "success",
+                    title: "Done!",
+                    text: "Testimonial created successfully!",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
             } else {
                 await API.put(`/updateTestimonial/${formData.id}`, formDataToSend, {
                     // headers: { "Content-Type": "multipart/form-data" }
                 });
-                alert("Testimonial updated successfully");
+                Swal.fire({
+                    icon: "success",
+                    title: "Done!",
+                    text: "Testimonial updated successfully!",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
             }
 
 
