@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../API/Api";
+import Swal from "sweetalert2";
 
 export default function VendorRegistrationForm() {
   const [formData, setFormData] = useState({
@@ -107,7 +108,13 @@ export default function VendorRegistrationForm() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      alert("Vendor registered successfully!");
+      Swal.fire({
+        icon: "success",
+        title: "Done!",
+        text: "Vendor registered successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
       // Reset form
       setFormData({
@@ -145,7 +152,13 @@ export default function VendorRegistrationForm() {
       setCertificates([]);
     } catch (err) {
       console.error(err);
-      alert("Error submitting form");
+      Swal.fire({
+        icon: "success",
+        title: "Done!",
+        text: "Error submitting form",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
