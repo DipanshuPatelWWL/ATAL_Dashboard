@@ -8,14 +8,15 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState([]);
   const [images, setImages] = useState([]);
-  // const [imagePreviews, setImagePreviews] = useState([]);
   const [keptImages, setKeptImages] = useState([]);
   const [lensImage1, setLensImage1] = useState(null);
   const [lensImage2, setLensImage2] = useState(null);
   const [products, setProducts] = useState([]);
 
   const [formData, setFormData] = useState({
+    cat_id: "",
     cat_sec: "",
+    subCat_id: "",
     subCategoryName: "",
     product_name: "",
     product_sku: "",
@@ -31,6 +32,10 @@ const Products = () => {
     product_lens_description1: "",
     product_lens_title2: "",
     product_lens_description2: "",
+    contact_type: "",
+    material: "",
+    manufacturer: "",
+    water_content: "",
   });
   const [editId, setEditId] = useState(null);
 
@@ -71,15 +76,15 @@ const Products = () => {
     setImages((prev) => [...prev, ...files]);
   };
 
-  // Remove new image before upload
   const removeNewImage = (idx) => {
     setImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // Open Add Modal
   const openAddModal = () => {
     setFormData({
+      cat_id: "",
       cat_sec: "",
+      subCat_id: "",
       subCategoryName: "",
       product_name: "",
       product_sku: "",
@@ -95,6 +100,10 @@ const Products = () => {
       product_lens_description1: "",
       product_lens_title2: "",
       product_lens_description2: "",
+      contact_type: "",
+      material: "",
+      manufacturer: "",
+      water_content: "",
     });
     setImages([]);
     setKeptImages([]);
@@ -104,44 +113,60 @@ const Products = () => {
     setOpen(true);
   };
 
-  // Open Edit Modal
   const openEditModal = (product) => {
     setFormData({
-      ...product,
-      cat_sec: product.cat_sec || "",
-      subCategoryName: product.subCategoryName || "",
+      ...formData,
+      cat_id: product.common?.cat_id || "",
+      cat_sec: product.common?.cat_sec || "",
+      subCat_id: product.common?.subCat_id || "",
+      subCategoryName: product.common?.subCategoryName || "",
+      product_name: product.common?.product_name || "",
+      product_sku: product.common?.product_sku || "",
+      product_price: product.common?.product_price || "",
+      product_sale_price: product.common?.product_sale_price || "",
+      product_description: product.common?.product_description || "",
+      gender: product.common?.gender || "",
+      product_frame_material: product.sunglasses?.frame_material || "",
+      product_frame_shape: product.sunglasses?.frame_shape || "",
+      product_frame_color: product.sunglasses?.frame_color || "",
+      product_frame_fit: product.sunglasses?.frame_fit || "",
+      product_lens_title1: product.lensDetails?.product_lens_title1 || "",
+      product_lens_description1: product.lensDetails?.product_lens_description1 || "",
+      product_lens_title2: product.lensDetails?.product_lens_title2 || "",
+      product_lens_description2: product.lensDetails?.product_lens_description2 || "",
+      contact_type: product.contactLens?.type || "",
+      material: product.contactLens?.material || "",
+      manufacturer: product.contactLens?.manufacturer || "",
+      water_content: product.contactLens?.water_content || "",
     });
     setImages([]);
     setKeptImages(
-      product.product_image_collection?.map((img) =>
+      product.common?.product_image_collection?.map((img) =>
         img.startsWith("http") ? img : IMAGE_URL + img
       ) || []
     );
     setLensImage1(
-      product.product_lens_image1
-        ? product.product_lens_image1.startsWith("http")
-          ? product.product_lens_image1
-          : IMAGE_URL + product.product_lens_image1
+      product.lensDetails?.product_lens_image1
+        ? product.lensDetails.product_lens_image1.startsWith("http")
+          ? product.lensDetails.product_lens_image1
+          : IMAGE_URL + product.lensDetails.product_lens_image1
         : null
     );
     setLensImage2(
-      product.product_lens_image2
-        ? product.product_lens_image2.startsWith("http")
-          ? product.product_lens_image2
-          : IMAGE_URL + product.product_lens_image2
+      product.lensDetails?.product_lens_image2
+        ? product.lensDetails.product_lens_image2.startsWith("http")
+          ? product.lensDetails.product_lens_image2
+          : IMAGE_URL + product.lensDetails.product_lens_image2
         : null
     );
     setEditId(product._id);
     setOpen(true);
   };
 
-
-  // Remove existing image
   const removeExistingImage = (idx) => {
     setKeptImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  //  Delete Product
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -164,22 +189,54 @@ const Products = () => {
     });
   };
 
-  //  Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const payload = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) payload.append(key, value);
-      });
 
-      // send kept existing images
-      payload.append("existingImages", JSON.stringify(keptImages.map(img => img.replace(IMAGE_URL, ""))));
+      // 🔹 Basic product fields
+      payload.append("cat_id", formData.cat_id);
+      payload.append("cat_sec", formData.cat_sec);
+      payload.append("subCat_id", formData.subCat_id);
+      payload.append("subCategoryName", formData.subCategoryName);
+      payload.append("product_name", formData.product_name);
+      payload.append("product_sku", formData.product_sku);
+      payload.append("product_price", formData.product_price);
+      payload.append("product_sale_price", formData.product_sale_price);
+      payload.append("product_description", formData.product_description);
+      payload.append("gender", formData.gender);
 
+      // 🔹 Sunglasses fields
+      if (formData.cat_sec === "Sunglasses") {
+        payload.append("frame_material", formData.product_frame_material);
+        payload.append("frame_shape", formData.product_frame_shape);
+        payload.append("frame_color", formData.product_frame_color);
+        payload.append("frame_fit", formData.product_frame_fit);
+      }
 
-      images.forEach((file) => {
-        payload.append("product_image_collection", file);
-      });
+      // 🔹 Contact Lens fields
+      if (formData.cat_sec === "Contact Lens") {
+        payload.append("type", formData.contact_type);
+        payload.append("material", formData.material);
+        payload.append("manufacturer", formData.manufacturer);
+        payload.append("water_content", formData.water_content);
+      }
+
+      // 🔹 Lens details
+      payload.append("product_lens_title1", formData.product_lens_title1);
+      payload.append("product_lens_description1", formData.product_lens_description1);
+      payload.append("product_lens_title2", formData.product_lens_title2);
+      payload.append("product_lens_description2", formData.product_lens_description2);
+
+      // 🔹 Existing images (keep old ones)
+      payload.append(
+        "existingImages",
+        JSON.stringify(keptImages.map((img) => img.replace(IMAGE_URL, "")))
+      );
+
+      // 🔹 New uploaded images
+      images.forEach((file) => payload.append("product_image_collection", file));
 
       if (lensImage1 && typeof lensImage1 !== "string") {
         payload.append("product_lens_image1", lensImage1);
@@ -188,6 +245,7 @@ const Products = () => {
         payload.append("product_lens_image2", lensImage2);
       }
 
+      // 🔹 Send to backend
       if (editId) {
         await API.put(`/updateProduct/${editId}`, payload, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -203,17 +261,12 @@ const Products = () => {
       fetchProducts();
       setOpen(false);
     } catch (err) {
-      Swal.fire(
-        "Error",
-        err.response?.data?.message || "Operation failed",
-        "error"
-      );
+      Swal.fire("Error", err.response?.data?.message || "Operation failed", "error");
     }
   };
 
   return (
     <div className="p-6">
-
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Products</h2>
@@ -242,12 +295,24 @@ const Products = () => {
         <tbody>
           {products.map((pro) => (
             <tr key={pro._id} className="">
-              <td className="border px-4 py-2 border-black text-center capitalize">{pro.product_name}</td>
-              <td className="border px-4 py-2 border-black text-center">{pro.product_sku}</td>
-              <td className="border px-4 py-2 border-black text-center">{pro.product_price}</td>
-              <td className="border px-4 py-2 border-black text-center">{pro.product_sale_price}</td>
-              <td className="border px-4 py-2 border-black text-center">{pro.cat_sec}</td>
-              <td className="border px-4 py-2 border-black text-center">{pro.subCategoryName}</td>
+              <td className="border px-4 py-2 border-black text-center capitalize">
+                {pro.product_name}
+              </td>
+              <td className="border px-4 py-2 border-black text-center">
+                {pro.product_sku}
+              </td>
+              <td className="border px-4 py-2 border-black text-center">
+                {pro.product_price}
+              </td>
+              <td className="border px-4 py-2 border-black text-center">
+                {pro.product_sale_price}
+              </td>
+              <td className="border px-4 py-2 border-black text-center">
+                {pro.cat_sec}
+              </td>
+              <td className="border px-4 py-2 border-black text-center">
+                {pro.subCategoryName}
+              </td>
               <td className="border px-4 py-2 border-black">
                 {pro.product_image_collection?.length ? (
                   <div className="grid grid-cols-3 scroll-my-0 ">
@@ -292,48 +357,72 @@ const Products = () => {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-3">
-              {/* Category Dropdown */}
+              {/* Category dropdown */}
               <div>
                 <label className="block text-gray-700 mb-1">Category</label>
                 <select
-                  name="cat_sec"
-                  value={formData.cat_sec}
-                  onChange={(e) =>
+                  value={formData.cat_id}
+                  onChange={(e) => {
+                    const selectedCat = category.find((c) => c._id === e.target.value);
                     setFormData({
                       ...formData,
-                      cat_sec: e.target.value,
+                      cat_id: selectedCat?._id || "",
+                      cat_sec: selectedCat?.categoryName || "",
+                      subCat_id: "",
                       subCategoryName: "",
-                    })
-                  }
+                    });
+                  }}
                   className="w-full border rounded p-2"
                 >
                   <option value="">Select Category</option>
                   {category.map((cat) => (
-                    <option key={cat._id} value={cat.categoryName}>
+                    <option key={cat._id} value={cat._id}>
                       {cat.categoryName}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/*  Subcategory Dropdown */}
-              {formData.cat_sec && (
+              {/* Subcategory dropdown */}
+              {formData.cat_id && (
                 <div>
                   <label className="block text-gray-700">Subcategory</label>
                   <select
-                    name="subCategoryName"
-                    value={formData.subCategoryName}
-                    onChange={handleChange}
+                    value={formData.subCat_id}
+                    onChange={(e) => {
+                      const selectedCat = category.find((c) => c._id === formData.cat_id);
+
+                      // Case 1: if subCategories is array of objects
+                      const selectedSub =
+                        selectedCat?.subCategories?.find((s) => s._id === e.target.value) || null;
+
+                      // Case 2: if subCategoryNames is array of strings
+                      const selectedName =
+                        selectedCat?.subCategoryNames?.find((s) => s === e.target.value) || "";
+
+                      setFormData({
+                        ...formData,
+                        subCat_id: selectedSub?._id || selectedName || "",
+                        subCategoryName: selectedSub?.name || selectedName || "",
+                      });
+                    }}
                     className="w-full border rounded p-2"
                   >
                     <option value="">Select Subcategory</option>
-                    {category
-                      .find((c) => c.categoryName === formData.cat_sec)
-                      ?.subCategoryNames.map((sub, idx) => (
-                        <option key={idx} value={sub}>
-                          {sub}
-                        </option>
-                      ))}
+
+                    {/* Render subCategories (objects) */}
+                    {category.find((c) => c._id === formData.cat_id)?.subCategories?.map((sub) => (
+                      <option key={sub._id} value={sub._id}>
+                        {sub.name}
+                      </option>
+                    ))}
+
+                    {/* Render subCategoryNames (strings) */}
+                    {category.find((c) => c._id === formData.cat_id)?.subCategoryNames?.map((name, idx) => (
+                      <option key={idx} value={name}>
+                        {name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               )}
@@ -433,42 +522,6 @@ const Products = () => {
                 ))}
               </div>
 
-              {/* Frame Details */}
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  name="product_frame_material"
-                  value={formData.product_frame_material}
-                  onChange={handleChange}
-                  placeholder="Frame Material"
-                  className="w-full border p-2 rounded"
-                />
-                <input
-                  type="text"
-                  name="product_frame_shape"
-                  value={formData.product_frame_shape}
-                  onChange={handleChange}
-                  placeholder="Frame Shape"
-                  className="w-full border p-2 rounded"
-                />
-                <input
-                  type="text"
-                  name="product_frame_color"
-                  value={formData.product_frame_color}
-                  onChange={handleChange}
-                  placeholder="Frame Color"
-                  className="w-full border p-2 rounded"
-                />
-                <input
-                  type="text"
-                  name="product_frame_fit"
-                  value={formData.product_frame_fit}
-                  onChange={handleChange}
-                  placeholder="Frame Fit"
-                  className="w-full border p-2 rounded"
-                />
-              </div>
-
               {/* Gender */}
               <select
                 name="gender"
@@ -481,6 +534,44 @@ const Products = () => {
                 <option value="Women">Women</option>
                 <option value="Unisex">Unisex</option>
               </select>
+
+              {/* Contact Lens Fields */}
+              {formData.subCategoryName === "Contact Lenses" && (
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="contact_type"
+                    value={formData.contact_type}
+                    onChange={handleChange}
+                    placeholder="Lens Type (Daily/Monthly)"
+                    className="w-full border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="material"
+                    value={formData.material}
+                    onChange={handleChange}
+                    placeholder="Material"
+                    className="w-full border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="manufacturer"
+                    value={formData.manufacturer}
+                    onChange={handleChange}
+                    placeholder="Manufacturer"
+                    className="w-full border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="water_content"
+                    value={formData.water_content}
+                    onChange={handleChange}
+                    placeholder="Water Content"
+                    className="w-full border p-2 rounded"
+                  />
+                </div>
+              )}
 
               {/* Lens Fields */}
               <div className="grid grid-cols-2 gap-4">
@@ -519,7 +610,7 @@ const Products = () => {
                         : URL.createObjectURL(lensImage1)
                     }
                     alt="lens1"
-                    className="w-20 h-20 mt-2 object-cover rounded"
+                    className="w-20 h-20 object-cover mt-2 rounded"
                   />
                 )}
               </div>
@@ -560,24 +651,31 @@ const Products = () => {
                         : URL.createObjectURL(lensImage2)
                     }
                     alt="lens2"
-                    className="w-20 h-20 mt-2 object-cover rounded"
+                    className="w-20 h-20 object-cover mt-2 rounded"
                   />
                 )}
               </div>
 
-              {/* Submit */}
-              <button
-                type="submit"
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-              >
-                {editId ? "Update Product" : "Save Product"}
-              </button>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                >
+                  {editId ? "Update" : "Submit"}
+                </button>
+              </div>
             </form>
 
-            {/* Close Button */}
             <button
               onClick={() => setOpen(false)}
-              className="absolute top-2 right-2 text-4xl hover:text-red-500 hover:cursor-pointer"
+              className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl"
             >
               <IoIosCloseCircle />
             </button>

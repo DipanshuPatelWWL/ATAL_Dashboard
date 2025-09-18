@@ -5,22 +5,21 @@ export default function AdminDashboard() {
 
   const menuItems = [
     { name: "Home", path: "/admin/home" },
-    { name: "FAQ", path: "/admin/faq" },
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
-    { name: "Frame Shape", path: "/admin/frame-shape" },
     { name: "Product", path: "/admin/product" },
-    { name: "Review", path: "/admin/review" },
     // { name: "Service", path: "/admin/service" },
-    { name: "Eye Check", path: "/admin/eyeCheck" },
+    { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Vendor", path: "/admin/vendor" },
     { name: "Company", path: "/admin/company" },
-    { name: "Testimonial", path: "/admin/testimonials" },
-    { name: "Eyewear Tips", path: "/admin/eyewearTips" },
-    { name: "Inquiries", path: "/admin/inquiries" },
-    { name: "Disclaimer", path: "/admin/disclaimer" },
     { name: "Eye Services", path: "/admin/eye-services" },
-    { name: "Contact Lens", path: "/admin/contact-lens" }
+    { name: "Eye Check", path: "/admin/eyeCheck" },
+    { name: "Eyewear Tips", path: "/admin/eyewearTips" },
+    { name: "Disclaimer", path: "/admin/disclaimer" },
+    { name: "Review", path: "/admin/review" },
+    { name: "Testimonial", path: "/admin/testimonials" },
+    { name: "Contact Lens", path: "/admin/contact-lens" },
+    { name: "FAQ", path: "/admin/faq" },
   ];
 
   return (
