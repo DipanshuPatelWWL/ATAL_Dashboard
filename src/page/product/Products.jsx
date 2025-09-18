@@ -31,6 +31,8 @@ const Products = () => {
     product_lens_description1: "",
     product_lens_title2: "",
     product_lens_description2: "",
+    cat_id: "",
+    subCat_id: ""
   });
   const [editId, setEditId] = useState(null);
 
@@ -95,6 +97,8 @@ const Products = () => {
       product_lens_description1: "",
       product_lens_title2: "",
       product_lens_description2: "",
+      cat_id: "",
+      subCat_id: ""
     });
     setImages([]);
     setKeptImages([]);
@@ -378,6 +382,22 @@ const Products = () => {
                 value={formData.product_description}
                 onChange={handleChange}
                 placeholder="Product Description"
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="cat_id"
+                value={formData.cat_id}
+                onChange={handleChange}
+                placeholder="Category Id"
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="subCat_id"
+                value={formData.subCat_id}
+                onChange={handleChange}
+                placeholder="SubCategory Id"
                 className="w-full border p-2 rounded"
               />
 
