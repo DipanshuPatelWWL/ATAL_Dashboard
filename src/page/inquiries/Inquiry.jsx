@@ -133,7 +133,7 @@ const Inquiry = () => {
                 <div className="relative w-60" ref={dropdownRef}>
                     <button
                         onClick={() => setOpen(!open)}
-                        className="flex w-full items-center justify-between rounded-lg border border-red-600 bg-white px-3 py-2 text-sm text-black"
+                        className="flex w-full items-center justify-between rounded-lg border border-red-600 bg-white px-3 py-2 text-sm text-black hover:cursor-pointer"
                     >
                         <span className="truncate">{selected}</span>
                         <svg
@@ -207,7 +207,7 @@ const Inquiry = () => {
                                             setSelectedInquiry(data);
                                             setShowResponse(true);
                                         }}
-                                        className="text-white p-2 rounded bg-red-600 hover:bg-red-700"
+                                        className="text-white p-2 rounded bg-red-600 hover:bg-red-700 hover:cursor-pointer"
                                     >
                                         Send Response
                                     </button>
@@ -237,21 +237,21 @@ const Inquiry = () => {
                             <button
                                 type="button"
                                 onClick={handleSend}
-                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 hover:cursor-pointer"
                             >
                                 Send
                             </button>
                             <button
                                 type="button"
                                 onClick={handleSendNReg}
-                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 hover:cursor-pointer"
                             >
                                 Send & Register
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setShowResponse(false)}
-                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 hover:cursor-pointer"
                             >
                                 Cancel
                             </button>

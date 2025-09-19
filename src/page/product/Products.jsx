@@ -268,7 +268,7 @@ const Products = () => {
         <h2 className="text-xl font-semibold">Products</h2>
         <button
           onClick={openAddModal}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer"
         >
           <FaPlus className="inline mr-2" /> Add Product
         </button>
@@ -506,7 +506,7 @@ const Products = () => {
                     <button
                       type="button"
                       onClick={() => removeExistingImage(idx)}
-                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1"
+                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
                     >
                       X
                     </button>
@@ -526,7 +526,7 @@ const Products = () => {
                     <button
                       type="button"
                       onClick={() => removeNewImage(idx)}
-                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1"
+                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
                     >
                       X
                     </button>
@@ -672,13 +672,13 @@ const Products = () => {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:cursor-pointer"
                 >
                   {editId ? "Update" : "Submit"}
                 </button>
@@ -687,7 +687,7 @@ const Products = () => {
 
             <button
               onClick={() => setOpen(false)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl"
+              className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl hover:cursor-pointer"
             >
               <IoIosCloseCircle />
             </button>

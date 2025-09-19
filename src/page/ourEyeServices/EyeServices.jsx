@@ -216,13 +216,13 @@ const EyeService = () => {
                             <div className="flex justify-between mt-4">
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                                    className="bg-gray-500 text-white px-4 py-2 rounded hover:cursor-pointer"
                                     type="button">
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-green-600 text-white px-4 py-2 rounded">
+                                    className="bg-green-600 text-white px-4 py-2 rounded hover:cursor-pointer">
                                     Submit
                                 </button>
                             </div>

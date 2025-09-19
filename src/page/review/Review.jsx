@@ -149,7 +149,7 @@ function Review() {
                 {review.description.length > 20 && (
                   <button
                     onClick={() => toggleExpand(review._id)}
-                    className="text-red-600 ml-2 hover:underline"
+                    className="text-red-600 ml-2 hover:underline hover:cursor-pointer"
                   >
                     {isExpanded ? "Show Less" : "Show More"}
                   </button>
@@ -170,7 +170,7 @@ function Review() {
               <div>
                 <button
                   onClick={() => handleEdit(review)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-1"
+                  className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:cursor-pointer"
                 >
                   <FaEdit /> Edit
                 </button>

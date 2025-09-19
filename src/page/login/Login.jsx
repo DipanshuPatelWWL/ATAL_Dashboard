@@ -136,7 +136,7 @@ const Login = () => {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-11 text-gray-400"
+                  className="absolute right-4 top-11 text-gray-400 hover:cursor-pointer"
                   onClick={handleClick}
                 >
                   {passwordVisible ? <FaEyeSlash /> : <FaEye />}

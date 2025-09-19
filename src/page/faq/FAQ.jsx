@@ -138,7 +138,7 @@ function FAQ() {
                 <>
                   <p>{data.description}</p>
                   <button
-                    className="text-red-500 underline text-sm"
+                    className="text-red-500 underline text-sm hover:cursor-pointer"
                     onClick={() => setExpandedIndex(null)}
                   >
                     Show Less
@@ -153,7 +153,7 @@ function FAQ() {
                   </p>
                   {data.description?.length > 100 && (
                     <button
-                      className="text-red-500 underline text-sm"
+                      className="text-red-500 underline text-sm hover:cursor-pointer"
                       onClick={() => setExpandedIndex(index)}
                     >
                       Show More

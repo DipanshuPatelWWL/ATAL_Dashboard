@@ -23,7 +23,7 @@ const CompanyDashboard = () => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`border-b-1 block px-4 py-2 rounded hover:bg-red-500 hover:text-white ${location.pathname === item.path
+                                className={`border-b-1 block px-4 py-2 rounded hover:bg-red-500 hover:text-white hover:cursor-pointer ${location.pathname === item.path
                                     ? "bg-red-500 text-white"
                                     : "text-gray-700"
                                     }`}

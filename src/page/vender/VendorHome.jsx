@@ -119,31 +119,31 @@ export default function VendorHome() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <Link
             to="/vendor"
-            className="bg-blue-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-blue-600 transition"
+            className="bg-blue-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-blue-600 transition hover:cursor-pointer"
           >
             Manage Profile
           </Link>
           <Link
             to="/vendor"
-            className="bg-green-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-green-600 transition"
+            className="bg-green-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-green-600 transition hover:cursor-pointer"
           >
             Manage Services
           </Link>
           <Link
             to="/vendor"
-            className="bg-yellow-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-yellow-600 transition"
+            className="bg-yellow-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-yellow-600 transition hover:cursor-pointer"
           >
             Manage Products
           </Link>
           <Link
             to="/vendor/orders"
-            className="bg-red-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-red-600 transition"
+            className="bg-red-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-red-600 transition hover:cursor-pointer"
           >
             Manage Orders
           </Link>
           <Link
             to="/vendor"
-            className="bg-purple-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-purple-600 transition"
+            className="bg-purple-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-purple-600 transition hover:cursor-pointer"
           >
             Manage Payments
           </Link>
