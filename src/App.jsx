@@ -29,6 +29,7 @@ import CompanyHome from "./page/company/CompanyHome";
 import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
 import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
 import ContactLens from "./page/contactLens/ContactLens";
+import UpdateAdminProfile from "./page/admin/UpdateAdminProfile";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
         >
           <Route index element={<Navigate to="home" replace />} />
           <Route path="home" element={<AdminHome />} />
+          <Route path="profile" element={<UpdateAdminProfile />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="category" element={<Category />} />
           <Route path="subCategory" element={<Subcategory />} />
