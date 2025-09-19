@@ -16,7 +16,7 @@ const Unauthorized = () => {
                 <div className="mt-6">
                     <Link
                         to="/"
-                        className="inline-block px-6 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-md transition"
+                        className="inline-block px-6 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-md transition hover:cursor-pointer"
                     >
                         Go Back Home
                     </Link>

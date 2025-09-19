@@ -145,32 +145,32 @@ export default function AdminHome() {
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     <Link
                         to="/admin/inquiries"
-                        className="bg-blue-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-blue-600 transition"
+                        className="bg-blue-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-blue-600 transition hover:cursor-pointer"
                     >
                         Manage Inquiry
                     </Link>
                     <Link
                         to="/admin/category"
-                        className="bg-green-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-green-600 transition"
+                        className="bg-green-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-green-600 transition hover:cursor-pointer"
                     >
                         Manage Categories
                     </Link>
                     <Link
                         to="/admin/product"
-                        className="bg-yellow-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-yellow-600 transition"
+                        className="bg-yellow-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-yellow-600 transition hover:cursor-pointer"
                     >
                         Manage Products
                     </Link>
                     <Link
                         to="/admin/company"
-                        className="bg-red-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-red-600 transition"
+                        className="bg-red-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-red-600 transition hover:cursor-pointer"
                     >
                         Manage Company
                     </Link>
 
                     <Link
                         to="/admin/vendor"
-                        className="bg-purple-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-purple-600 transition"
+                        className="bg-purple-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-purple-600 transition hover:cursor-pointer"
                     >
                         Manage Vendor
                     </Link>

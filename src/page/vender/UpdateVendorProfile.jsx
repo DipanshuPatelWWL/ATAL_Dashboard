@@ -583,7 +583,7 @@ const UpdateVendorProfile = () => {
                                 <button
                                     type="button"
                                     onClick={() => removeFile("certifications", idx)}
-                                    className="text-red-500 hover:underline"
+                                    className="text-red-500 hover:underline hover:cursor-pointer"
                                 >
                                     Remove
                                 </button>
@@ -614,7 +614,7 @@ const UpdateVendorProfile = () => {
                                 <button
                                     type="button"
                                     onClick={() => removeFile("certificates", idx)}
-                                    className="text-red-500 hover:underline"
+                                    className="text-red-500 hover:underline hover:cursor-pointer"
                                 >
                                     Remove
                                 </button>
@@ -657,7 +657,7 @@ const UpdateVendorProfile = () => {
             <button
                 type="submit"
                 disabled={loading || !formData.termsAccepted}
-                className={`w-full font-semibold p-3 rounded-lg ${loading || !formData.termsAccepted
+                className={`w-full font-semibold p-3 rounded-lg hover:cursor-pointer ${loading || !formData.termsAccepted
                     ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                     : "bg-red-600 hover:bg-red-700 text-white"
                     }`}

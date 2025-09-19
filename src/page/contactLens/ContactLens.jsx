@@ -368,7 +368,7 @@ const ContactLens = () => {
                                         <button
                                             type="button"
                                             onClick={() => removeExistingImage(idx)}
-                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1"
+                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
                                         >
                                             X
                                         </button>
@@ -388,7 +388,7 @@ const ContactLens = () => {
                                         <button
                                             type="button"
                                             onClick={() => removeNewImage(idx)}
-                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1"
+                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
                                         >
                                             X
                                         </button>
@@ -399,14 +399,14 @@ const ContactLens = () => {
                             <div className="flex justify-between mt-4">
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                                    className="bg-gray-500 text-white px-4 py-2 rounded hover:cursor-pointer"
                                     type="button"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-green-600 text-white px-4 py-2 rounded"
+                                    className="bg-green-600 text-white px-4 py-2 rounded hover:cursor-pointer"
                                 >
                                     {editId ? "Update" : "Submit"}
                                 </button>
