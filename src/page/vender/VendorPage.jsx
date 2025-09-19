@@ -20,19 +20,12 @@ function VendorPage() {
       <div className="p-6">
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold mb-6">Vendor Details</h2>
-          {/* <Link to="/admin/register">
-            <button className="bg-green-500 text-white text-xl font-semibold py-2 px-3 rounded-lg hover:cursor-pointer hover:bg-green-700 flex items-center gap-2">
-              <FaPlus /> ADD VENDOR
-            </button>
-          </Link>
-          */}
-
         </div>
         <div className="">
           {vendor.map((data, index) => (
             <div
               key={index}
-              className="bg-white shadow rounded-2xl p-4 border hover:shadow-md transition"
+              className="bg-white mb-6 shadow rounded-2xl p-4 border hover:shadow-md transition"
             >
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex ">
