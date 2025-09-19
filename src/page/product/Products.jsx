@@ -32,8 +32,10 @@ const Products = () => {
     product_lens_description1: "",
     product_lens_title2: "",
     product_lens_description2: "",
-    cat_id: "",
-    subCat_id: ""
+    contact_type: "",
+    material: "",
+    manufacturer: "",
+    water_content: "",
   });
   const [editId, setEditId] = useState(null);
 
@@ -98,8 +100,10 @@ const Products = () => {
       product_lens_description1: "",
       product_lens_title2: "",
       product_lens_description2: "",
-      cat_id: "",
-      subCat_id: ""
+      contact_type: "",
+      material: "",
+      manufacturer: "",
+      water_content: "",
     });
     setImages([]);
     setKeptImages([]);
@@ -268,7 +272,7 @@ const Products = () => {
         <h2 className="text-xl font-semibold">Products</h2>
         <button
           onClick={openAddModal}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer"
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
         >
           <FaPlus className="inline mr-2" /> Add Product
         </button>
@@ -465,22 +469,6 @@ const Products = () => {
                 placeholder="Product Description"
                 className="w-full border p-2 rounded"
               />
-              <input
-                type="text"
-                name="cat_id"
-                value={formData.cat_id}
-                onChange={handleChange}
-                placeholder="Category Id"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="text"
-                name="subCat_id"
-                value={formData.subCat_id}
-                onChange={handleChange}
-                placeholder="SubCategory Id"
-                className="w-full border p-2 rounded"
-              />
 
               {/* Multiple Images */}
               <label htmlFor="product_image" className="block text-gray-700">
@@ -506,7 +494,7 @@ const Products = () => {
                     <button
                       type="button"
                       onClick={() => removeExistingImage(idx)}
-                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
+                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1"
                     >
                       X
                     </button>
@@ -526,7 +514,7 @@ const Products = () => {
                     <button
                       type="button"
                       onClick={() => removeNewImage(idx)}
-                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
+                      className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1"
                     >
                       X
                     </button>
@@ -672,13 +660,13 @@ const Products = () => {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer"
+                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:cursor-pointer"
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                 >
                   {editId ? "Update" : "Submit"}
                 </button>
@@ -687,7 +675,7 @@ const Products = () => {
 
             <button
               onClick={() => setOpen(false)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl hover:cursor-pointer"
+              className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl"
             >
               <IoIosCloseCircle />
             </button>
