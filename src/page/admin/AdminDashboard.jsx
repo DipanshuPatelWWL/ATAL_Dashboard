@@ -5,6 +5,7 @@ export default function AdminDashboard() {
 
   const menuItems = [
     { name: "Home", path: "/admin/home" },
+    { name: "Profile", path: "/admin/profile"},
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
     { name: "Product", path: "/admin/product" },
