@@ -12,7 +12,7 @@ const ContactLens = () => {
     const [editId, setEditId] = useState(null);
     const [lens, setLens] = useState([]);
 
-    // ✅ set default category + subcategory here
+    // set default category + subcategory here
     const [formData, setFormData] = useState({
         lens_name: "",
         brand_name: "",
@@ -100,8 +100,8 @@ const ContactLens = () => {
             material: "",
             description: "",
             water_content: "",
-            cat_sec: "Lense", // ✅ default fixed
-            subCategoryName: "Contact Lense", // ✅ default fixed
+            cat_sec: "Lense", // default fixed
+            subCategoryName: "Contact Lense", // default fixed
         });
         setImages([]);
         setKeptImages([]);
@@ -113,8 +113,8 @@ const ContactLens = () => {
     const handleUpdateClick = (lens) => {
         setFormData({
             ...lens,
-            cat_sec: "Lense", // ✅ always fixed
-            subCategoryName: "Contact Lense", // ✅ always fixed
+            cat_sec: "Lense", // always fixed
+            subCategoryName: "Contact Lense", // always fixed
         });
         setImages([]);
         setKeptImages(

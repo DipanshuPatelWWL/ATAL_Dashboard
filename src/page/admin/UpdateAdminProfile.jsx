@@ -74,13 +74,13 @@ const UpdateAdminProfile = () => {
       Swal.fire("Validation Error", "Please fix the errors in the form", "warning");
       return;
     }
-    // console.log("Id", `/updateAdminProfile/${adminId}`);
+
 
 
     setLoading(true);
     try {
-        const adminData = JSON.parse(localStorage.getItem("user"));
-        const adminId = adminData?._id;
+      const adminData = JSON.parse(localStorage.getItem("user"));
+      const adminId = adminData?._id;
       const res = await API.put(`/updateAdminProfile/${adminId}`, formData, {
         withCredentials: true,
       });
@@ -167,11 +167,10 @@ const UpdateAdminProfile = () => {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full font-semibold p-3 rounded-lg ${
-          loading
+        className={`w-full font-semibold p-3 rounded-lg ${loading
             ? "bg-gray-400 text-gray-200 cursor-not-allowed"
             : "bg-red-600 hover:bg-red-700 text-white"
-        }`}
+          }`}
       >
         {loading ? "Submitting..." : "Update Profile"}
       </button>
