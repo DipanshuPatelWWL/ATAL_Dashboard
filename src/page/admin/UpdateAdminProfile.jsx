@@ -168,8 +168,8 @@ const UpdateAdminProfile = () => {
         type="submit"
         disabled={loading}
         className={`w-full font-semibold p-3 rounded-lg ${loading
-            ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-            : "bg-red-600 hover:bg-red-700 text-white"
+          ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+          : "bg-red-600 hover:bg-red-700 text-white"
           }`}
       >
         {loading ? "Submitting..." : "Update Profile"}
