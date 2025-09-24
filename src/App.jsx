@@ -30,6 +30,7 @@ import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
 import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
 import ContactLens from "./page/contactLens/ContactLens";
 import UpdateAdminProfile from "./page/admin/UpdateAdminProfile";
+import VendorProducts from "./page/vender/VendorProduct";
 
 function App() {
   return (
@@ -84,7 +85,7 @@ function App() {
         >
           <Route index element={<Navigate to="home" replace />} />
           <Route path="home" element={<VendorHome />} />
-          <Route path="product" element={<VendorHome />} />
+          <Route path="product" element={<VendorProducts />} />
           <Route path="order" element={<VendorHome />} />
           <Route path="profile" element={<UpdateVendorProfile />} />
           <Route path="faq" element={<VendorHome />} />
