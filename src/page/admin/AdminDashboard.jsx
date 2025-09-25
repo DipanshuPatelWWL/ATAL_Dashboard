@@ -5,13 +5,13 @@ export default function AdminDashboard() {
 
   const menuItems = [
     { name: "Home", path: "/admin/home" },
-    { name: "Profile", path: "/admin/profile"},
+    { name: "Profile", path: "/admin/profile" },
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
     { name: "Product", path: "/admin/product" },
-    // { name: "Service", path: "/admin/service" },
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Vendor", path: "/admin/vendor" },
+    { name: "Vendor Product", path: "/admin/vendor-product" },
     { name: "Company", path: "/admin/company" },
     { name: "Eye Services", path: "/admin/eye-services" },
     { name: "Eye Check", path: "/admin/eyeCheck" },
