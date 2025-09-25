@@ -30,11 +30,11 @@ import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
 import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
 import ContactLens from "./page/contactLens/ContactLens";
 import UpdateAdminProfile from "./page/admin/UpdateAdminProfile";
-import EyeExam from "./page/eyeExam/eyeExam";
 import DoctorSchedule from "./page/doctorSchedule/DoctorSchedule";
 import VendorProducts from "./page/vender/VendorProduct";
 import VendorApprovalProduct from "./page/admin/VendorApprovalProduct";
 import CouponCode from "./page/coupons/CouponCode";
+// import EyeExam from "./page/eyeExam/EyeExam";
 
 function App() {
   return (
@@ -74,7 +74,7 @@ function App() {
           <Route path="disclaimer" element={<Disclaimer />} />
           <Route path="eye-services" element={<EyeService />} />
           <Route path="contact-lens" element={<ContactLens />} />
-          <Route path="eye-exam" element={<EyeExam />} />
+          {/* <Route path="eye-exam" element={<EyeExam />} /> */}
           <Route path="doctor-schedule" element={<DoctorSchedule />} />
           <Route path="vendor-product" element={<VendorApprovalProduct />} />
         </Route>
