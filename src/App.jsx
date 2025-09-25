@@ -30,6 +30,7 @@ import UpdateCompanyProfile from "./page/company/UpdateCompanyProfile";
 import AdminCompanyDetails from "./page/company/AdminCompanyDetails";
 import ContactLens from "./page/contactLens/ContactLens";
 import UpdateAdminProfile from "./page/admin/UpdateAdminProfile";
+import CouponCode from "./page/coupons/CouponCode";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
           <Route path="category" element={<Category />} />
           <Route path="subCategory" element={<Subcategory />} />
           <Route path="product" element={<Products />} />
+          <Route path="coupons" element={<CouponCode />} />
           <Route path="review" element={<Review />} />
           {/* <Route path="service" element={<Service />} /> */}
           <Route path="eyeCheck" element={<EyeCheck />} />
