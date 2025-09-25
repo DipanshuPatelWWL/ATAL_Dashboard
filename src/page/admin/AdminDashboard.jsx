@@ -5,7 +5,7 @@ export default function AdminDashboard() {
 
   const menuItems = [
     { name: "Home", path: "/admin/home" },
-    { name: "Profile", path: "/admin/profile"},
+    { name: "Profile", path: "/admin/profile" },
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
     { name: "Product", path: "/admin/product" },
@@ -21,6 +21,8 @@ export default function AdminDashboard() {
     { name: "Testimonial", path: "/admin/testimonials" },
     { name: "Contact Lens", path: "/admin/contact-lens" },
     { name: "FAQ", path: "/admin/faq" },
+    { name: "Eye Exam", path: "/admin/eye-exam" },
+    { name: "Doctor Schedule", path: "/admin/doctor-schedule" },
   ];
 
   return (
