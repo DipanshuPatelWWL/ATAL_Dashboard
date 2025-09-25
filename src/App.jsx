@@ -32,6 +32,7 @@ import ContactLens from "./page/contactLens/ContactLens";
 import UpdateAdminProfile from "./page/admin/UpdateAdminProfile";
 import VendorProducts from "./page/vender/VendorProduct";
 import VendorApprovalProduct from "./page/admin/VendorApprovalProduct";
+import CouponCode from "./page/coupons/CouponCode";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
           <Route path="category" element={<Category />} />
           <Route path="subCategory" element={<Subcategory />} />
           <Route path="product" element={<Products />} />
+          <Route path="coupons" element={<CouponCode />} />
           <Route path="review" element={<Review />} />
           <Route path="eyeCheck" element={<EyeCheck />} />
           <Route path="vendor" element={<VendorPage />} />
