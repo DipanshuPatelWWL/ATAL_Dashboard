@@ -32,6 +32,9 @@ import ContactLens from "./page/contactLens/ContactLens";
 import UpdateAdminProfile from "./page/admin/UpdateAdminProfile";
 import EyeExam from "./page/eyeExam/eyeExam";
 import DoctorSchedule from "./page/doctorSchedule/DoctorSchedule";
+import VendorProducts from "./page/vender/VendorProduct";
+import VendorApprovalProduct from "./page/admin/VendorApprovalProduct";
+import CouponCode from "./page/coupons/CouponCode";
 
 function App() {
   return (
@@ -60,14 +63,11 @@ function App() {
           <Route path="category" element={<Category />} />
           <Route path="subCategory" element={<Subcategory />} />
           <Route path="product" element={<Products />} />
+          <Route path="coupons" element={<CouponCode />} />
           <Route path="review" element={<Review />} />
-          {/* <Route path="service" element={<Service />} /> */}
           <Route path="eyeCheck" element={<EyeCheck />} />
           <Route path="vendor" element={<VendorPage />} />
           <Route path="company" element={<AdminCompanyDetails />} />
-          {/* <Route path="register" element={<Register/>} /> */}
-          {/* <Route path="register" element={<VendorRegistrationForm />} /> */}
-          {/* <Route path="company" element={<CompanyRegistrationForm />} /> */}
           <Route path="testimonials" element={<Testimonials />} />
           <Route path="eyewearTips" element={<EyewearTips />} />
           <Route path="inquiries" element={<Inquiry />} />
@@ -76,6 +76,7 @@ function App() {
           <Route path="contact-lens" element={<ContactLens />} />
           <Route path="eye-exam" element={<EyeExam />} />
           <Route path="doctor-schedule" element={<DoctorSchedule />} />
+          <Route path="vendor-product" element={<VendorApprovalProduct />} />
         </Route>
 
         <Route
@@ -88,7 +89,7 @@ function App() {
         >
           <Route index element={<Navigate to="home" replace />} />
           <Route path="home" element={<VendorHome />} />
-          <Route path="product" element={<VendorHome />} />
+          <Route path="product" element={<VendorProducts />} />
           <Route path="order" element={<VendorHome />} />
           <Route path="profile" element={<UpdateVendorProfile />} />
           <Route path="faq" element={<VendorHome />} />
