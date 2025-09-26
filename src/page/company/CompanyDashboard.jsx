@@ -10,6 +10,7 @@ const CompanyDashboard = () => {
         { name: "Team", path: "/company/team" },
         { name: "Profile", path: "/company/profile" },
         { name: "FAQ", path: "/company/faq" },
+        {name: "Insurance Policy", path: "/company/insurance-policy"}
     ];
 
     return (

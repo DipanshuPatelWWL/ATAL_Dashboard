@@ -34,6 +34,7 @@ import DoctorSchedule from "./page/doctorSchedule/DoctorSchedule";
 import VendorProducts from "./page/vender/VendorProduct";
 import VendorApprovalProduct from "./page/admin/VendorApprovalProduct";
 import CouponCode from "./page/coupons/CouponCode";
+import AddInsurancePolicy from "./page/company/AddInsurancePolicy";
 // import EyeExam from "./page/eyeExam/EyeExam";
 
 function App() {
@@ -77,6 +78,8 @@ function App() {
           {/* <Route path="eye-exam" element={<EyeExam />} /> */}
           <Route path="doctor-schedule" element={<DoctorSchedule />} />
           <Route path="vendor-product" element={<VendorApprovalProduct />} />
+         
+
         </Route>
 
         <Route
@@ -111,6 +114,7 @@ function App() {
           <Route path="profile" element={<UpdateCompanyProfile />} />
           <Route path="team" element={<CompanyHome />} />
           <Route path="faq" element={<CompanyHome />} />
+           <Route path="insurance-policy" element={<AddInsurancePolicy />} />
         </Route>
 
 

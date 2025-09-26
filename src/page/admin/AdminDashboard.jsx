@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
+import Insurance from "../../../../ATAL_Home/src/page/Cart/Insurance";
 
 export default function AdminDashboard() {
   const location = useLocation();
@@ -9,6 +10,7 @@ export default function AdminDashboard() {
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
     { name: "Product", path: "/admin/product" },
+    {name: "coupon", path: "/admin/coupons"},
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Vendor", path: "/admin/vendor" },
     { name: "Vendor Product", path: "/admin/vendor-product" },
@@ -23,6 +25,7 @@ export default function AdminDashboard() {
     { name: "FAQ", path: "/admin/faq" },
     { name: "Eye Exam", path: "/admin/eye-exam" },
     { name: "Doctor Schedule", path: "/admin/doctor-schedule" },
+
   ];
 
   return (
