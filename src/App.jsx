@@ -35,6 +35,8 @@ import VendorProducts from "./page/vender/VendorProduct";
 import VendorApprovalProduct from "./page/admin/VendorApprovalProduct";
 import CouponCode from "./page/coupons/CouponCode";
 import EyeExam from "./page/eyeExamPage/EyeExam";
+import AdminOrderUpdate from "./page/ordderTracking/AdminOrderUpdate";
+import CustomerTracking from "./page/ordderTracking/CustomerTracking";
 
 function App() {
   return (
@@ -77,6 +79,8 @@ function App() {
           <Route path="eye-exam" element={<EyeExam />} />
           <Route path="doctor-schedule" element={<DoctorSchedule />} />
           <Route path="vendor-product" element={<VendorApprovalProduct />} />
+          <Route path="admin-order-tracking" element={<AdminOrderUpdate />} />
+          <Route path="customer-order-tracking" element={<CustomerTracking />} />
         </Route>
 
         <Route
