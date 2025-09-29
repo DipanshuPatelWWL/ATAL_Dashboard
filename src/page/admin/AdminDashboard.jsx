@@ -9,6 +9,7 @@ export default function AdminDashboard() {
     { name: "Category", path: "/admin/category" },
     { name: "Sub-Category", path: "/admin/subCategory" },
     { name: "Product", path: "/admin/product" },
+    {name: "coupon", path: "/admin/coupons"},
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Vendor", path: "/admin/vendor" },
     { name: "Vendor Product", path: "/admin/vendor-product" },
@@ -25,6 +26,7 @@ export default function AdminDashboard() {
     { name: "Doctor Schedule", path: "/admin/doctor-schedule" },
     { name: "Admin Tracking", path: "/admin/admin-order-tracking" },
     { name: "Customer Tracking", path: "/admin/customer-order-tracking" },
+
   ];
 
   return (
