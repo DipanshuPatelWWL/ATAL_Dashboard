@@ -6,7 +6,6 @@ const API = axios.create({
   withCredentials: true,
 })
 
-
 export default API;
 export const IMAGE_URL = "http://localhost:4000/uploads/"
 // export const IMAGE_URL = "https://atal-back-updated.onrender.com/uploads/";
