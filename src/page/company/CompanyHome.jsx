@@ -24,7 +24,7 @@ export default function CompanyHome() {
             const res = await API.get(`/getCompanyById/${companyId}`, {
                 withCredentials: true,
             });
-            // console.log(res.data);
+
             setCompanyData(res.data.company)
 
         } catch (error) {
