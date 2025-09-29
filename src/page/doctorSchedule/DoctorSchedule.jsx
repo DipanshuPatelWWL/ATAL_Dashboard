@@ -14,7 +14,6 @@ const DoctorSchedule = () => {
         doctor_name: "",
         specialization: "",
         image: null,
-        // exams: "",
         exam_section: "",
         schedule: {
             day: "",
@@ -92,9 +91,6 @@ const DoctorSchedule = () => {
             id: doctor._id,
             doctor_name: doctor.doctor_name || "",
             specialization: doctor.specialization || "",
-            // exams: Array.isArray(doctor.exams) && doctor.exams.length > 0
-            //     ? doctor.exams[0]?._id || doctor.exams[0]
-            //     : "",
             exam_section: doctor.exam_section || "",
             schedule: {
                 day: firstDay,
@@ -135,57 +131,6 @@ const DoctorSchedule = () => {
             image: e.target.files[0],
         }));
     };
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     try {
-    //         const schedulePayload = [{
-    //             day: formData.schedule.day,
-    //             times: formData.schedule.times,
-    //             status: "Available"
-    //         }];
-
-    //         const payloadToSend = {
-    //             doctor_name: formData.doctor_name,
-    //             specialization: formData.specialization,
-    //             // exams: [formData.exams],   // must be an ObjectId string, not exam name
-    //             exam_section: formData.exam_section,
-    //             schedule: schedulePayload
-    //         };
-
-
-    //         if (modalType === "add") {
-    //             await API.post("/addDoctor", payloadToSend, {
-    //                 headers: { "Content-Type": "application/json" }
-    //             });
-    //             Swal.fire("Success!", "Doctor created successfully", "success");
-    //         } else {
-    //             await API.put(`/updateDoctor/${formData.id}`, payloadToSend, {
-    //                 headers: { "Content-Type": "application/json" }
-    //             });
-    //             Swal.fire("Success!", "Doctor updated successfully", "success");
-    //         }
-
-    //         setShowModal(false);
-    //         setFormData({
-    //             doctor_name: "",
-    //             image: null,
-    //             specialization: "",
-    //             exam_section: "",
-    //             schedule: { day: "", times: [] }
-    //         });
-    //         fetchDoctor();
-    //     } catch (error) {
-    //         console.log("Error submitting form:", error);
-    //         Swal.fire("Error!", "Failed to save doctor.", "error");
-    //     }
-    // };
-
-
-
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();

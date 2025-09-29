@@ -1,5 +1,4 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import Insurance from "../../../../ATAL_Home/src/page/Cart/Insurance";
 
 export default function AdminDashboard() {
   const location = useLocation();
@@ -25,6 +24,8 @@ export default function AdminDashboard() {
     { name: "FAQ", path: "/admin/faq" },
     { name: "Eye Exam", path: "/admin/eye-exam" },
     { name: "Doctor Schedule", path: "/admin/doctor-schedule" },
+    { name: "Admin Tracking", path: "/admin/admin-order-tracking" },
+    { name: "Customer Tracking", path: "/admin/customer-order-tracking" },
 
   ];
 
