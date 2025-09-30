@@ -12,7 +12,8 @@ const Products = () => {
     const [lensImage1, setLensImage1] = useState(null);
     const [lensImage2, setLensImage2] = useState(null);
     const [products, setProducts] = useState([]);
-
+    const [showRejectionModal, setShowRejectionModal] = useState(false);
+    const [rejectionMessage, setRejectionMessage] = useState("");
     const [formData, setFormData] = useState({
         cat_id: "",
         cat_sec: "",
@@ -38,6 +39,7 @@ const Products = () => {
         water_content: "",
     });
     const [editId, setEditId] = useState(null);
+    const [editingProduct, setEditingProduct] = useState(null);
 
     // Fetch products (only pending & not sent for approval)
     const fetchVendorProducts = async () => {
@@ -81,6 +83,7 @@ const Products = () => {
     const openAddModal = () => {
         setOpen(true);
         setEditId(null);
+        setEditingProduct(null);
         setFormData({
             cat_id: "",
             cat_sec: "",
@@ -112,6 +115,7 @@ const Products = () => {
     };
 
     const openEditModal = (product) => {
+        setEditingProduct(product);
         setFormData({
             cat_id: product.cat_id || "",
             cat_sec: product.cat_sec || "",
@@ -177,7 +181,7 @@ const Products = () => {
             if (lensImage2 && typeof lensImage2 !== "string") payload.append("product_lens_image2", lensImage2);
 
             if (editId) {
-                await API.put(`/updateProduct/${editId}`, payload, {
+                await API.put(`/updateVendorProduct/${editId}`, payload, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 Swal.fire("Success", "Product updated successfully!", "success");
@@ -251,12 +255,12 @@ const Products = () => {
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border px-4 py-2 border-black">Name</th>
-                        <th className="border px-4 py-2 border-black">SKU</th>
                         <th className="border px-4 py-2 border-black">Price</th>
                         <th className="border px-4 py-2 border-black">Sale Price</th>
                         <th className="border px-4 py-2 border-black">Category</th>
                         <th className="border px-4 py-2 border-black">Subcategory</th>
                         <th className="border px-4 py-2 border-black">Image(s)</th>
+                        <th className="border px-4 py-2 border-black">Product Status</th>
                         <th className="border px-4 py-2 border-black">Actions</th>
                     </tr>
                 </thead>
@@ -266,7 +270,6 @@ const Products = () => {
                             <td className="border px-4 py-2 border-black text-center capitalize">
                                 {pro.product_name}
                             </td>
-                            <td className="border px-4 py-2 border-black text-center">{pro.product_sku}</td>
                             <td className="border px-4 py-2 border-black text-center">{pro.product_price}</td>
                             <td className="border px-4 py-2 border-black text-center">{pro.product_sale_price}</td>
                             <td className="border px-4 py-2 border-black text-center">{pro.cat_sec}</td>
@@ -287,18 +290,38 @@ const Products = () => {
                                     "No Images"
                                 )}
                             </td>
+                            <td className="border px-4 py-2 border-black text-center">{pro.productStatus}</td>
                             <td className="border space-x-1 border-black mx-1">
+                                {pro.productStatus !== "Rejected" && (
+                                    <button
+                                        onClick={() => openEditModal(pro)}
+                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer text-center"
+                                    >
+                                        <FaEdit />
+                                    </button>
+                                )}
                                 <button
-                                    onClick={() => openEditModal(pro)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer text-center"
+                                    onClick={() => {
+                                        if (pro.productStatus === "Rejected") {
+                                            setRejectionMessage(pro.rejectionReason || "This product was rejected.");
+                                            setShowRejectionModal(true);
+                                        } else {
+                                            handleSendApproval(pro._id);
+                                        }
+                                    }}
+                                    disabled={pro.isSentForApproval && pro.productStatus !== "Rejected"}
+                                    className={`px-4 py-2 rounded text-white ${pro.productStatus === "Rejected"
+                                        ? "bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
+                                        : pro.isSentForApproval
+                                            ? "bg-red-400 cursor-not-allowed"
+                                            : "bg-red-600 hover:bg-red-700 cursor-pointer"
+                                        }`}
                                 >
-                                    <FaEdit />
-                                </button>
-                                <button
-                                    onClick={() => handleSendApproval(pro._id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 hover:cursor-pointer"
-                                >
-                                    Send For Approval
+                                    {pro.productStatus === "Rejected"
+                                        ? "Show Message"
+                                        : pro.isSentForApproval
+                                            ? "Sent"
+                                            : "Send For Approval"}
                                 </button>
                             </td>
                         </tr>
@@ -306,384 +329,431 @@ const Products = () => {
                 </tbody>
             </table>
 
-            {/* Modal Form */}
-            {open && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto">
-                        <h3 className="text-lg font-semibold mb-4">{editId ? "Edit Product" : "Add Product"}</h3>
-                        <form onSubmit={handleSubmit} className="space-y-3">
-                            {/* Category dropdown */}
-                            <div>
-                                <label className="block text-gray-700 mb-1">Category</label>
-                                <select
-                                    value={formData.cat_id}
-                                    onChange={(e) => {
-                                        const selectedCat = category.find((c) => c._id === e.target.value);
-                                        setFormData({
-                                            ...formData,
-                                            cat_id: selectedCat?._id || "",
-                                            cat_sec: selectedCat?.categoryName || "",
-                                            subCat_id: "",
-                                            subCategoryName: "",
-                                        });
-                                    }}
-                                    className="w-full border rounded p-2"
-                                >
-                                    <option value="">Select Category</option>
-                                    {category.map((cat) => (
-                                        <option key={cat._id} value={cat._id}>
-                                            {cat.categoryName}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
 
-                            {/* Subcategory dropdown */}
-                            {formData.cat_id && (
+            {showRejectionModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+                        <h3 className="text-lg font-semibold mb-4 text-red-600">Product Rejected</h3>
+                        <p className="text-gray-700 mb-6">{rejectionMessage}</p>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={() => setShowRejectionModal(false)}
+                                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+            {/* Modal Form */}
+            {
+                open && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+                        <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto">
+                            <h3 className="text-lg font-semibold mb-4">{editId ? "Edit Product" : "Add Product"}</h3>
+                            <form onSubmit={handleSubmit} className="space-y-3">
+                                {/* Category dropdown */}
                                 <div>
-                                    <label className="block text-gray-700">Subcategory</label>
+                                    <label className="block text-gray-700 mb-1">Category</label>
                                     <select
-                                        value={formData.subCat_id}
+                                        value={formData.cat_id}
+                                        disabled={editingProduct?.isSentForApproval}
                                         onChange={(e) => {
-                                            const selectedCat = category.find((c) => c._id === formData.cat_id);
-                                            const selectedSub =
-                                                selectedCat?.subCategories?.find((s) => s._id === e.target.value) || null;
-                                            const selectedName =
-                                                selectedCat?.subCategoryNames?.find((s) => s === e.target.value) || "";
+                                            const selectedCat = category.find((c) => c._id === e.target.value);
                                             setFormData({
                                                 ...formData,
-                                                subCat_id: selectedSub?._id || selectedName || "",
-                                                subCategoryName: selectedSub?.name || selectedName || "",
+                                                cat_id: selectedCat?._id || "",
+                                                cat_sec: selectedCat?.categoryName || "",
+                                                subCat_id: "",
+                                                subCategoryName: "",
                                             });
                                         }}
                                         className="w-full border rounded p-2"
                                     >
-                                        <option value="">Select Subcategory</option>
-                                        {category.find((c) => c._id === formData.cat_id)?.subCategories?.map((sub) => (
-                                            <option key={sub._id} value={sub._id}>
-                                                {sub.name}
-                                            </option>
-                                        ))}
-                                        {category.find((c) => c._id === formData.cat_id)?.subCategoryNames?.map((name, idx) => (
-                                            <option key={idx} value={name}>
-                                                {name}
+                                        <option value="">Select Category</option>
+                                        {category.map((cat) => (
+                                            <option key={cat._id} value={cat._id}>
+                                                {cat.categoryName}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
-                            )}
 
-                            <input
-                                type="text"
-                                name="product_name"
-                                value={formData.product_name.toUpperCase()}
-                                onChange={handleChange}
-                                placeholder="Product Name"
-                                className="w-full border p-2 rounded"
-                            />
-                            <input
-                                type="text"
-                                name="product_sku"
-                                value={formData.product_sku}
-                                onChange={handleChange}
-                                placeholder="Product SKU"
-                                className="w-full border p-2 rounded"
-                            />
-                            <div className="grid grid-cols-2 gap-4">
+                                {/* Subcategory dropdown */}
+                                {formData.cat_id && (
+                                    <div>
+                                        <label className="block text-gray-700">Subcategory</label>
+                                        <select
+                                            value={formData.subCat_id}
+                                            disabled={editingProduct?.isSentForApproval}
+                                            onChange={(e) => {
+                                                const selectedCat = category.find((c) => c._id === formData.cat_id);
+                                                const selectedSub =
+                                                    selectedCat?.subCategories?.find((s) => s._id === e.target.value) || null;
+                                                const selectedName =
+                                                    selectedCat?.subCategoryNames?.find((s) => s === e.target.value) || "";
+                                                setFormData({
+                                                    ...formData,
+                                                    subCat_id: selectedSub?._id || selectedName || "",
+                                                    subCategoryName: selectedSub?.name || selectedName || "",
+                                                });
+                                            }}
+                                            className="w-full border rounded p-2"
+                                        >
+                                            <option value="">Select Subcategory</option>
+                                            {category.find((c) => c._id === formData.cat_id)?.subCategories?.map((sub) => (
+                                                <option key={sub._id} value={sub._id}>
+                                                    {sub.name}
+                                                </option>
+                                            ))}
+                                            {category.find((c) => c._id === formData.cat_id)?.subCategoryNames?.map((name, idx) => (
+                                                <option key={idx} value={name}>
+                                                    {name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+
                                 <input
-                                    type="number"
-                                    name="product_price"
-                                    value={formData.product_price || ""}
+                                    type="text"
+                                    name="product_name"
+                                    value={formData.product_name.toUpperCase()}
                                     onChange={handleChange}
-                                    placeholder="Price"
+                                    placeholder="Product Name"
                                     className="w-full border p-2 rounded"
+                                    disabled={editingProduct?.isSentForApproval}
                                 />
                                 <input
-                                    type="number"
-                                    name="product_sale_price"
-                                    value={formData.product_sale_price || ""}
+                                    type="text"
+                                    name="product_sku"
+                                    value={formData.product_sku}
                                     onChange={handleChange}
-                                    placeholder="Sale Price"
+                                    placeholder="Product SKU"
                                     className="w-full border p-2 rounded"
+                                    disabled={editingProduct?.isSentForApproval}
                                 />
-                            </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input
+                                        type="number"
+                                        name="product_price"
+                                        value={formData.product_price || ""}
+                                        onChange={handleChange}
+                                        placeholder="Price"
+                                        className="w-full border p-2 rounded"
+                                    />
+                                    <input
+                                        type="number"
+                                        name="product_sale_price"
+                                        value={formData.product_sale_price || ""}
+                                        onChange={handleChange}
+                                        placeholder="Sale Price"
+                                        className="w-full border p-2 rounded"
+                                    />
+                                </div>
 
-                            <textarea
-                                name="product_description"
-                                value={formData.product_description}
-                                onChange={handleChange}
-                                placeholder="Product Description"
-                                className="w-full border p-2 rounded"
-                            />
+                                <textarea
+                                    name="product_description"
+                                    value={formData.product_description}
+                                    onChange={handleChange}
+                                    placeholder="Product Description"
+                                    className="w-full border p-2 rounded"
+                                    disabled={editingProduct?.isSentForApproval}
+                                />
 
-                            {/* Multiple Images */}
-                            <label htmlFor="product_image" className="block text-gray-700">
-                                Product Image
-                            </label>
-                            <input
-                                id="product_image"
-                                type="file"
-                                multiple
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="w-full border p-2 rounded"
-                            />
-                            {/* Show kept old images */}
-                            <div className="flex gap-2 flex-wrap mt-2">
-                                {keptImages.map((img, idx) => (
-                                    <div key={idx} className="relative">
-                                        <img
-                                            src={img}
-                                            alt="kept"
-                                            className="w-16 h-16 object-cover rounded"
+                                {/* Multiple Images */}
+                                <label htmlFor="product_image" className="block text-gray-700">
+                                    Product Image
+                                </label>
+                                <input
+                                    id="product_image"
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="w-full border p-2 rounded"
+                                    disabled={editingProduct?.isSentForApproval}
+                                />
+                                {/* Show kept old images */}
+                                <div className="flex gap-2 flex-wrap mt-2">
+                                    {keptImages.map((img, idx) => (
+                                        <div key={idx} className="relative">
+                                            <img
+                                                src={img}
+                                                alt="kept"
+                                                className="w-16 h-16 object-cover rounded"
+                                                disabled={editingProduct?.isSentForApproval}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeExistingImage(idx)}
+                                                className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
+                                                disabled={editingProduct?.isSentForApproval}
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Show new uploaded previews */}
+                                <div className="flex gap-2 flex-wrap mt-2">
+                                    {images.map((file, idx) => (
+                                        <div key={idx} className="relative">
+                                            <img
+                                                src={URL.createObjectURL(file)}
+                                                alt="new"
+                                                className="w-16 h-16 object-cover rounded"
+                                                disabled={editingProduct?.isSentForApproval}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeNewImage(idx)}
+                                                className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
+                                                disabled={editingProduct?.isSentForApproval}
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Gender */}
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded"
+                                    disabled={editingProduct?.isSentForApproval}
+                                >
+                                    <option value="">Select Gender</option>
+                                    <option value="Men">Men</option>
+                                    <option value="Women">Women</option>
+                                    <option value="Unisex">Unisex</option>
+                                </select>
+
+                                {/* Sunglasses Fields */}
+                                {formData.subCategoryName !== "Contact Lenses" && (
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            name="frame_material"
+                                            value={formData.frame_material}
+                                            onChange={handleChange}
+                                            placeholder="Frame Material"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
                                         />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeExistingImage(idx)}
-                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
-                                        >
-                                            X
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Show new uploaded previews */}
-                            <div className="flex gap-2 flex-wrap mt-2">
-                                {images.map((file, idx) => (
-                                    <div key={idx} className="relative">
-                                        <img
-                                            src={URL.createObjectURL(file)}
-                                            alt="new"
-                                            className="w-16 h-16 object-cover rounded"
+                                        <input
+                                            type="text"
+                                            name="frame_shape"
+                                            value={formData.frame_shape}
+                                            onChange={handleChange}
+                                            placeholder="Frame Shape"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
                                         />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeNewImage(idx)}
-                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
-                                        >
-                                            X
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
+                                        <input
+                                            type="text"
+                                            name="frame_color"
+                                            value={formData.frame_color}
+                                            onChange={handleChange}
+                                            placeholder="Frame Color"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="frame_fit"
+                                            value={formData.frame_fit}
+                                            onChange={handleChange}
+                                            placeholder="Frame Fit"
+                                            className="w-full border p-2 rounded "
+                                            disabled={editingProduct?.isSentForApproval}
 
-                            {/* Gender */}
-                            <select
-                                name="gender"
-                                value={formData.gender}
-                                onChange={handleChange}
-                                className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Contact Lens Fields */}
+                                {formData.subCategoryName === "Contact Lenses" && (
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            name="type"
+                                            value={formData.type}
+                                            onChange={handleChange}
+                                            placeholder="Lens Type (Daily/Monthly)"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="material"
+                                            value={formData.material}
+                                            onChange={handleChange}
+                                            placeholder="Material"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="manufacturer"
+                                            value={formData.manufacturer}
+                                            onChange={handleChange}
+                                            placeholder="Manufacturer"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="water_content"
+                                            value={formData.water_content}
+                                            onChange={handleChange}
+                                            placeholder="Water Content (e.g., 55%)"
+                                            className="w-full border p-2 rounded"
+                                            disabled={editingProduct?.isSentForApproval}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Lens Fields */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input
+                                        type="text"
+                                        name="product_lens_title1"
+                                        value={formData.product_lens_title1}
+                                        onChange={handleChange}
+                                        placeholder="Lens Title 1"
+                                        className="w-full border p-2 rounded"
+                                        disabled={editingProduct?.isSentForApproval}
+                                    />
+                                    <input
+                                        type="text"
+                                        name="product_lens_description1"
+                                        value={formData.product_lens_description1}
+                                        onChange={handleChange}
+                                        placeholder="Lens Description 1"
+                                        className="w-full border p-2 rounded"
+                                        disabled={editingProduct?.isSentForApproval}
+                                    />
+                                </div>
+
+                                {/* Lens Image 1 */}
+                                <div>
+                                    <label className="block text-gray-700">Lens Image 1</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setLensImage1(e.target.files[0])}
+                                        className="w-full border p-2 rounded"
+                                        disabled={editingProduct?.isSentForApproval}
+                                    />
+                                    {lensImage1 && (
+                                        <div className="relative inline-block mt-2">
+                                            <img
+                                                src={
+                                                    typeof lensImage1 === "string"
+                                                        ? lensImage1
+                                                        : URL.createObjectURL(lensImage1)
+                                                }
+                                                alt="lens1"
+                                                className="w-20 h-20 object-cover rounded"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setLensImage1(null)}
+                                                className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input
+                                        type="text"
+                                        name="product_lens_title2"
+                                        value={formData.product_lens_title2}
+                                        onChange={handleChange}
+                                        placeholder="Lens Title 2"
+                                        className="w-full border p-2 rounded"
+                                        disabled={editingProduct?.isSentForApproval}
+                                    />
+                                    <input
+                                        type="text"
+                                        name="product_lens_description2"
+                                        value={formData.product_lens_description2}
+                                        onChange={handleChange}
+                                        placeholder="Lens Description 2"
+                                        className="w-full border p-2 rounded"
+                                        disabled={editingProduct?.isSentForApproval}
+                                    />
+                                </div>
+
+                                {/* Lens Image 2 */}
+                                <div>
+                                    <label className="block text-gray-700">Lens Image 2</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setLensImage2(e.target.files[0])}
+                                        className="w-full border p-2 rounded"
+                                        disabled={editingProduct?.isSentForApproval}
+                                    />
+                                    {lensImage2 && (
+                                        <div className="relative inline-block mt-2">
+                                            <img
+                                                src={
+                                                    typeof lensImage2 === "string"
+                                                        ? lensImage2
+                                                        : URL.createObjectURL(lensImage2)
+                                                }
+                                                alt="lens2"
+                                                className="w-20 h-20 object-cover rounded"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setLensImage2(null)}
+                                                className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex justify-end space-x-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setOpen(false)}
+                                        className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:cursor-pointer"
+                                    >
+                                        {editId ? "Update" : "Submit"}
+                                    </button>
+                                </div>
+                            </form>
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl hover:cursor-pointer"
                             >
-                                <option value="">Select Gender</option>
-                                <option value="Men">Men</option>
-                                <option value="Women">Women</option>
-                                <option value="Unisex">Unisex</option>
-                            </select>
-
-                            {/* Sunglasses Fields */}
-                            {formData.subCategoryName !== "Contact Lenses" && (
-                                <div className="grid grid-cols-2 gap-4">
-                                    <input
-                                        type="text"
-                                        name="frame_material"
-                                        value={formData.frame_material}
-                                        onChange={handleChange}
-                                        placeholder="Frame Material"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="frame_shape"
-                                        value={formData.frame_shape}
-                                        onChange={handleChange}
-                                        placeholder="Frame Shape"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="frame_color"
-                                        value={formData.frame_color}
-                                        onChange={handleChange}
-                                        placeholder="Frame Color"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="frame_fit"
-                                        value={formData.frame_fit}
-                                        onChange={handleChange}
-                                        placeholder="Frame Fit"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Contact Lens Fields */}
-                            {formData.subCategoryName === "Contact Lenses" && (
-                                <div className="grid grid-cols-2 gap-4">
-                                    <input
-                                        type="text"
-                                        name="type"
-                                        value={formData.type}
-                                        onChange={handleChange}
-                                        placeholder="Lens Type (Daily/Monthly)"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="material"
-                                        value={formData.material}
-                                        onChange={handleChange}
-                                        placeholder="Material"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="manufacturer"
-                                        value={formData.manufacturer}
-                                        onChange={handleChange}
-                                        placeholder="Manufacturer"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="water_content"
-                                        value={formData.water_content}
-                                        onChange={handleChange}
-                                        placeholder="Water Content (e.g., 55%)"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Lens Fields */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <input
-                                    type="text"
-                                    name="product_lens_title1"
-                                    value={formData.product_lens_title1}
-                                    onChange={handleChange}
-                                    placeholder="Lens Title 1"
-                                    className="w-full border p-2 rounded"
-                                />
-                                <input
-                                    type="text"
-                                    name="product_lens_description1"
-                                    value={formData.product_lens_description1}
-                                    onChange={handleChange}
-                                    placeholder="Lens Description 1"
-                                    className="w-full border p-2 rounded"
-                                />
-                            </div>
-
-                            {/* Lens Image 1 */}
-                            <div>
-                                <label className="block text-gray-700">Lens Image 1</label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => setLensImage1(e.target.files[0])}
-                                    className="w-full border p-2 rounded"
-                                />
-                                {lensImage1 && (
-                                    <div className="relative inline-block mt-2">
-                                        <img
-                                            src={
-                                                typeof lensImage1 === "string"
-                                                    ? lensImage1
-                                                    : URL.createObjectURL(lensImage1)
-                                            }
-                                            alt="lens1"
-                                            className="w-20 h-20 object-cover rounded"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setLensImage1(null)}
-                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
-                                        >
-                                            X
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <input
-                                    type="text"
-                                    name="product_lens_title2"
-                                    value={formData.product_lens_title2}
-                                    onChange={handleChange}
-                                    placeholder="Lens Title 2"
-                                    className="w-full border p-2 rounded"
-                                />
-                                <input
-                                    type="text"
-                                    name="product_lens_description2"
-                                    value={formData.product_lens_description2}
-                                    onChange={handleChange}
-                                    placeholder="Lens Description 2"
-                                    className="w-full border p-2 rounded"
-                                />
-                            </div>
-
-                            {/* Lens Image 2 */}
-                            <div>
-                                <label className="block text-gray-700">Lens Image 2</label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => setLensImage2(e.target.files[0])}
-                                    className="w-full border p-2 rounded"
-                                />
-                                {lensImage2 && (
-                                    <div className="relative inline-block mt-2">
-                                        <img
-                                            src={
-                                                typeof lensImage2 === "string"
-                                                    ? lensImage2
-                                                    : URL.createObjectURL(lensImage2)
-                                            }
-                                            alt="lens2"
-                                            className="w-20 h-20 object-cover rounded"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setLensImage2(null)}
-                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1 hover:cursor-pointer"
-                                        >
-                                            X
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="flex justify-end space-x-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setOpen(false)}
-                                    className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:cursor-pointer"
-                                >
-                                    {editId ? "Update" : "Submit"}
-                                </button>
-                            </div>
-                        </form>
-                        <button
-                            onClick={() => setOpen(false)}
-                            className="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl hover:cursor-pointer"
-                        >
-                            <IoIosCloseCircle />
-                        </button>
+                                <IoIosCloseCircle />
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 

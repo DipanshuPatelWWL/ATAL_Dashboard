@@ -54,6 +54,10 @@ const CustomerTracking = lazy(() =>
   import("./page/ordderTracking/CustomerTracking")
 );
 
+const AddPolicy = lazy(() =>
+  import("./page/insurance/AddPolicy")
+);
+
 function App() {
   return (
     <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
@@ -135,6 +139,7 @@ function App() {
             <Route path="profile" element={<UpdateCompanyProfile />} />
             <Route path="team" element={<CompanyHome />} />
             <Route path="faq" element={<CompanyHome />} />
+            <Route path="add-policy" element={<AddPolicy />} />
           </Route>
 
           {/* ---------- fallback ---------- */}
