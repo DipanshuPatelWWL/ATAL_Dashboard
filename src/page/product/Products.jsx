@@ -37,6 +37,7 @@ const Products = () => {
     material: "",
     manufacturer: "",
     water_content: "",
+    stockAvailability: "",
   });
   const [editId, setEditId] = useState(null);
 
@@ -68,7 +69,10 @@ const Products = () => {
   // Handle input
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // Image change handler
@@ -110,6 +114,7 @@ const Products = () => {
       material: "",
       manufacturer: "",
       water_content: "",
+      stockAvailability: "",
     });
     setImages([]);
     setKeptImages([]);
@@ -148,6 +153,7 @@ const Products = () => {
       material: product.material || "",
       manufacturer: product.manufacturer || "",
       water_content: product.water_content || "",
+      stockAvailability: product.stockAvailability || "",
     });
     setImages([]);
     setKeptImages(
@@ -226,6 +232,7 @@ const Products = () => {
 
     try {
       const payload = new FormData();
+      const stockValue = Number(formData.stockAvailability);
 
       // 🔹 Basic product fields
       payload.append("cat_id", formData.cat_id);
@@ -240,6 +247,7 @@ const Products = () => {
       payload.append("product_sale_price", formData.product_sale_price);
       payload.append("product_description", formData.product_description);
       payload.append("gender", formData.gender);
+      payload.append("stockAvailability", isNaN(stockValue) ? 0 : stockValue);
 
       // 🔹 Sunglasses fields
       if (formData.subCategoryName !== "Contact Lenses") {
@@ -567,6 +575,15 @@ const Products = () => {
                   className="w-full border p-2 rounded"
                 />
               </div>
+
+              <input
+                type="number"
+                name="stockAvailability"
+                value={formData.stockAvailability || ""}
+                onChange={handleChange}
+                placeholder="Stock Availability"
+                className="w-full border p-2 rounded"
+              />
 
               <textarea
                 name="product_description"

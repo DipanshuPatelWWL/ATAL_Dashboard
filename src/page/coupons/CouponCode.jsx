@@ -25,7 +25,6 @@ const CouponCode = () => {
       const res = await API.get("/getCouponCode");
       if (res.data.success) {
         setCouponData(res.data.data);
-        console.log("data", res.data.data);
       }
     } catch (err) {
       console.error(err);
