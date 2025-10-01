@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import API from "../../API/Api";
+import API, { IMAGE_URL } from "../../API/Api"; //  Make sure IMAGE_URL is imported
 
 const UpdateVendorProfile = () => {
+    const [profileImage, setProfileImage] = useState(null);
+    const [profilePreview, setProfilePreview] = useState(null)
     const [formData, setFormData] = useState({
         companyName: "",
         operatingName: "",
@@ -58,7 +60,6 @@ const UpdateVendorProfile = () => {
                     withCredentials: true,
                 });
 
-
                 const data = res.data.vendor || {};
                 setFormData((prev) => ({
                     ...prev,
@@ -93,8 +94,12 @@ const UpdateVendorProfile = () => {
                     remittanceEmail: data.remittanceEmail || "",
                     termsAccepted: false, // Must re-accept terms
                 }));
+
+                if (data.profileImage) {
+                    setProfileImage(data.profileImage); // backend filename/path
+                    setProfilePreview(null); // reset preview
+                }
                 setCategoriesInput((data.categories || []).join(", "));
-                // Initialize as empty since not returned by getVendorById
                 setCertificationFiles(data.certifications || []);
                 setCertificateFiles(data.certificates || []);
             } catch (err) {
@@ -135,7 +140,7 @@ const UpdateVendorProfile = () => {
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
-    // Handle categories input
+    // 🔹 Handle categories input
     const handleCategoriesChange = (e) => {
         setCategoriesInput(e.target.value);
         const values = e.target.value
@@ -143,6 +148,15 @@ const UpdateVendorProfile = () => {
             .map((v) => v.trim())
             .filter(Boolean);
         setFormData({ ...formData, categories: values });
+    };
+
+    // 🔹 Handle profile image
+    const handleProfileImage = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfileImage(file); // File for upload
+            setProfilePreview(URL.createObjectURL(file)); // Show preview
+        }
     };
 
     // 🔹 Handle file inputs
@@ -188,6 +202,11 @@ const UpdateVendorProfile = () => {
                 }
             });
 
+            //  Append profile image if it's a File
+            if (profileImage instanceof File) {
+                uploadData.append("profileImage", profileImage);
+            }
+
             certificationFiles.forEach((file) => {
                 if (file instanceof File) {
                     uploadData.append("certifications", file);
@@ -203,6 +222,13 @@ const UpdateVendorProfile = () => {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             });
+
+            //  Update profile image from backend after save
+            if (res.data?.vendor?.profileImage) {
+                window.dispatchEvent(new Event("profileUpdated"));
+                setProfileImage(res.data.vendor.profileImage);
+                setProfilePreview(null);
+            }
 
             Swal.fire("Success", res.data.message, "success");
         } catch (err) {
@@ -243,6 +269,32 @@ const UpdateVendorProfile = () => {
                             <p className="text-red-500 text-sm">{errors.companyName}</p>
                         )}
                     </div>
+
+                    <div>
+                        <label className="block text-sm font-medium mb-1 text-gray-600">
+                            Profile Image
+                        </label>
+                        <input
+                            type="file"
+                            onChange={handleProfileImage}
+                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-400 outline-none"
+                            accept="image/*"
+                        />
+                        {(profilePreview || profileImage) && (
+                            <div className="mt-3">
+                                <img
+                                    src={
+                                        profilePreview
+                                            ? profilePreview
+                                            : `${IMAGE_URL}${profileImage}` // from backend
+                                    }
+                                    alt="Profile Preview"
+                                    className="w-24 h-24 object-cover rounded-full border shadow"
+                                />
+                            </div>
+                        )}
+                    </div>
+
                     <div>
                         <label htmlFor="operatingName" className="block font-medium text-gray-700">
                             Operating/Trade Name
@@ -653,6 +705,7 @@ const UpdateVendorProfile = () => {
                 )}
             </div>
 
+
             {/* Submit */}
             <button
                 type="submit"
@@ -665,8 +718,6 @@ const UpdateVendorProfile = () => {
                 {loading ? "Submitting..." : "Submit Profile"}
             </button>
         </form>
-
-
     );
 };
 

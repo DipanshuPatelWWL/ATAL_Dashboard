@@ -50,9 +50,6 @@ const CouponCode = lazy(() => import("./page/coupons/CouponCode"));
 const EyeExam = lazy(() => import("./page/eyeExamPage/EyeExam"));
 const AdminOrderUpdate = lazy(() =>
   import("./page/ordderTracking/AdminOrderUpdate")
-); // fixed typo "ordderTracking"
-const CustomerTracking = lazy(() =>
-  import("./page/ordderTracking/CustomerTracking")
 );
 
 const AddPolicy = lazy(() =>
@@ -101,10 +98,6 @@ function App() {
             <Route path="doctor-schedule" element={<DoctorSchedule />} />
             <Route path="vendor-product" element={<VendorApprovalProduct />} />
             <Route path="admin-order-tracking" element={<AdminOrderUpdate />} />
-            <Route
-              path="customer-order-tracking"
-              element={<CustomerTracking />}
-            />
           </Route>
 
           {/* ------------ vendor ------------ */}

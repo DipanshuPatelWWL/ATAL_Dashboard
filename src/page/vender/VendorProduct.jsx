@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import API, { IMAGE_URL } from "../../API/Api";
-import { FaPlus, FaEdit } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 
 const Products = () => {
@@ -37,6 +37,7 @@ const Products = () => {
         material: "",
         manufacturer: "",
         water_content: "",
+        stock: "",
     });
     const [editId, setEditId] = useState(null);
     const [editingProduct, setEditingProduct] = useState(null);
@@ -107,6 +108,7 @@ const Products = () => {
             material: "",
             manufacturer: "",
             water_content: "",
+            stock: "",
         });
         setImages([]);
         setKeptImages([]);
@@ -139,6 +141,7 @@ const Products = () => {
             material: product.material || "",
             manufacturer: product.manufacturer || "",
             water_content: product.water_content || "",
+            stock: product.stock || "",
         });
         setKeptImages(
             product.product_image_collection?.map((img) =>
@@ -163,7 +166,6 @@ const Products = () => {
         setEditId(product._id);
         setOpen(true);
     };
-
 
 
     // handleSubmit remains unchanged to keep all form fields
@@ -454,6 +456,14 @@ const Products = () => {
                                         className="w-full border p-2 rounded"
                                     />
                                 </div>
+                                <input
+                                    type="number"
+                                    name="stock"
+                                    value={formData.stock || ""}
+                                    onChange={handleChange}
+                                    placeholder="Stock Availablity"
+                                    className="w-full border p-2 rounded"
+                                />
 
                                 <textarea
                                     name="product_description"

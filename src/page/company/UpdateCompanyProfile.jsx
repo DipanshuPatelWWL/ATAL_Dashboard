@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import API from "../../API/Api";
+import API, { IMAGE_URL } from "../../API/Api";
 import Swal from "sweetalert2";
 
 export default function UpdateCompanyProfile() {
+    const [profileImage, setProfileImage] = useState(null); // backend filename OR File
+    const [profilePreview, setProfilePreview] = useState(null);
     const [formData, setFormData] = useState({
         companyName: "",
         companyEmail: "",
@@ -51,6 +53,15 @@ export default function UpdateCompanyProfile() {
         setFiles((prev) => ({ ...prev, [name]: selectedFiles[0] }));
     };
 
+    // 🔹 Handle profile image
+    const handleProfileImage = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfileImage(file); // File for upload
+            setProfilePreview(URL.createObjectURL(file)); // Show preview
+        }
+    };
+
     // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -69,6 +80,8 @@ export default function UpdateCompanyProfile() {
             for (let key in formData) {
                 if (key === "claim") {
                     formData.claim.forEach((c) => data.append("claim", c));
+                } else if (key === "companyPassword" && !formData[key]) {
+                    continue; // skip empty password
                 } else {
                     data.append(key, formData[key]);
                 }
@@ -80,10 +93,20 @@ export default function UpdateCompanyProfile() {
                 }
             }
 
-            await API.put(`/companyProfile/${companyId}`, data, {
+            if (profileImage instanceof File) {
+                data.append("profileImage", profileImage);
+            }
+
+            const res = await API.put(`/companyProfile/${companyId}`, data, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             });
+
+            if (res.data?.company?.profileImage) {
+                window.dispatchEvent(new Event("profileUpdated"));
+                setProfileImage(res.data.company.profileImage); //  persist backend filename
+                setProfilePreview(null); // clear preview
+            }
 
             Swal.fire("Success", "Company profile updated successfully!", "success");
         } catch (error) {
@@ -126,6 +149,11 @@ export default function UpdateCompanyProfile() {
                     serviceStandards: data.serviceStandards || "",
                     agreementAccepted: data.agreementAccepted || false,
                 }));
+
+                //  Load existing profile image from backend
+                if (data.profileImage) {
+                    setProfileImage(data.profileImage);
+                }
             } catch (err) {
                 Swal.fire(
                     "Error",
@@ -170,6 +198,32 @@ export default function UpdateCompanyProfile() {
                                 required
                             />
                         </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-1 text-gray-600">
+                                Profile Image
+                            </label>
+                            <input
+                                type="file"
+                                onChange={handleProfileImage}
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-400 outline-none"
+                                accept="image/*"
+                            />
+                            {(profilePreview || profileImage) && (
+                                <div className="mt-3">
+                                    <img
+                                        src={
+                                            profilePreview
+                                                ? profilePreview
+                                                : `${IMAGE_URL}${profileImage}`
+                                        }
+                                        alt="Profile Preview"
+                                        className="w-24 h-24 object-cover rounded-full border shadow"
+                                    />
+                                </div>
+                            )}
+                        </div>
+
                         <div>
                             <label className="block font-medium mb-1">Password</label>
                             <input
