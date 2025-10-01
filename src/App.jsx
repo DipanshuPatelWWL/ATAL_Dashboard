@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
+import VendorProductOrder from "./page/vender/VendorProductOrder";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -111,7 +112,7 @@ function App() {
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<VendorHome />} />
             <Route path="product" element={<VendorProducts />} />
-            <Route path="order" element={<VendorHome />} />
+            <Route path="order" element={<VendorProductOrder />} />
             <Route path="profile" element={<UpdateVendorProfile />} />
             <Route path="faq" element={<VendorHome />} />
           </Route>
