@@ -19,7 +19,8 @@ const Products = () => {
     subCat_id: "",
     subCategoryName: "",
     product_name: "",
-    product_sku: "",
+    product_size: [], 
+    product_color: [], 
     product_price: "",
     product_sale_price: "",
     product_description: "",
@@ -91,7 +92,8 @@ const Products = () => {
       subCat_id: "",
       subCategoryName: "",
       product_name: "",
-      product_sku: "",
+      product_size: [],
+      product_color: [],
       product_price: "",
       product_sale_price: "",
       product_description: "",
@@ -124,7 +126,12 @@ const Products = () => {
       subCat_id: product.subCat_id || "",
       subCategoryName: product.subCategoryName || "",
       product_name: product.product_name || "",
-      product_sku: product.product_sku || "",
+     product_size: product.product_size
+  ? product.product_size
+      .flatMap(item => item.split(",").map(s => s.trim()))
+  : [],
+
+      product_color: product.product_color || [],
       product_price: product.product_price || "",
       product_sale_price: product.product_sale_price || "",
       product_description: product.product_description || "",
@@ -200,8 +207,12 @@ const Products = () => {
       Swal.fire("Error", "Product name is required", "error");
       return;
     }
-    if (!formData.product_sku) {
+    if (!formData.product_size) {
       Swal.fire("Error", "Product SKU is required", "error");
+      return;
+    }
+    if (!formData.product_color) {
+      Swal.fire("Error", "Product Color is required", "error");
       return;
     }
     if (!formData.product_price) {
@@ -222,7 +233,9 @@ const Products = () => {
       payload.append("subCat_id", formData.subCat_id);
       payload.append("subCategoryName", formData.subCategoryName);
       payload.append("product_name", formData.product_name);
-      payload.append("product_sku", formData.product_sku);
+      payload.append("product_size", formData.product_size);
+      
+      payload.append("product_color", formData.product_color);
       payload.append("product_price", formData.product_price);
       payload.append("product_sale_price", formData.product_sale_price);
       payload.append("product_description", formData.product_description);
@@ -246,9 +259,15 @@ const Products = () => {
 
       // 🔹 Lens details
       payload.append("product_lens_title1", formData.product_lens_title1);
-      payload.append("product_lens_description1", formData.product_lens_description1);
+      payload.append(
+        "product_lens_description1",
+        formData.product_lens_description1
+      );
       payload.append("product_lens_title2", formData.product_lens_title2);
-      payload.append("product_lens_description2", formData.product_lens_description2);
+      payload.append(
+        "product_lens_description2",
+        formData.product_lens_description2
+      );
 
       // 🔹 Existing images
       payload.append(
@@ -257,7 +276,9 @@ const Products = () => {
       );
 
       // 🔹 New uploaded images
-      images.forEach((file) => payload.append("product_image_collection", file));
+      images.forEach((file) =>
+        payload.append("product_image_collection", file)
+      );
 
       if (lensImage1 && typeof lensImage1 !== "string") {
         payload.append("product_lens_image1", lensImage1);
@@ -282,9 +303,25 @@ const Products = () => {
       fetchProducts();
       setOpen(false);
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Operation failed", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Operation failed",
+        "error"
+      );
     }
   };
+
+  const toggleSize = (size) => {
+  let updatedSizes;
+  if (selectedSize.includes(size)) {
+    updatedSizes = selectedSize.filter((s) => s !== size);
+  } else {
+    updatedSizes = [...selectedSize, size];
+  }
+  setSelectedSize(updatedSizes);
+  setFormData((prev) => ({ ...prev, product_size: updatedSizes })); //  keep formData in sync
+};
+
 
   return (
     <div className="p-6">
@@ -304,7 +341,8 @@ const Products = () => {
         <thead>
           <tr className="bg-gray-100">
             <th className="border px-4 py-2 border-black">Name</th>
-            <th className="border px-4 py-2 border-black">SKU</th>
+            <th className="border px-4 py-2 border-black">Size</th>
+            <th className="border px-4 py-2 border-black">Color</th>
             <th className="border px-4 py-2 border-black">Price</th>
             <th className="border px-4 py-2 border-black">Sale Price</th>
             <th className="border px-4 py-2 border-black">Category</th>
@@ -320,7 +358,10 @@ const Products = () => {
                 {pro.product_name}
               </td>
               <td className="border px-4 py-2 border-black text-center">
-                {pro.product_sku}
+                {pro.product_size}
+              </td>
+              <td className="border px-4 py-2 border-black text-center">
+                {pro.product_color}
               </td>
               <td className="border px-4 py-2 border-black text-center">
                 {pro.product_price}
@@ -384,7 +425,9 @@ const Products = () => {
                 <select
                   value={formData.cat_id}
                   onChange={(e) => {
-                    const selectedCat = category.find((c) => c._id === e.target.value);
+                    const selectedCat = category.find(
+                      (c) => c._id === e.target.value
+                    );
                     setFormData({
                       ...formData,
                       cat_id: selectedCat?._id || "",
@@ -411,30 +454,41 @@ const Products = () => {
                   <select
                     value={formData.subCat_id}
                     onChange={(e) => {
-                      const selectedCat = category.find((c) => c._id === formData.cat_id);
+                      const selectedCat = category.find(
+                        (c) => c._id === formData.cat_id
+                      );
                       const selectedSub =
-                        selectedCat?.subCategories?.find((s) => s._id === e.target.value) || null;
+                        selectedCat?.subCategories?.find(
+                          (s) => s._id === e.target.value
+                        ) || null;
                       const selectedName =
-                        selectedCat?.subCategoryNames?.find((s) => s === e.target.value) || "";
+                        selectedCat?.subCategoryNames?.find(
+                          (s) => s === e.target.value
+                        ) || "";
                       setFormData({
                         ...formData,
                         subCat_id: selectedSub?._id || selectedName || "",
-                        subCategoryName: selectedSub?.name || selectedName || "",
+                        subCategoryName:
+                          selectedSub?.name || selectedName || "",
                       });
                     }}
                     className="w-full border rounded p-2"
                   >
                     <option value="">Select Subcategory</option>
-                    {category.find((c) => c._id === formData.cat_id)?.subCategories?.map((sub) => (
-                      <option key={sub._id} value={sub._id}>
-                        {sub.name}
-                      </option>
-                    ))}
-                    {category.find((c) => c._id === formData.cat_id)?.subCategoryNames?.map((name, idx) => (
-                      <option key={idx} value={name}>
-                        {name}
-                      </option>
-                    ))}
+                    {category
+                      .find((c) => c._id === formData.cat_id)
+                      ?.subCategories?.map((sub) => (
+                        <option key={sub._id} value={sub._id}>
+                          {sub.name}
+                        </option>
+                      ))}
+                    {category
+                      .find((c) => c._id === formData.cat_id)
+                      ?.subCategoryNames?.map((name, idx) => (
+                        <option key={idx} value={name}>
+                          {name}
+                        </option>
+                      ))}
                   </select>
                 </div>
               )}
@@ -447,12 +501,52 @@ const Products = () => {
                 placeholder="Product Name"
                 className="w-full border p-2 rounded"
               />
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">
+                  Product Sizes
+                </label>
+                <div className="flex gap-4">
+                  {["S", "M", "L"].map((size) => (
+                    <label key={size} className="flex items-center gap-1">
+                      <input
+                        type="checkbox"
+                        value={size}
+                        checked={formData.product_size.includes(size)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              product_size: [...formData.product_size, size],
+                            });
+                          } else {
+                            setFormData({
+                              ...formData,
+                              product_size: formData.product_size.filter(
+                                (s) => s !== size
+                              ),
+                            });
+                          }
+                        }}
+                      />
+                      <span>{size}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               <input
                 type="text"
-                name="product_sku"
-                value={formData.product_sku}
-                onChange={handleChange}
-                placeholder="Product SKU"
+                name="product_color"
+                value={formData.product_color.join(", ")} // array → string
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    product_color: e.target.value
+                      .split(",")
+                      .map((c) => c.trim()), // string → array
+                  })
+                }
+                placeholder="Enter colors (Black, Red, Blue)"
                 className="w-full border p-2 rounded"
               />
               <div className="grid grid-cols-2 gap-4">
