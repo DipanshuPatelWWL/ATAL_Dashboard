@@ -6,13 +6,14 @@ const UpdateAdminProfile = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    photo: null,
     password: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // 🔹 Fetch admin profile
+  // Fetch admin profile
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -33,6 +34,7 @@ const UpdateAdminProfile = () => {
           name: data.name || "",
           email: data.email || "",
           password: "", // keep empty, only update if changed
+          photo: data.photo || null, // existing photo URL from server
         });
       } catch (err) {
         Swal.fire(
@@ -46,7 +48,7 @@ const UpdateAdminProfile = () => {
     fetchProfile();
   }, []);
 
-  // 🔹 Validate form fields
+  //  Validate form fields
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
@@ -59,30 +61,38 @@ const UpdateAdminProfile = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // 🔹 Handle input change
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // 🔹 Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
-      Swal.fire("Validation Error", "Please fix the errors in the form", "warning");
+      Swal.fire(
+        "Validation Error",
+        "Please fix the errors in the form",
+        "warning"
+      );
       return;
     }
 
-
-
     setLoading(true);
     try {
-      const adminData = JSON.parse(localStorage.getItem("user"));
-      const adminId = adminData?._id;
-      const res = await API.put(`/updateAdminProfile/${adminId}`, formData, {
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      if (formData.password) data.append("password", formData.password);
+      if (formData.photo && formData.photo instanceof File) {
+        data.append("photo", formData.photo);
+      }
+
+      const res = await API.put(`/profile`, data, {
         withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       Swal.fire("Success", res.data.message, "success");
@@ -144,6 +154,22 @@ const UpdateAdminProfile = () => {
           </div>
 
           <div>
+            <label htmlFor="photo" className="block font-medium text-gray-700">
+              Profile Photo
+            </label>
+            <input
+              type="file"
+              id="photo"
+              name="photo"
+              accept="image/*"
+              onChange={(e) =>
+                setFormData({ ...formData, photo: e.target.files[0] })
+              }
+              className="input"
+            />
+          </div>
+
+          <div>
             <label
               htmlFor="password"
               className="block font-medium text-gray-700"
@@ -167,10 +193,11 @@ const UpdateAdminProfile = () => {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full font-semibold p-3 rounded-lg ${loading
-          ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-          : "bg-red-600 hover:bg-red-700 text-white"
-          }`}
+        className={`w-full font-semibold p-3 rounded-lg ${
+          loading
+            ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+            : "bg-red-600 hover:bg-red-700 text-white"
+        }`}
       >
         {loading ? "Submitting..." : "Update Profile"}
       </button>
