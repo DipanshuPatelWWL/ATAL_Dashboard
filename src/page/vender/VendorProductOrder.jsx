@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../../API/Api";
 import Swal from "sweetalert2";
 
-const AdminOrderUpdate = () => {
+const VendorProductOrder = () => {
     const [orderId, setOrderId] = useState("");
     const [status, setStatus] = useState("Placed");
     const [trackingNumber, setTrackingNumber] = useState("");
@@ -13,7 +13,7 @@ const AdminOrderUpdate = () => {
     // Fetch all orders
     const fetchOrders = async () => {
         try {
-            const { data } = await API.get("/allOrder");
+            const { data } = await API.get("/vendor-orders");
             setAllData(data.orders || []);
         } catch (err) {
             Swal.fire({
@@ -85,7 +85,7 @@ const AdminOrderUpdate = () => {
                     >
                         <div>{data._id}</div>
                         <div className="ml-5">{data.userId}</div>
-                        <div className="ml-5">{data.orderStatus}</div>
+                        <div>{data.orderStatus}</div>
                         <div>{data.trackingNumber}</div>
 
                         {/* Display updated date in YYYY-MM-DD */}
@@ -137,12 +137,12 @@ const AdminOrderUpdate = () => {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center">
-                    <div className="bg-white rounded-lg shadow-lg w-[500px] p-6 relative">
+                    <div className="bg-white rounded-lg shadow-lg w-[500px] p-6 relative mt-30 ml-50">
                         <h3 className="text-lg font-bold mb-2">
                             Update Order {orderId ? `#${orderId}` : "(Loading...)"}
                         </h3>
 
-                        <div className="flex flex-wrap gap-4 mt-4">
+                        <div className="flex flex-wrap gap-4">
                             <select
                                 className="border p-2 w-full rounded"
                                 value={status}
@@ -197,4 +197,4 @@ const AdminOrderUpdate = () => {
     );
 };
 
-export default AdminOrderUpdate;
+export default VendorProductOrder;
