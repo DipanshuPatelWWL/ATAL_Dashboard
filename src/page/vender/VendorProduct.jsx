@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import API, { IMAGE_URL } from "../../API/Api";
-import { FaPlus, FaEdit } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 
 const Products = () => {
@@ -163,7 +163,6 @@ const Products = () => {
         setEditId(product._id);
         setOpen(true);
     };
-
 
 
     // handleSubmit remains unchanged to keep all form fields
