@@ -19,8 +19,8 @@ const Products = () => {
     subCat_id: "",
     subCategoryName: "",
     product_name: "",
-    product_size: [], 
-    product_color: [], 
+    product_size: [],
+    product_color: [],
     product_price: "",
     product_sale_price: "",
     product_description: "",
@@ -131,10 +131,10 @@ const Products = () => {
       subCat_id: product.subCat_id || "",
       subCategoryName: product.subCategoryName || "",
       product_name: product.product_name || "",
-     product_size: product.product_size
-  ? product.product_size
-      .flatMap(item => item.split(",").map(s => s.trim()))
-  : [],
+      product_size: product.product_size
+        ? product.product_size
+          .flatMap(item => item.split(",").map(s => s.trim()))
+        : [],
 
       product_color: product.product_color || [],
       product_price: product.product_price || "",
@@ -204,7 +204,7 @@ const Products = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔹 Basic validation
+    // Basic validation
     if (!formData.cat_id || !formData.cat_sec) {
       Swal.fire("Error", "Please select a category", "error");
       return;
@@ -234,14 +234,14 @@ const Products = () => {
       const payload = new FormData();
       const stockValue = Number(formData.stockAvailability);
 
-      // 🔹 Basic product fields
+      // Basic product fields
       payload.append("cat_id", formData.cat_id);
       payload.append("cat_sec", formData.cat_sec);
       payload.append("subCat_id", formData.subCat_id);
       payload.append("subCategoryName", formData.subCategoryName);
       payload.append("product_name", formData.product_name);
       payload.append("product_size", formData.product_size);
-      
+
       payload.append("product_color", formData.product_color);
       payload.append("product_price", formData.product_price);
       payload.append("product_sale_price", formData.product_sale_price);
@@ -249,7 +249,7 @@ const Products = () => {
       payload.append("gender", formData.gender);
       payload.append("stockAvailability", isNaN(stockValue) ? 0 : stockValue);
 
-      // 🔹 Sunglasses fields
+      // Sunglasses fields
       if (formData.subCategoryName !== "Contact Lenses") {
         payload.append("frame_material", formData.frame_material);
         payload.append("frame_shape", formData.frame_shape);
@@ -257,7 +257,7 @@ const Products = () => {
         payload.append("frame_fit", formData.frame_fit);
       }
 
-      // 🔹 Contact Lens fields
+      // Contact Lens fields
       if (formData.subCategoryName === "Contact Lenses") {
         payload.append("contact_type", formData.type);
         payload.append("material", formData.material);
@@ -265,7 +265,7 @@ const Products = () => {
         payload.append("water_content", formData.water_content);
       }
 
-      // 🔹 Lens details
+      // Lens details
       payload.append("product_lens_title1", formData.product_lens_title1);
       payload.append(
         "product_lens_description1",
@@ -277,13 +277,13 @@ const Products = () => {
         formData.product_lens_description2
       );
 
-      // 🔹 Existing images
+      // Existing images
       payload.append(
         "existingImages",
         JSON.stringify(keptImages.map((img) => img.replace(IMAGE_URL, "")))
       );
 
-      // 🔹 New uploaded images
+      // New uploaded images
       images.forEach((file) =>
         payload.append("product_image_collection", file)
       );
@@ -295,7 +295,7 @@ const Products = () => {
         payload.append("product_lens_image2", lensImage2);
       }
 
-      // 🔹 Send to backend
+      // Send to backend
       if (editId) {
         await API.put(`/updateProduct/${editId}`, payload, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -320,15 +320,15 @@ const Products = () => {
   };
 
   const toggleSize = (size) => {
-  let updatedSizes;
-  if (selectedSize.includes(size)) {
-    updatedSizes = selectedSize.filter((s) => s !== size);
-  } else {
-    updatedSizes = [...selectedSize, size];
-  }
-  setSelectedSize(updatedSizes);
-  setFormData((prev) => ({ ...prev, product_size: updatedSizes })); //  keep formData in sync
-};
+    let updatedSizes;
+    if (selectedSize.includes(size)) {
+      updatedSizes = selectedSize.filter((s) => s !== size);
+    } else {
+      updatedSizes = [...selectedSize, size];
+    }
+    setSelectedSize(updatedSizes);
+    setFormData((prev) => ({ ...prev, product_size: updatedSizes })); //  keep formData in sync
+  };
 
 
   return (

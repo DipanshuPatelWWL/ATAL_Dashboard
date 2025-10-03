@@ -44,7 +44,7 @@ const UpdateVendorProfile = () => {
     const [errors, setErrors] = useState({});
     const [categoriesInput, setCategoriesInput] = useState("");
 
-    // 🔹 Fetch vendor profile
+    // Fetch vendor profile
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -114,7 +114,7 @@ const UpdateVendorProfile = () => {
         fetchProfile();
     }, []);
 
-    // 🔹 Validate form fields
+    // Validate form fields
     const validateForm = () => {
         const newErrors = {};
         if (!formData.companyName) newErrors.companyName = "Company name is required";
@@ -130,7 +130,7 @@ const UpdateVendorProfile = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // 🔹 Handle input fields
+    // Handle input fields
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -140,7 +140,7 @@ const UpdateVendorProfile = () => {
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
-    // 🔹 Handle categories input
+    // Handle categories input
     const handleCategoriesChange = (e) => {
         setCategoriesInput(e.target.value);
         const values = e.target.value
@@ -150,7 +150,7 @@ const UpdateVendorProfile = () => {
         setFormData({ ...formData, categories: values });
     };
 
-    // 🔹 Handle profile image
+    // Handle profile image
     const handleProfileImage = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -159,7 +159,7 @@ const UpdateVendorProfile = () => {
         }
     };
 
-    // 🔹 Handle file inputs
+    // Handle file inputs
     const handleFileChange = (e, type) => {
         const files = Array.from(e.target.files);
         if (type === "certifications") {
@@ -169,7 +169,7 @@ const UpdateVendorProfile = () => {
         }
     };
 
-    // 🔹 Remove file
+    // Remove file
     const removeFile = (type, index) => {
         if (type === "certifications") {
             setCertificationFiles((prev) => prev.filter((_, i) => i !== index));
@@ -178,7 +178,7 @@ const UpdateVendorProfile = () => {
         }
     };
 
-    // 🔹 Submit form
+    // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
 
