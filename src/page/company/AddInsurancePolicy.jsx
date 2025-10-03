@@ -9,7 +9,7 @@ const AddInsurancePolicy = () => {
   const [policies, setPolicies] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    companyName:"",
+    companyName: "",
     policyDetails: "",
     billingType: "invoice",
     coverage: "",
@@ -18,23 +18,21 @@ const AddInsurancePolicy = () => {
   });
   const [editId, setEditId] = useState(null);
 
-   const getCompany = async () => {
-        try {
-            const companyData = JSON.parse(localStorage.getItem("user"));
-            const companyId = companyData?._id;
-            const res = await API.get(`/getCompanyById/${companyId}`, {
-                withCredentials: true,
-            });
-            // console.log(res.data);
-            setCompanyData(res.data.company);
-            // console.log("comp data", res.data.company.companyName);
-            
+  const getCompany = async () => {
+    try {
+      const companyData = JSON.parse(localStorage.getItem("user"));
+      const companyId = companyData?._id;
+      const res = await API.get(`/getCompanyById/${companyId}`, {
+        withCredentials: true,
+      });
+      setCompanyData(res.data.company);
 
-        } catch (error) {
-            console.log(error);
 
-        }
+    } catch (error) {
+      console.log(error);
+
     }
+  }
 
   // Fetch policies
   const fetchPolicies = async () => {
@@ -71,7 +69,7 @@ const AddInsurancePolicy = () => {
       }
       setShowModal(false);
       setFormData({
-        companyName:"",
+        companyName: "",
         policyDetails: "",
         billingType: "invoice",
         coverage: "",

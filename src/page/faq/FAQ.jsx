@@ -70,7 +70,6 @@ function FAQ() {
         },
       });
       setfaqdata(response.data.faqs);
-      //   console.log(response.data.faqs);
     } catch (err) {
       console.error(err);
     }
