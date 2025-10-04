@@ -39,7 +39,6 @@ const UpdateCompanyProfile = lazy(() =>
 const AdminCompanyDetails = lazy(() =>
   import("./page/company/AdminCompanyDetails")
 );
-const ContactLens = lazy(() => import("./page/contactLens/ContactLens"));
 const UpdateAdminProfile = lazy(() =>
   import("./page/admin/UpdateAdminProfile")
 );
