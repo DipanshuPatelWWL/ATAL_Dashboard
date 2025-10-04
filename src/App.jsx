@@ -96,7 +96,6 @@ function App() {
             <Route path="inquiries" element={<Inquiry />} />
             <Route path="disclaimer" element={<Disclaimer />} />
             <Route path="eye-services" element={<EyeService />} />
-            <Route path="contact-lens" element={<ContactLens />} />
             <Route path="eye-exam" element={<EyeExam />} />
             <Route path="doctor-schedule" element={<DoctorSchedule />} />
             <Route path="vendor-product" element={<VendorApprovalProduct />} />
