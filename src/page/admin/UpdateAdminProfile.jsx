@@ -9,8 +9,8 @@ const UpdateAdminProfile = () => {
     password: "",
   });
 
-  const [profileImage, setProfileImage] = useState(null); // backend filename or URL
-  const [profileFile, setProfileFile] = useState(null);   // selected file
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileFile, setProfileFile] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,6 @@ const UpdateAdminProfile = () => {
         const res = await API.get(`/getAdminById/${adminId}`, {
           withCredentials: true,
         });
-
         const data = res.data.admin || {};
         setFormData({
           name: data.name || "",
@@ -40,6 +39,7 @@ const UpdateAdminProfile = () => {
         //  Set profile image from backend
         if (data.profileImage) {
           setProfileImage(data.profileImage);
+          setProfilePreview(null);
 
           // also update localStorage so image persists on refresh
           localStorage.setItem(
@@ -94,19 +94,16 @@ const UpdateAdminProfile = () => {
     setLoading(true);
     try {
       const adminData = JSON.parse(localStorage.getItem("user"));
-      const adminId = adminData?._id;
-
       const data = new FormData();
       data.append("name", formData.name);
       data.append("email", formData.email);
       if (formData.password) data.append("password", formData.password);
       if (profileFile) data.append("profileImage", profileFile);
 
-      const res = await API.put(`/updateAdminProfile/${adminId}`, data, {
+      const res = await API.put(`/adminProfile`, data, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
-
       if (res.data?.admin) {
         const updatedAdmin = res.data.admin;
 
@@ -138,17 +135,6 @@ const UpdateAdminProfile = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  //  Handle profile image display
-  const getProfileImageSrc = () => {
-    if (profilePreview) return profilePreview;
-    if (profileImage) {
-      return profileImage.startsWith("http")
-        ? profileImage
-        : `${IMAGE_URL}${profileImage}`;
-    }
-    return null;
   };
 
   return (
@@ -186,10 +172,10 @@ const UpdateAdminProfile = () => {
               className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-400 outline-none"
             />
 
-            {getProfileImageSrc() && (
+            {(profilePreview || profileImage) && (
               <div className="mt-3">
                 <img
-                  src={getProfileImageSrc()}
+                  src={profilePreview ? profilePreview : `${IMAGE_URL}${profileImage}`}
                   alt="Profile"
                   className="w-24 h-24 object-cover rounded-full border shadow"
                 />

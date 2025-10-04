@@ -20,12 +20,11 @@ export default function AdminDashboard() {
     { name: "Disclaimer", path: "/admin/disclaimer" },
     { name: "Review", path: "/admin/review" },
     { name: "Testimonial", path: "/admin/testimonials" },
-    { name: "Contact Lens", path: "/admin/contact-lens" },
     { name: "FAQ", path: "/admin/faq" },
     { name: "Eye Exam", path: "/admin/eye-exam" },
     { name: "Doctor Schedule", path: "/admin/doctor-schedule" },
     { name: "Admin Tracking", path: "/admin/order-tracking" },
-    {name: "Chat",  path: "/admin/chat"}
+    { name: "Chat", path: "/admin/chat" }
 
   ];
 

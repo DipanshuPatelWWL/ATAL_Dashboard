@@ -16,11 +16,7 @@ const AdminOrderUpdate = () => {
             const { data } = await API.get("/allOrder");
             setAllData(data.orders || []);
         } catch (err) {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Failed to load orders",
-            });
+            console.log(err)
         }
     };
 
@@ -76,62 +72,68 @@ const AdminOrderUpdate = () => {
                     <div className="text-lg">ACTION</div>
                 </div>
 
-                {allData.map((data, idx) => (
-                    <div
-                        key={idx}
-                        className={`grid grid-cols-6 text-center items-center px-4 py-3 
-                          border-b border-gray-200 text-sm hover:bg-gray-100 
-                          ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
-                    >
-                        <div>{data._id}</div>
-                        <div className="ml-5">{data.userId}</div>
-                        <div className="ml-5">{data.orderStatus}</div>
-                        <div>{data.trackingNumber}</div>
-
-                        {/* Display updated date in YYYY-MM-DD */}
-                        <div>
-                            {data.deliveryDate
-                                ? new Date(data.deliveryDate).toISOString().split("T")[0]
-                                : new Date(data.updatedAt).toISOString().split("T")[0]}
-                        </div>
-
-                        <div>
-                            <button
-                                onClick={() => {
-                                    setOrderId(data._id);
-                                    setStatus(data.orderStatus);
-                                    setTrackingNumber(data.trackingNumber || "");
-
-                                    // Current local date & time in YYYY-MM-DDTHH:mm format
-                                    const now = new Date();
-                                    const pad = (n) => n.toString().padStart(2, "0");
-
-                                    const year = now.getFullYear();
-                                    const month = pad(now.getMonth() + 1);
-                                    const day = pad(now.getDate());
-                                    const hours = pad(now.getHours());
-                                    const minutes = pad(now.getMinutes());
-
-                                    const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-
-                                    setDeliveryDate(
-                                        data.deliveryDate
-                                            ? new Date(data.deliveryDate).toISOString().slice(0, 16)
-                                            : localDateTime
-                                    );
-
-                                    setShowModal(true);
-                                }}
-
-
-                                className="bg-blue-500 px-3 py-1 h-10 rounded-xl text-white hover:cursor-pointer"
-                            >
-                                Change Status
-                            </button>
-
-                        </div>
+                {/* ✅ Fixed conditional rendering */}
+                {allData.length === 0 ? (
+                    <div className="text-center py-10 text-gray-500 text-lg">
+                        No Orders Found
                     </div>
-                ))}
+                ) : (
+                    allData.map((data, idx) => (
+                        <div
+                            key={idx}
+                            className={`grid grid-cols-6 text-center items-center px-4 py-3 
+                border-b border-gray-200 text-sm hover:bg-gray-100 
+                ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+                        >
+                            <div>{data._id}</div>
+                            <div className="ml-5">{data.userId}</div>
+                            <div className="ml-5">{data.orderStatus}</div>
+                            <div>{data.trackingNumber}</div>
+
+                            {/* Display updated date in YYYY-MM-DD */}
+                            <div>
+                                {data.deliveryDate
+                                    ? new Date(data.deliveryDate).toISOString().split("T")[0]
+                                    : new Date(data.updatedAt).toISOString().split("T")[0]}
+                            </div>
+
+                            <div>
+                                <button
+                                    onClick={() => {
+                                        setOrderId(data._id);
+                                        setStatus(data.orderStatus);
+                                        setTrackingNumber(data.trackingNumber || "");
+
+                                        // Current local date & time in YYYY-MM-DDTHH:mm format
+                                        const now = new Date();
+                                        const pad = (n) => n.toString().padStart(2, "0");
+
+                                        const year = now.getFullYear();
+                                        const month = pad(now.getMonth() + 1);
+                                        const day = pad(now.getDate());
+                                        const hours = pad(now.getHours());
+                                        const minutes = pad(now.getMinutes());
+
+                                        const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+                                        setDeliveryDate(
+                                            data.deliveryDate
+                                                ? new Date(data.deliveryDate)
+                                                    .toISOString()
+                                                    .slice(0, 16)
+                                                : localDateTime
+                                        );
+
+                                        setShowModal(true);
+                                    }}
+                                    className="bg-blue-500 px-3 py-1 h-10 rounded-xl text-white hover:cursor-pointer"
+                                >
+                                    Change Status
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
 
             {/* Modal */}
@@ -171,7 +173,6 @@ const AdminOrderUpdate = () => {
                                 onChange={(e) => setDeliveryDate(e.target.value)}
                                 disabled
                             />
-
 
                             <div className="flex justify-between mt-4 gap-6 w-full">
                                 <button

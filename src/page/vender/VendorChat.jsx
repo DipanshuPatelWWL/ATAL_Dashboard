@@ -14,7 +14,7 @@ const VendorChatDashboard = () => {
     const fetchAdmin = async () => {
       try {
         const adminId = "68a6e76c4c3e5ed4fd0df895"; // admin _id
-        const res = await API.get(`/admin/getAdminById/${adminId}`, {
+        const res = await API.get(`/getAdminById/${adminId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAdminId(res.data._id);
@@ -42,11 +42,6 @@ const VendorChatDashboard = () => {
 
     // Initial fetch
     fetchMessages();
-
-    // Poll every 3 seconds
-    const intervalId = setInterval(fetchMessages, 3000);
-
-    return () => clearInterval(intervalId); // cleanup
   }, [adminId, token]);
 
   //  Send message
@@ -54,7 +49,7 @@ const VendorChatDashboard = () => {
     if (!newMessage.trim() || !adminId) return;
     try {
       const res = await API.post(
-        "/chat/send",
+        "/send",
         { receiverId: adminId, text: newMessage },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -74,16 +69,14 @@ const VendorChatDashboard = () => {
         {messages.map((msg) => (
           <div
             key={msg._id}
-            className={`flex ${
-              msg.sender === adminId ? "justify-start" : "justify-end"
-            }`}
+            className={`flex ${msg.sender === adminId ? "justify-start" : "justify-end"
+              }`}
           >
             <div
-              className={`px-4 py-2 rounded-lg max-w-xs break-words ${
-                msg.sender === adminId
-                  ? "bg-gray-200 text-gray-800"
-                  : "bg-green-500 text-white"
-              }`}
+              className={`px-4 py-2 rounded-lg max-w-xs break-words ${msg.sender === adminId
+                ? "bg-gray-200 text-gray-800"
+                : "bg-green-500 text-white"
+                }`}
             >
               {msg.text}
             </div>
