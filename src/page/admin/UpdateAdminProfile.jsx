@@ -15,8 +15,6 @@ const UpdateAdminProfile = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
-  // 🔹 Fetch admin profile on mount
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -61,7 +59,6 @@ const UpdateAdminProfile = () => {
     fetchProfile();
   }, []);
 
-  // 🔹 Handle profile image selection
   const handleProfileImage = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -70,7 +67,6 @@ const UpdateAdminProfile = () => {
     }
   };
 
-  // 🔹 Validation
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
@@ -82,15 +78,12 @@ const UpdateAdminProfile = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  // 🔹 Input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // 🔹 Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
@@ -147,7 +140,7 @@ const UpdateAdminProfile = () => {
     }
   };
 
-  // ✅ Handle profile image display
+  //  Handle profile image display
   const getProfileImageSrc = () => {
     if (profilePreview) return profilePreview;
     if (profileImage) {

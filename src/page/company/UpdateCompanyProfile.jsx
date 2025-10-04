@@ -53,7 +53,7 @@ export default function UpdateCompanyProfile() {
         setFiles((prev) => ({ ...prev, [name]: selectedFiles[0] }));
     };
 
-    // 🔹 Handle profile image
+    // Handle profile image
     const handleProfileImage = (e) => {
         const file = e.target.files[0];
         if (file) {

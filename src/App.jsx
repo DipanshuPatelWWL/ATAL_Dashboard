@@ -1,6 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import VendorProductOrder from "./page/vender/VendorProductOrder";
+import Chat from "./page/admin/Chat";
+import VendorChat from "./page/vender/VendorChat";
+import InsuranceChat from "./page/company/InsuranceChat";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -98,6 +101,7 @@ function App() {
             <Route path="doctor-schedule" element={<DoctorSchedule />} />
             <Route path="vendor-product" element={<VendorApprovalProduct />} />
             <Route path="admin-order-tracking" element={<AdminOrderUpdate />} />
+            <Route path="chat" element={<Chat />} />
           </Route>
 
           {/* ------------ vendor ------------ */}
@@ -115,6 +119,7 @@ function App() {
             <Route path="order" element={<VendorProductOrder />} />
             <Route path="profile" element={<UpdateVendorProfile />} />
             <Route path="faq" element={<VendorHome />} />
+            <Route path="chat" element={<VendorChat/>} />
           </Route>
 
           {/* ------------ company ------------ */}
@@ -134,6 +139,7 @@ function App() {
             <Route path="team" element={<CompanyHome />} />
             <Route path="faq" element={<CompanyHome />} />
             <Route path="add-policy" element={<AddPolicy />} />
+            <Route path="chat" element={<InsuranceChat />} />
           </Route>
 
           {/* ---------- fallback ---------- */}
