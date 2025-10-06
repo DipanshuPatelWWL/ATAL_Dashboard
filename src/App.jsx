@@ -4,6 +4,7 @@ import VendorProductOrder from "./page/vender/VendorProductOrder";
 import Chat from "./page/admin/Chat";
 import VendorChat from "./page/vender/VendorChat";
 import InsuranceChat from "./page/company/InsuranceChat";
+import Loader from "./page/loader/Loader";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -38,7 +39,6 @@ const UpdateCompanyProfile = lazy(() =>
 const AdminCompanyDetails = lazy(() =>
   import("./page/company/AdminCompanyDetails")
 );
-const ContactLens = lazy(() => import("./page/contactLens/ContactLens"));
 const UpdateAdminProfile = lazy(() =>
   import("./page/admin/UpdateAdminProfile")
 );
@@ -61,7 +61,7 @@ const AddPolicy = lazy(() =>
 
 function App() {
   return (
-    <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+    <Suspense fallback={<Loader />}>
       <Routes>
         {/* ---------- public routes ---------- */}
         <Route path="/" element={<Navigate to="/loginNew" replace />} />
@@ -96,11 +96,10 @@ function App() {
             <Route path="inquiries" element={<Inquiry />} />
             <Route path="disclaimer" element={<Disclaimer />} />
             <Route path="eye-services" element={<EyeService />} />
-            <Route path="contact-lens" element={<ContactLens />} />
             <Route path="eye-exam" element={<EyeExam />} />
             <Route path="doctor-schedule" element={<DoctorSchedule />} />
             <Route path="vendor-product" element={<VendorApprovalProduct />} />
-            <Route path="admin-order-tracking" element={<AdminOrderUpdate />} />
+            <Route path="order-tracking" element={<AdminOrderUpdate />} />
             <Route path="chat" element={<Chat />} />
           </Route>
 
@@ -119,7 +118,7 @@ function App() {
             <Route path="order" element={<VendorProductOrder />} />
             <Route path="profile" element={<UpdateVendorProfile />} />
             <Route path="faq" element={<VendorHome />} />
-            <Route path="chat" element={<VendorChat/>} />
+            <Route path="chat" element={<VendorChat />} />
           </Route>
 
           {/* ------------ company ------------ */}

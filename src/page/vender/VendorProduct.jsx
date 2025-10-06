@@ -168,6 +168,30 @@ const Products = () => {
     };
 
 
+    const handleDelete = async (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await API.delete(`/deleteProduct/${id}`);
+                    Swal.fire("Deleted!", "Product deleted successfully!", "success");
+                    fetchVendorProducts();
+                } catch (err) {
+                    Swal.fire("Error", "Failed to delete product", "error");
+                }
+            }
+        });
+    };
+
+
+
     // handleSubmit remains unchanged to keep all form fields
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -324,6 +348,12 @@ const Products = () => {
                                         : pro.isSentForApproval
                                             ? "Sent"
                                             : "Send For Approval"}
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(pro._id)}
+                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
+                                >
+                                    <FaTrash />
                                 </button>
                             </td>
                         </tr>

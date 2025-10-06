@@ -118,7 +118,7 @@ export default function VendorHome() {
         <h2 className="text-xl font-bold mb-4 text-gray-800">Quick Navigation</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <Link
-            to="/vendor"
+            to="/vendor/profile"
             className="bg-blue-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-blue-600 transition hover:cursor-pointer"
           >
             Manage Profile
@@ -130,13 +130,13 @@ export default function VendorHome() {
             Manage Services
           </Link>
           <Link
-            to="/vendor"
+            to="/vendor/product"
             className="bg-yellow-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-yellow-600 transition hover:cursor-pointer"
           >
             Manage Products
           </Link>
           <Link
-            to="/vendor/orders"
+            to="/vendor/order"
             className="bg-red-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-red-600 transition hover:cursor-pointer"
           >
             Manage Orders
