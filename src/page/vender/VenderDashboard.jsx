@@ -12,6 +12,7 @@ const VenderDashboard = () => {
         { name: "Profile", path: "/vendor/profile" },
         { name: "FAQ", path: "/vendor/faq" },
         { name: "Chat", path: "/vendor/chat" },
+        { name: "Vendor Policy", path: "/vendor/privacy-policy" },
     ];
 
     return (

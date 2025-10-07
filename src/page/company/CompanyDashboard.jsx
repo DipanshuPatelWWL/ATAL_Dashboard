@@ -5,15 +5,12 @@ const CompanyDashboard = () => {
     const location = useLocation()
     const menuItems = [
         { name: "Home", path: "/company/home" },
-        { name: "Services", path: "/company/services" },
-        { name: "Project", path: "/company/project" },
-        { name: "Team", path: "/company/team" },
         { name: "Profile", path: "/company/profile" },
-        { name: "FAQ", path: "/company/faq" },
         { name: "Insurance Policy", path: "/company/add-policy" },
         { name: "Customer Policies", path: "/company/customer-policy" },
         { name: "Customer Claims", path: "/company/customer-claims" },
         { name: "Chat", path: "/company/chat" },
+        { name: "Company Policy", path: "/company/privacy-policy" },
     ];
 
     return (
