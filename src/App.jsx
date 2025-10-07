@@ -5,6 +5,7 @@ import Chat from "./page/admin/Chat";
 import VendorChat from "./page/vender/VendorChat";
 import InsuranceChat from "./page/company/InsuranceChat";
 import Loader from "./page/loader/Loader";
+import VendorProductDiscount from "./page/vender/VendorProductDiscount";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -119,6 +120,7 @@ function App() {
             <Route path="profile" element={<UpdateVendorProfile />} />
             <Route path="faq" element={<VendorHome />} />
             <Route path="chat" element={<VendorChat />} />
+            <Route path="discount-product" element={<VendorProductDiscount />} />
           </Route>
 
           {/* ------------ company ------------ */}

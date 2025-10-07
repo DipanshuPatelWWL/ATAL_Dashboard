@@ -7,10 +7,11 @@ const VenderDashboard = () => {
     const menuItems = [
         { name: "Home", path: "/vendor/home" },
         { name: "Product", path: "/vendor/product" },
+        { name: "Discounted Product", path: "/vendor/discount-product" },
         { name: "Order", path: "/vendor/order" },
         { name: "Profile", path: "/vendor/profile" },
         { name: "FAQ", path: "/vendor/faq" },
-        {name: "Chat", path: "/vendor/chat"},
+        { name: "Chat", path: "/vendor/chat" },
     ];
 
     return (
