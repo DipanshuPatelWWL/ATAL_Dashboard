@@ -8,6 +8,9 @@ import Loader from "./page/loader/Loader";
 import CustomerPolicies from "./page/company/CustomerPolicy/CustomerPolicies";
 import CustomerClaims from "./page/company/CustomerPolicy/CustomerClaims";
 import VendorProductDiscount from "./page/vender/VendorProductDiscount";
+import CompanyPrivacyPolicy from "./page/company/CompanyPrivacyPolicy";
+import AdminPrivacyPolicy from "./page/admin/AdminPrivacyPolicy";
+import VendorPrivacyPolicy from "./page/vender/VendorPrivacyPolicy";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -104,6 +107,7 @@ function App() {
             <Route path="vendor-product" element={<VendorApprovalProduct />} />
             <Route path="order-tracking" element={<AdminOrderUpdate />} />
             <Route path="chat" element={<Chat />} />
+            <Route path="privacy-policy" element={<AdminPrivacyPolicy />} />
           </Route>
 
           {/* ------------ vendor ------------ */}
@@ -123,6 +127,7 @@ function App() {
             <Route path="faq" element={<VendorHome />} />
             <Route path="chat" element={<VendorChat />} />
             <Route path="discount-product" element={<VendorProductDiscount />} />
+            <Route path="privacy-policy" element={<VendorPrivacyPolicy />} />
           </Route>
 
           {/* ------------ company ------------ */}
@@ -145,6 +150,7 @@ function App() {
             <Route path="chat" element={<InsuranceChat />} />
             <Route path="customer-policy" element={<CustomerPolicies />} />
             <Route path="customer-claims" element={<CustomerClaims />} />
+            <Route path="privacy-policy" element={<CompanyPrivacyPolicy />} />
           </Route>
 
           {/* ---------- fallback ---------- */}
