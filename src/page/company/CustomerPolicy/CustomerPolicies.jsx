@@ -61,7 +61,7 @@ const CustomerPolicies = () => {
         <div className=" min-h-screen">
             <h1 className="text-2xl font-bold mb-6 text-red-600">Customer Policies</h1>
 
-            {/* 🔍 Search and Filter Bar */}
+            {/* Search and Filter Bar */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div className="relative w-full md:w-1/2">
                     <Search className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -131,10 +131,12 @@ const CustomerPolicies = () => {
                                     <td className="px-4 py-3">{item?.durationDays}</td>
                                     <td className="px-4 py-3">
                                         <span
-                                            className={`px-3 py-1 rounded-full text-sm font-medium ${item?.status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                            className={`px-3 py-1 rounded-full text-sm font-medium ${item?.status === "Active"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-red-100 text-red-700"
                                                 }`}
                                         >
-                                            {item?.status ? "Active" : "Inactive"}
+                                            {item?.status}
                                         </span>
                                     </td>
                                 </tr>
