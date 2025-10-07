@@ -11,7 +11,9 @@ const CompanyDashboard = () => {
         { name: "Profile", path: "/company/profile" },
         { name: "FAQ", path: "/company/faq" },
         { name: "Insurance Policy", path: "/company/add-policy" },
-        {name: "Chat", path: "/company/chat"},
+        { name: "Customer Policies", path: "/company/customer-policy" },
+        { name: "Customer Claims", path: "/company/customer-claims" },
+        { name: "Chat", path: "/company/chat" },
     ];
 
     return (

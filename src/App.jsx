@@ -5,6 +5,8 @@ import Chat from "./page/admin/Chat";
 import VendorChat from "./page/vender/VendorChat";
 import InsuranceChat from "./page/company/InsuranceChat";
 import Loader from "./page/loader/Loader";
+import CustomerPolicies from "./page/company/CustomerPolicy/CustomerPolicies";
+import CustomerClaims from "./page/company/CustomerPolicy/CustomerClaims";
 import VendorProductDiscount from "./page/vender/VendorProductDiscount";
 
 // ---------- lazy imports ----------
@@ -141,6 +143,8 @@ function App() {
             <Route path="faq" element={<CompanyHome />} />
             <Route path="add-policy" element={<AddPolicy />} />
             <Route path="chat" element={<InsuranceChat />} />
+            <Route path="customer-policy" element={<CustomerPolicies />} />
+            <Route path="customer-claims" element={<CustomerClaims />} />
           </Route>
 
           {/* ---------- fallback ---------- */}
