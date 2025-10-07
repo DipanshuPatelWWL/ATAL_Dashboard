@@ -10,6 +10,7 @@ const VendorProductDiscount = () => {
     const [formData, setFormData] = useState({
         discountType: "",
         discountValue: "",
+        discountedPrice: "",
     });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [calculatedPrice, setCalculatedPrice] = useState(0);
@@ -52,6 +53,7 @@ const VendorProductDiscount = () => {
         setFormData({
             discountType: product.discountType || "",
             discountValue: product.discountValue || "",
+            discountedPrice: product.discountedPrice || "",
         });
 
         const basePrice = product.product_sale_price || product.product_price;
@@ -93,6 +95,7 @@ const VendorProductDiscount = () => {
             const payload = {
                 discountType: formData.discountType,
                 discountValue: Number(formData.discountValue),
+                discountedPrice: Number(calculatedPrice),
             };
 
             const res = await API.put(`/vendor-products/${selectedProduct._id}/discount`, payload);
