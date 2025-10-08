@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../../../API/Api"; // 👈 adjust the path to your API instance
+import API from "../../../API/Api";
 import { Search } from "lucide-react";
 
 const CustomerPolicies = () => {
@@ -8,14 +8,9 @@ const CustomerPolicies = () => {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
 
-    // replace with actual companyId (e.g. from JWT or context)
-    // const companyId = "68c155c9358b3b53b52f92b1";
+
     const companyData = JSON.parse(localStorage.getItem("user"));
     const companyId = companyData?._id;
-
-    // console.log(companyId);
-
-
     useEffect(() => {
         if (companyId) {
             fetchPolicies();
@@ -87,7 +82,7 @@ const CustomerPolicies = () => {
                 </div>
             </div>
 
-            {/* 📊 Policies Table */}
+            {/* Policies Table */}
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="min-w-full table-auto">
                     <thead className="bg-red-600 text-white">
@@ -132,8 +127,8 @@ const CustomerPolicies = () => {
                                     <td className="px-4 py-3">
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm font-medium ${item?.status === "Active"
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-red-100 text-red-700"
+                                                ? "bg-green-100 text-green-700"
+                                                : "bg-red-100 text-red-700"
                                                 }`}
                                         >
                                             {item?.status}

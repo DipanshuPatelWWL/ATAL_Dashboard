@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../../API/Api";
 import Swal from "sweetalert2";
 
@@ -9,8 +10,8 @@ const VendorProductOrder = () => {
     const [deliveryDate, setDeliveryDate] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [allData, setAllData] = useState([]);
+    const navigate = useNavigate();
 
-    // Fetch all orders
     const fetchOrders = async () => {
         try {
             const { data } = await API.get("/vendor-orders");
@@ -28,7 +29,6 @@ const VendorProductOrder = () => {
         fetchOrders();
     }, []);
 
-    // Update order status
     const updateOrder = async () => {
         if (!orderId) {
             Swal.fire("Missing Order ID", "Order ID is required.", "warning");
@@ -49,10 +49,7 @@ const VendorProductOrder = () => {
                 showConfirmButton: false,
             });
 
-            // Refresh table data with latest DB values
             await fetchOrders();
-
-            // Close modal
             setShowModal(false);
         } catch (err) {
             Swal.fire({
@@ -64,71 +61,132 @@ const VendorProductOrder = () => {
     };
 
     return (
-        <div>
-            {/* Scrollable Table with Sticky Header */}
-            <div className="relative overflow-y-auto max-h-[560px] w-full mt-6">
-                <div className="grid grid-cols-6 text-center bg-black text-white font-semibold py-3 px-4 sticky top-0 z-10">
+        <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Vendor Orders</h2>
+
+            {/* Desktop Table */}
+            <div className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg">
+                <div className="grid grid-cols-7 text-center bg-black text-white font-semibold py-3 px-4 sticky top-0 z-10">
                     <div className="text-lg">ORDER ID</div>
                     <div className="text-lg">USER ID</div>
-                    <div className="text-lg">ORDER STATUS</div>
+                    <div className="text-lg">STATUS</div>
                     <div className="text-lg">TRACKING NO.</div>
                     <div className="text-lg">DATE</div>
                     <div className="text-lg">ACTION</div>
+                    <div className="text-lg">DETAILS</div>
                 </div>
 
                 {allData.map((data, idx) => (
                     <div
                         key={idx}
-                        className={`grid grid-cols-6 text-center items-center px-4 py-3 
-                          border-b border-gray-200 text-sm hover:bg-gray-100 
-                          ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+                        className={`grid grid-cols-7 text-center items-center px-4 py-3 border-b border-gray-200 text-sm hover:bg-gray-100 
+            ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
                     >
-                        <div>{data._id}</div>
-                        <div className="ml-5">{data.userId}</div>
-                        <div>{data.orderStatus}</div>
-                        <div>{data.trackingNumber}</div>
-
-                        {/* Display updated date in YYYY-MM-DD */}
-                        <div>
+                        <div className="break-words whitespace-normal text-sm font-medium text-gray-700">{data._id}</div>
+                        <div className="break-words whitespace-normal ml-3 text-sm text-gray-600">{data.userId}</div>
+                        <div className="text-sm text-gray-600">{data.orderStatus}</div>
+                        <div className="break-words whitespace-normal text-sm text-gray-600">{data.trackingNumber || "-"}</div>
+                        <div className="text-sm text-gray-600">
                             {data.deliveryDate
                                 ? new Date(data.deliveryDate).toISOString().split("T")[0]
                                 : new Date(data.updatedAt).toISOString().split("T")[0]}
                         </div>
-
                         <div>
                             <button
                                 onClick={() => {
                                     setOrderId(data._id);
                                     setStatus(data.orderStatus);
                                     setTrackingNumber(data.trackingNumber || "");
-
-                                    // Current local date & time in YYYY-MM-DDTHH:mm format
                                     const now = new Date();
                                     const pad = (n) => n.toString().padStart(2, "0");
-
-                                    const year = now.getFullYear();
-                                    const month = pad(now.getMonth() + 1);
-                                    const day = pad(now.getDate());
-                                    const hours = pad(now.getHours());
-                                    const minutes = pad(now.getMinutes());
-
-                                    const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-
+                                    const localDateTime = `${now.getFullYear()}-${pad(
+                                        now.getMonth() + 1
+                                    )}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(
+                                        now.getMinutes()
+                                    )}`;
                                     setDeliveryDate(
                                         data.deliveryDate
                                             ? new Date(data.deliveryDate).toISOString().slice(0, 16)
                                             : localDateTime
                                     );
-
                                     setShowModal(true);
                                 }}
-
-
-                                className="bg-blue-500 px-3 py-1 h-10 rounded-xl text-white hover:cursor-pointer"
+                                className="bg-blue-500 px-3 py-1 h-10 rounded-xl text-white hover:bg-blue-600 transition"
                             >
                                 Change Status
                             </button>
+                        </div>
+                        <div>
+                            <button
+                                onClick={() =>
+                                    navigate("/vendor/order-details", { state: { order: data } })
+                                }
+                                className="bg-green-600 px-3 py-1 h-10 rounded-xl text-white hover:bg-green-700 transition"
+                            >
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
+            {/* Mobile Cards */}
+            <div className="md:hidden flex flex-col gap-4 mt-6">
+                {allData.map((data, idx) => (
+                    <div
+                        key={idx}
+                        className="bg-white shadow rounded-lg p-4 border hover:shadow-lg transition"
+                    >
+                        <p className="text-sm font-semibold text-gray-700 break-words">
+                            <span className="font-bold">ORDER ID:</span> {data._id}
+                        </p>
+                        <p className="text-sm text-gray-600 break-words">
+                            <span className="font-bold">USER ID:</span> {data.userId}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                            <span className="font-bold">Status:</span> {data.orderStatus}
+                        </p>
+                        <p className="text-sm text-gray-600 break-words">
+                            <span className="font-bold">Tracking:</span> {data.trackingNumber || "-"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                            <span className="font-bold">Date:</span>{" "}
+                            {data.deliveryDate
+                                ? new Date(data.deliveryDate).toISOString().split("T")[0]
+                                : new Date(data.updatedAt).toISOString().split("T")[0]}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            <button
+                                onClick={() => {
+                                    setOrderId(data._id);
+                                    setStatus(data.orderStatus);
+                                    setTrackingNumber(data.trackingNumber || "");
+                                    const now = new Date();
+                                    const pad = (n) => n.toString().padStart(2, "0");
+                                    const localDateTime = `${now.getFullYear()}-${pad(
+                                        now.getMonth() + 1
+                                    )}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(
+                                        now.getMinutes()
+                                    )}`;
+                                    setDeliveryDate(
+                                        data.deliveryDate
+                                            ? new Date(data.deliveryDate).toISOString().slice(0, 16)
+                                            : localDateTime
+                                    );
+                                    setShowModal(true);
+                                }}
+                                className="bg-blue-500 px-3 py-1 rounded text-white hover:bg-blue-600 transition"
+                            >
+                                Change Status
+                            </button>
+                            <button
+                                onClick={() =>
+                                    navigate("/vendor/order-details", { state: { order: data } })
+                                }
+                                className="bg-green-600 px-3 py-1 rounded text-white hover:bg-green-700 transition"
+                            >
+                                View Details
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -136,8 +194,8 @@ const VendorProductOrder = () => {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center">
-                    <div className="bg-white rounded-lg shadow-lg w-[500px] p-6 relative mt-30 ml-50">
+                <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center z-50">
+                    <div className="bg-white rounded-lg shadow-lg w-[500px] p-6 relative">
                         <h3 className="text-lg font-bold mb-2">
                             Update Order {orderId ? `#${orderId}` : "(Loading...)"}
                         </h3>
@@ -171,7 +229,6 @@ const VendorProductOrder = () => {
                                 onChange={(e) => setDeliveryDate(e.target.value)}
                                 disabled
                             />
-
 
                             <div className="flex justify-between mt-4 gap-6 w-full">
                                 <button
