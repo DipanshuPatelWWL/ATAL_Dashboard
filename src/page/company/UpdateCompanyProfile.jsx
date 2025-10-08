@@ -27,15 +27,37 @@ export default function UpdateCompanyProfile() {
     });
 
     const [loading, setLoading] = useState(false);
+    const [location, setLocation] = useState({
+        province: '',
+        city: '',
+        postalCode: '',
+    });
 
-    // Handle text / checkbox change
+    const provinces = [
+        'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick',
+        'Newfoundland and Labrador', 'Nova Scotia', 'Ontario',
+        'Prince Edward Island', 'Quebec', 'Saskatchewan'
+    ];
+
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        const newValue = name === "postalCode" ? value.toUpperCase() : value;
+
         setFormData((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: type === "checkbox" ? checked : newValue,
         }));
+
+        if (["province", "city", "postalCode"].includes(name)) {
+            setLocation((prevLocation) => ({
+                ...prevLocation,
+                [name]: newValue,
+            }));
+        }
     };
+
+
 
     // Handle claim checkboxes
     const handleClaimChange = (method) => {
@@ -62,7 +84,7 @@ export default function UpdateCompanyProfile() {
         }
     };
 
-    // Submit form
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -73,10 +95,13 @@ export default function UpdateCompanyProfile() {
 
             if (!companyId) {
                 Swal.fire("Error", "Company ID not found", "error");
+                setLoading(false);
                 return;
             }
 
             const data = new FormData();
+
+            // Append formData fields
             for (let key in formData) {
                 if (key === "claim") {
                     formData.claim.forEach((c) => data.append("claim", c));
@@ -87,12 +112,21 @@ export default function UpdateCompanyProfile() {
                 }
             }
 
+            // Append location fields as strings
+            for (let key in location) {
+                if (location[key]) {
+                    data.append(key, String(location[key])); // ensures string
+                }
+            }
+
+            // Append other files
             for (let key in files) {
                 if (files[key]) {
                     data.append(key, files[key]);
                 }
             }
 
+            // Append profile image
             if (profileImage instanceof File) {
                 data.append("profileImage", profileImage);
             }
@@ -102,10 +136,10 @@ export default function UpdateCompanyProfile() {
                 withCredentials: true,
             });
 
+            // Update backend profile image for preview
             if (res.data?.company?.profileImage) {
-                window.dispatchEvent(new Event("profileUpdated"));
-                setProfileImage(res.data.company.profileImage); //  persist backend filename
-                setProfilePreview(null); // clear preview
+                setProfileImage(res.data.company.profileImage);
+                setProfilePreview(null);
             }
 
             Swal.fire("Success", "Company profile updated successfully!", "success");
@@ -354,6 +388,53 @@ export default function UpdateCompanyProfile() {
                             onChange={handleChange}
                             rows={4}
                             className={inputClass}
+                        />
+                    </section>
+                    <section>
+                        <h2 className="block font-medium mb-1">Enter Office Location</h2>
+                        {/* Province Selection */}
+                        <label htmlFor="province">Select Province:</label>
+                        <select
+                            id="province"
+                            name="province"
+                            value={location.province}
+                            onChange={handleChange}
+                            required
+                            className="w-full border rounded px-2 py-1 mt-1"
+                        >
+                            <option value="">--Select Province--</option>
+                            {provinces.map((province, index) => (
+                                <option key={index} value={province}>
+                                    {province}
+                                </option>
+                            ))}
+                        </select>
+
+
+                        {/* City Input */}
+                        <label htmlFor="city">Enter City:</label>
+                        <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            value={location.city}
+                            onChange={handleChange}
+                            placeholder="e.g., Toronto"
+                            required
+                            className="w-full border rounded px-2 py-1 mt-1"
+                        />
+
+                        {/* Postal Code Input */}
+                        <label htmlFor="postalCode">Enter Postal Code:</label>
+                        <input
+                            type="text"
+                            id="postalCode"
+                            name="postalCode"
+                            value={location.postalCode}
+                            onChange={handleChange}
+                            placeholder="e.g., M5A 1A1"
+                            required
+                            className="w-full border rounded px-2 py-1 mt-1"
                         />
                     </section>
 
