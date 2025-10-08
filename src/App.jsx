@@ -12,6 +12,9 @@ import CompanyPrivacyPolicy from "./page/company/CompanyPrivacyPolicy";
 import AdminPrivacyPolicy from "./page/admin/AdminPrivacyPolicy";
 import VendorPrivacyPolicy from "./page/vender/VendorPrivacyPolicy";
 import Appointment from "./page/eyeExamPage/Appointment";
+import VendorOrderDetails from "./page/vender/VendorOrderDetails";
+import AdminOrderDetails from "./page/ordderTracking/AdminOrderDetails";
+import ClaimDetails from "./page/company/CustomerPolicy/ClaimDetails";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -106,10 +109,11 @@ function App() {
             <Route path="eye-exam" element={<EyeExam />} />
             <Route path="doctor-schedule" element={<DoctorSchedule />} />
             <Route path="vendor-product" element={<VendorApprovalProduct />} />
-            <Route path="order-tracking" element={<AdminOrderUpdate />} />
+            <Route path="admin-order" element={<AdminOrderUpdate />} />
             <Route path="chat" element={<Chat />} />
             <Route path="privacy-policy" element={<AdminPrivacyPolicy />} />
             <Route path="appointments" element={<Appointment />} />
+            <Route path="order-details/:id" element={<AdminOrderDetails />} />
           </Route>
 
           {/* ------------ vendor ------------ */}
@@ -130,6 +134,7 @@ function App() {
             <Route path="chat" element={<VendorChat />} />
             <Route path="discount-product" element={<VendorProductDiscount />} />
             <Route path="privacy-policy" element={<VendorPrivacyPolicy />} />
+            <Route path="order-details" element={<VendorOrderDetails />} />
           </Route>
 
           {/* ------------ company ------------ */}
@@ -152,6 +157,7 @@ function App() {
             <Route path="chat" element={<InsuranceChat />} />
             <Route path="customer-policy" element={<CustomerPolicies />} />
             <Route path="customer-claims" element={<CustomerClaims />} />
+            <Route path="claims/:claimId" element={<ClaimDetails />} />
             <Route path="privacy-policy" element={<CompanyPrivacyPolicy />} />
           </Route>
 

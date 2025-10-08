@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../../API/Api";
 import Swal from "sweetalert2";
 
@@ -10,13 +11,15 @@ const AdminOrderUpdate = () => {
     const [showModal, setShowModal] = useState(false);
     const [allData, setAllData] = useState([]);
 
+    const navigate = useNavigate();
+
     // Fetch all orders
     const fetchOrders = async () => {
         try {
             const { data } = await API.get("/allOrder");
             setAllData(data.orders || []);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     };
 
@@ -45,10 +48,7 @@ const AdminOrderUpdate = () => {
                 showConfirmButton: false,
             });
 
-            // Refresh table data with latest DB values
             await fetchOrders();
-
-            // Close modal
             setShowModal(false);
         } catch (err) {
             Swal.fire({
@@ -60,19 +60,20 @@ const AdminOrderUpdate = () => {
     };
 
     return (
-        <div>
-            {/* Scrollable Table with Sticky Header */}
-            <div className="relative overflow-y-auto max-h-[560px] w-full mt-6">
+        <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Admin Orders</h2>
+
+            {/* Desktop Table */}
+            <div className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg">
                 <div className="grid grid-cols-6 text-center bg-black text-white font-semibold py-3 px-4 sticky top-0 z-10">
-                    <div className="text-lg">ORDER ID</div>
-                    <div className="text-lg">USER ID</div>
-                    <div className="text-lg">ORDER STATUS</div>
-                    <div className="text-lg">TRACKING NO.</div>
-                    <div className="text-lg">DATE</div>
-                    <div className="text-lg">ACTION</div>
+                    <div>ORDER ID</div>
+                    <div>USER ID</div>
+                    <div>STATUS</div>
+                    <div>TRACKING NO.</div>
+                    <div>DATE</div>
+                    <div>ACTIONS</div>
                 </div>
 
-                {/* ✅ Fixed conditional rendering */}
                 {allData.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 text-lg">
                         No Orders Found
@@ -81,54 +82,122 @@ const AdminOrderUpdate = () => {
                     allData.map((data, idx) => (
                         <div
                             key={idx}
-                            className={`grid grid-cols-6 text-center items-center px-4 py-3 
-                border-b border-gray-200 text-sm hover:bg-gray-100 
-                ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+                            className={`grid grid-cols-6 text-center items-center px-4 py-3 border-b border-gray-200 text-sm hover:bg-gray-100 ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                }`}
                         >
-                            <div>{data._id}</div>
-                            <div className="ml-5">{data.userId}</div>
-                            <div className="ml-5">{data.orderStatus}</div>
-                            <div>{data.trackingNumber}</div>
-
-                            {/* Display updated date in YYYY-MM-DD */}
+                            <div className="break-words whitespace-normal">{data._id}</div>
+                            <div className="break-words whitespace-normal ml-4">{data.userId}</div>
+                            <div>{data.orderStatus}</div>
+                            <div>{data.trackingNumber || "-"}</div>
                             <div>
                                 {data.deliveryDate
                                     ? new Date(data.deliveryDate).toISOString().split("T")[0]
                                     : new Date(data.updatedAt).toISOString().split("T")[0]}
                             </div>
-
-                            <div>
+                            <div className="flex gap-2 justify-center">
                                 <button
                                     onClick={() => {
                                         setOrderId(data._id);
                                         setStatus(data.orderStatus);
                                         setTrackingNumber(data.trackingNumber || "");
 
-                                        // Current local date & time in YYYY-MM-DDTHH:mm format
                                         const now = new Date();
                                         const pad = (n) => n.toString().padStart(2, "0");
-
-                                        const year = now.getFullYear();
-                                        const month = pad(now.getMonth() + 1);
-                                        const day = pad(now.getDate());
-                                        const hours = pad(now.getHours());
-                                        const minutes = pad(now.getMinutes());
-
-                                        const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+                                        const localDateTime = `${now.getFullYear()}-${pad(
+                                            now.getMonth() + 1
+                                        )}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(
+                                            now.getMinutes()
+                                        )}`;
 
                                         setDeliveryDate(
                                             data.deliveryDate
-                                                ? new Date(data.deliveryDate)
-                                                    .toISOString()
-                                                    .slice(0, 16)
+                                                ? new Date(data.deliveryDate).toISOString().slice(0, 16)
                                                 : localDateTime
                                         );
 
                                         setShowModal(true);
                                     }}
-                                    className="bg-blue-500 px-3 py-1 h-10 rounded-xl text-white hover:cursor-pointer"
+                                    className="bg-blue-500 px-4 py-2 rounded-xl text-white hover:bg-blue-600 transition"
                                 >
                                     Change Status
+                                </button>
+
+                                <button
+                                    onClick={() => navigate(`/admin/order-details/${data._id}`)}
+                                    className="bg-green-600 px-4 py-2 rounded-xl text-white hover:bg-green-700 transition"
+                                >
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden flex flex-col gap-4 mt-4">
+                {allData.length === 0 ? (
+                    <div className="text-center py-10 text-gray-500 text-lg">
+                        No Orders Found
+                    </div>
+                ) : (
+                    allData.map((data, idx) => (
+                        <div
+                            key={idx}
+                            className="bg-white border rounded-lg shadow p-4 flex flex-col gap-2 animate-fadeIn"
+                        >
+                            <p className="text-sm font-medium break-words">
+                                <span className="font-semibold">Order ID:</span> {data._id}
+                            </p>
+                            <p className="text-sm text-gray-600 break-words">
+                                <span className="font-semibold">User ID:</span> {data.userId}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                <span className="font-semibold">Status:</span> {data.orderStatus}
+                            </p>
+                            <p className="text-sm text-gray-600 break-words">
+                                <span className="font-semibold">Tracking:</span> {data.trackingNumber || "-"}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                <span className="font-semibold">Date:</span>{" "}
+                                {data.deliveryDate
+                                    ? new Date(data.deliveryDate).toISOString().split("T")[0]
+                                    : new Date(data.updatedAt).toISOString().split("T")[0]}
+                            </p>
+
+                            <div className="flex gap-2 mt-2">
+                                <button
+                                    onClick={() => {
+                                        setOrderId(data._id);
+                                        setStatus(data.orderStatus);
+                                        setTrackingNumber(data.trackingNumber || "");
+
+                                        const now = new Date();
+                                        const pad = (n) => n.toString().padStart(2, "0");
+                                        const localDateTime = `${now.getFullYear()}-${pad(
+                                            now.getMonth() + 1
+                                        )}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(
+                                            now.getMinutes()
+                                        )}`;
+
+                                        setDeliveryDate(
+                                            data.deliveryDate
+                                                ? new Date(data.deliveryDate).toISOString().slice(0, 16)
+                                                : localDateTime
+                                        );
+
+                                        setShowModal(true);
+                                    }}
+                                    className="bg-blue-500 px-4 py-2 rounded-xl text-white hover:bg-blue-600 transition w-1/2"
+                                >
+                                    Change Status
+                                </button>
+
+                                <button
+                                    onClick={() => navigate(`/admin/order-details/${data._id}`)}
+                                    className="bg-green-600 px-4 py-2 rounded-xl text-white hover:bg-green-700 transition w-1/2"
+                                >
+                                    View Details
                                 </button>
                             </div>
                         </div>
@@ -138,7 +207,7 @@ const AdminOrderUpdate = () => {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center">
+                <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center z-50">
                     <div className="bg-white rounded-lg shadow-lg w-[500px] p-6 relative">
                         <h3 className="text-lg font-bold mb-2">
                             Update Order {orderId ? `#${orderId}` : "(Loading...)"}

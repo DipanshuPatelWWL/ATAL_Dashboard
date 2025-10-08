@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import API from "../../../API/Api"; // your axios instance
+import API from "../../../API/Api";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const CustomerClaims = () => {
     const [claims, setClaims] = useState([]);
+    const navigate = useNavigate();
 
-    // Fetch all claims
     const fetchClaims = async () => {
         try {
             const res = await API.get("/claims");
@@ -18,60 +19,110 @@ const CustomerClaims = () => {
     useEffect(() => {
         fetchClaims();
     }, []);
-
-    // Approve or Reject Claim
     const handleStatusChange = async (claimId, status) => {
-        const result = await Swal.fire({
-            title: `Are you sure you want to ${status.toLowerCase()} this claim?`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: `Yes, ${status}`,
-        });
+        if (status === "Approved") {
+            const { value: formValues } = await Swal.fire({
+                title: "Approve Claim",
+                html: `
+        <div class="flex flex-col gap-2">
+          <input id="claimAmount" type="number" placeholder="Enter claim settlement amount" 
+            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <textarea id="claimNotes" placeholder="Enter notes (optional)" maxlength="250"
+            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+      `,
+                showCancelButton: true,
+                confirmButtonText: "Confirm",
+                cancelButtonText: "Cancel",
+                focusConfirm: false,
+                preConfirm: () => {
+                    const claimAmount = document.getElementById("claimAmount").value;
+                    const notes = document.getElementById("claimNotes").value;
 
-        if (!result.isConfirmed) return;
+                    // Condition: claimAmount must be positive number
+                    if (!claimAmount || isNaN(claimAmount) || Number(claimAmount) <= 0) {
+                        Swal.showValidationMessage("Please enter a valid claim amount greater than 0");
+                        return false;
+                    }
 
-        try {
-            await API.put(`/claims/${claimId}`, { status });
-            Swal.fire("Success", `Claim ${status}`, "success");
-            fetchClaims(); // refresh list
-        } catch (err) {
-            Swal.fire("Error", "Failed to update claim", "error");
+                    return { claimAmount: Number(claimAmount), notes };
+                },
+                customClass: {
+                    confirmButton: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded ml-2",
+                    cancelButton: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded",
+                    popup: "p-6 rounded-lg border border-gray-300 shadow-lg max-w-md w-full",
+                    title: "text-xl font-bold mb-4 text-gray-800 text-center",
+                },
+            });
+
+            if (!formValues) return; // user cancelled
+
+            try {
+                await API.put(`/claims/${claimId}`, {
+                    status,
+                    claimAmount: formValues.claimAmount,
+                    notes: formValues.notes,
+                });
+                Swal.fire(
+                    "Success",
+                    `Claim approved with amount ₹${formValues.claimAmount}`,
+                    "success"
+                );
+                fetchClaims();
+            } catch (err) {
+                Swal.fire("Error", "Failed to update claim", "error");
+            }
+        } else {
+            // Rejected flow
+            const result = await Swal.fire({
+                title: `Are you sure you want to ${status.toLowerCase()} this claim?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: `Yes, ${status}`,
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+                await API.put(`/claims/${claimId}`, { status });
+                Swal.fire("Success", `Claim ${status}`, "success");
+                fetchClaims();
+            } catch (err) {
+                Swal.fire("Error", "Failed to update claim", "error");
+            }
         }
     };
 
 
-    console.log(claims);
 
     return (
         <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Customer Claim Requests</h2>
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+                Customer Claim Requests
+            </h2>
 
             {claims.length === 0 ? (
-                <p>No claim requests found.</p>
+                <p className="text-gray-600 text-center">No claim requests found.</p>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="w-full border border-gray-200 shadow-sm">
+                <div className="overflow-x-auto rounded-lg shadow border border-gray-300">
+                    <table className="min-w-[1000px] w-full text-left border-collapse">
                         <thead className="bg-gray-100 text-gray-700">
                             <tr>
-                                <th className="p-3 text-left">Customer</th>
-                                <th className="p-3 text-left">Order ID</th>
-                                <th className="p-3 text-left">Incident Date</th>
-                                <th className="p-3 text-left">Description</th>
-                                <th className="p-3 text-left">Status</th>
+                                <th className="p-3">Customer</th>
+                                <th className="p-3">Order ID</th>
+                                <th className="p-3">Claim Date</th>
+                                <th className="p-3">Status</th>
                                 <th className="p-3 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {claims.map((claim) => (
-                                <tr key={claim._id} className="border-t">
-                                    <td className="p-3">{claim.orderId?.billingAddress?.fullName || "N/A"}</td>
-                                    <td className="p-3">{claim.orderId?._id}</td>
+                                <tr key={claim._id} className="border-t hover:bg-gray-50 transition">
+                                    <td className="p-3">{claim.orderId?.shippingAddress?.fullName || "N/A"}</td>
+                                    <td className="p-3">{claim.orderId?._id || "N/A"}</td>
                                     <td className="p-3">
-                                        {claim.incidentDate
-                                            ? new Date(claim.incidentDate).toLocaleDateString()
-                                            : "-"}
+                                        {claim.claimDate ? new Date(claim.claimDate).toLocaleDateString() : "-"}
                                     </td>
-                                    <td className="p-3">{claim.description}</td>
                                     <td
                                         className={`p-3 font-semibold ${claim.status === "Pending"
                                             ? "text-yellow-600"
@@ -83,20 +134,34 @@ const CustomerClaims = () => {
                                         {claim.status}
                                     </td>
                                     <td className="p-3 text-center">
-                                        <button
-                                            onClick={() => handleStatusChange(claim._id, "Approved")}
-                                            disabled={claim.status !== "Pending"}
-                                            className="bg-green-500 text-white px-3 py-1 rounded mr-2 disabled:opacity-50"
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            onClick={() => handleStatusChange(claim._id, "Rejected")}
-                                            disabled={claim.status !== "Pending"}
-                                            className="bg-red-500 text-white px-3 py-1 rounded disabled:opacity-50"
-                                        >
-                                            Reject
-                                        </button>
+                                        <div className="flex flex-nowrap gap-2 justify-center items-center">
+                                            <button
+                                                onClick={() => handleStatusChange(claim._id, "Approved")}
+                                                disabled={claim.status !== "Pending"}
+                                                className={`px-4 py-2 rounded text-white transition ${claim.status !== "Pending"
+                                                    ? "bg-green-400 opacity-100 cursor-not-allowed"
+                                                    : "bg-green-600 hover:bg-green-700 cursor-pointer"
+                                                    }`}
+                                            >
+                                                {claim.status === "Approved" ? "Approved" : "Approve"}
+                                            </button>
+                                            <button
+                                                onClick={() => handleStatusChange(claim._id, "Rejected")}
+                                                disabled={claim.status !== "Pending"}
+                                                className={`px-4 py-2 rounded text-white transition ${claim.status !== "Pending"
+                                                    ? "bg-red-400 opacity-100 cursor-not-allowed"
+                                                    : "bg-red-600 hover:bg-red-700 cursor-pointer"
+                                                    }`}
+                                            >
+                                                {claim.status === "Rejected" ? "Rejected" : "Reject"}
+                                            </button>
+                                            <button
+                                                onClick={() => navigate(`/company/claims/${claim._id}`)}
+                                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition cursor-pointer"
+                                            >
+                                                View Details
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
