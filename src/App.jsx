@@ -11,6 +11,7 @@ import VendorProductDiscount from "./page/vender/VendorProductDiscount";
 import CompanyPrivacyPolicy from "./page/company/CompanyPrivacyPolicy";
 import AdminPrivacyPolicy from "./page/admin/AdminPrivacyPolicy";
 import VendorPrivacyPolicy from "./page/vender/VendorPrivacyPolicy";
+import Appointment from "./page/eyeExamPage/Appointment";
 import VendorOrderDetails from "./page/vender/VendorOrderDetails";
 import AdminOrderDetails from "./page/ordderTracking/AdminOrderDetails";
 import ClaimDetails from "./page/company/CustomerPolicy/ClaimDetails";
@@ -111,6 +112,7 @@ function App() {
             <Route path="admin-order" element={<AdminOrderUpdate />} />
             <Route path="chat" element={<Chat />} />
             <Route path="privacy-policy" element={<AdminPrivacyPolicy />} />
+            <Route path="appointments" element={<Appointment />} />
             <Route path="order-details/:id" element={<AdminOrderDetails />} />
           </Route>
 

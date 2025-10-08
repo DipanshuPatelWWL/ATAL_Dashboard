@@ -22,6 +22,7 @@ export default function AdminDashboard() {
     { name: "Testimonial", path: "/admin/testimonials" },
     { name: "FAQ", path: "/admin/faq" },
     { name: "Eye Exam", path: "/admin/eye-exam" },
+    { name: "All Appointments", path: "/admin/appointments" },
     { name: "Doctor Schedule", path: "/admin/doctor-schedule" },
     { name: "Admin Order", path: "/admin/admin-order" },
     { name: "Chat", path: "/admin/chat" },

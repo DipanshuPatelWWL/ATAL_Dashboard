@@ -37,7 +37,7 @@ const Products = () => {
         material: "",
         manufacturer: "",
         water_content: "",
-        stock: "",
+        stockAvailability: "",
     });
     const [editId, setEditId] = useState(null);
     const [editingProduct, setEditingProduct] = useState(null);
@@ -108,7 +108,7 @@ const Products = () => {
             material: "",
             manufacturer: "",
             water_content: "",
-            stock: "",
+            stockAvailability: "",
         });
         setImages([]);
         setKeptImages([]);
@@ -141,7 +141,7 @@ const Products = () => {
             material: product.material || "",
             manufacturer: product.manufacturer || "",
             water_content: product.water_content || "",
-            stock: product.stock || "",
+            stockAvailability: product.stockAvailability || "",
         });
         setKeptImages(
             product.product_image_collection?.map((img) =>
@@ -191,20 +191,39 @@ const Products = () => {
     };
 
 
-
-    // handleSubmit remains unchanged to keep all form fields
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const payload = new FormData();
-            Object.keys(formData).forEach((key) => payload.append(key, formData[key]));
 
+            // Append all fields except stockAvailability
+            Object.keys(formData).forEach((key) => {
+                if (key !== "stockAvailability") {
+                    payload.append(key, formData[key] ?? "");
+                }
+            });
+
+            // Append stockAvailability only if user entered it
+            const stock = formData.stockAvailability;
+            if (stock !== "" && stock !== null && stock !== undefined) {
+                payload.append("stockAvailability", stock.toString());
+            }
+
+            // Existing images
             keptImages.forEach((img) =>
                 payload.append("existingImages", img.replace(IMAGE_URL, ""))
             );
-            images.forEach((file) => payload.append("product_image_collection", file));
-            if (lensImage1 && typeof lensImage1 !== "string") payload.append("product_lens_image1", lensImage1);
-            if (lensImage2 && typeof lensImage2 !== "string") payload.append("product_lens_image2", lensImage2);
+
+            // New images
+            images.forEach((file) =>
+                payload.append("product_image_collection", file)
+            );
+
+            // Lens images
+            if (lensImage1 && typeof lensImage1 !== "string")
+                payload.append("product_lens_image1", lensImage1);
+            if (lensImage2 && typeof lensImage2 !== "string")
+                payload.append("product_lens_image2", lensImage2);
 
             if (editId) {
                 await API.put(`/updateVendorProduct/${editId}`, payload, {
@@ -488,8 +507,8 @@ const Products = () => {
                                 </div>
                                 <input
                                     type="number"
-                                    name="stock"
-                                    value={formData.stock || ""}
+                                    name="stockAvailability"
+                                    value={formData.stockAvailability ?? ""}
                                     onChange={handleChange}
                                     placeholder="Stock Availablity"
                                     className="w-full border p-2 rounded"
