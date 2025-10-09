@@ -7,41 +7,38 @@ const CustomerPolicies = () => {
     const [filteredPolicies, setFilteredPolicies] = useState([]);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [policyPerPage] = useState(10);
 
     const companyData = JSON.parse(localStorage.getItem("user"));
     const companyId = companyData?._id;
-    useEffect(() => {
-        if (companyId) {
-            fetchPolicies();
-        }
-    }, [companyId]);
 
-    useEffect(() => {
-        fetchPolicies();
-    }, []);
-
+    // Fetch Policies
     const fetchPolicies = async () => {
         try {
             const res = await API.get(`/companyPolicies/${companyId}`);
-            setPolicies(res.data.policies || []);
-            setFilteredPolicies(res.data.policies || []);
+            const data = res.data.policies || [];
+            setPolicies(data);
+            setFilteredPolicies(data);
         } catch (error) {
             console.error("Error fetching policies:", error);
         }
     };
 
     useEffect(() => {
+        if (companyId) fetchPolicies();
+    }, [companyId]);
+
+    // Filter + Search
+    useEffect(() => {
         let filtered = [...policies];
 
-        // Search by policy name
         if (search.trim() !== "") {
             filtered = filtered.filter((item) =>
                 item.policyName?.toLowerCase().includes(search.toLowerCase())
             );
         }
 
-        //  Filter by policy status (as string comparison)
         if (statusFilter !== "All") {
             filtered = filtered.filter(
                 (item) => item?.status?.toLowerCase() === statusFilter.toLowerCase()
@@ -49,14 +46,21 @@ const CustomerPolicies = () => {
         }
 
         setFilteredPolicies(filtered);
+        setCurrentPage(1); // reset to first page when filters change
     }, [search, statusFilter, policies]);
 
+    // Pagination Logic
+    const indexOfLastPage = currentPage * policyPerPage;
+    const indexOfFirstPage = indexOfLastPage - policyPerPage;
+    const currentPolicies = filteredPolicies.slice(indexOfFirstPage, indexOfLastPage);
+    const totalPages = Math.ceil(filteredPolicies.length / policyPerPage);
+    const handlePageChange = (page) => setCurrentPage(page);
 
     return (
-        <div className=" min-h-screen">
+        <div className="min-h-screen">
             <h1 className="text-2xl font-bold mb-6 text-red-600">Customer Policies</h1>
 
-            {/* Search and Filter Bar */}
+            {/* Search & Filter Bar */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div className="relative w-full md:w-1/2">
                     <Search className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -83,9 +87,9 @@ const CustomerPolicies = () => {
             </div>
 
             {/* Policies Table */}
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg max-h-[500px]">
                 <table className="min-w-full table-auto">
-                    <thead className="bg-red-600 text-white">
+                    <thead className="bg-red-600 text-white sticky top-0 z-10">
                         <tr>
                             <th className="px-4 py-3 text-left">Policy Name</th>
                             <th className="px-4 py-3 text-left">Price</th>
@@ -96,18 +100,18 @@ const CustomerPolicies = () => {
                             <th className="px-4 py-3 text-left">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {filteredPolicies.length > 0 ? (
-                            filteredPolicies.map((item, index) => (
+                    <tbody className="max-h-[500px] overflow-y-auto">
+                        {currentPolicies.length > 0 ? (
+                            currentPolicies.map((item, index) => (
                                 <tr
                                     key={index}
                                     className="border-b hover:bg-gray-50 transition-colors"
                                 >
-                                    <td className="px-4 py-3">{item?.policyName}</td>
-                                    <td className="px-4 py-3">${item?.policyPrice}</td>
-                                    <td className="px-4 py-3">{item?.customer.email}</td>
+                                    <td className="px-4 py-3">{item?.policyName || "-"}</td>
+                                    <td className="px-4 py-3">${item?.policyPrice || "-"}</td>
+                                    <td className="px-4 py-3">{item?.customer?.email || "-"}</td>
                                     <td className="px-4 py-3 flex items-center gap-2">
-                                        {item?.product?.image?.includes('http') ? (
+                                        {item?.product?.image?.includes("http") ? (
                                             <img
                                                 src={item.product.image}
                                                 alt={item.product.name}
@@ -115,15 +119,13 @@ const CustomerPolicies = () => {
                                             />
                                         ) : (
                                             <div className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded text-sm font-medium">
-                                                {item.product.name?.charAt(0).toUpperCase()}
+                                                {item?.product?.name?.charAt(0)?.toUpperCase() || "?"}
                                             </div>
                                         )}
-
-                                        <span>{item.product?.name}</span>
+                                        <span>{item?.product?.name || "-"}</span>
                                     </td>
-
-                                    <td className="px-4 py-3">{item?.coverage}</td>
-                                    <td className="px-4 py-3">{item?.durationDays}</td>
+                                    <td className="px-4 py-3">{item?.coverage || "-"}</td>
+                                    <td className="px-4 py-3">{item?.durationDays || "-"}</td>
                                     <td className="px-4 py-3">
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm font-medium ${item?.status === "Active"
@@ -131,7 +133,7 @@ const CustomerPolicies = () => {
                                                 : "bg-red-100 text-red-700"
                                                 }`}
                                         >
-                                            {item?.status}
+                                            {item?.status || "-"}
                                         </span>
                                     </td>
                                 </tr>
@@ -148,6 +150,24 @@ const CustomerPolicies = () => {
                         )}
                     </tbody>
                 </table>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <div className="flex justify-center mt-4 space-x-2 pb-4">
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i}
+                                className={`px-3 py-1 border rounded transition-colors ${currentPage === i + 1
+                                    ? "bg-red-600 text-white border-red-600"
+                                    : "hover:bg-red-100"
+                                    }`}
+                                onClick={() => handlePageChange(i + 1)}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

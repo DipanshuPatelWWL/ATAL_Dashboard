@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import API, { IMAGE_URL } from "../../API/Api";
+import API from "../../API/Api";
+import { useNavigate } from "react-router-dom";
 
 function AdminCompanyDetails() {
-  const [company, setCompany] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const navigate = useNavigate();
 
   const getAllCompanies = async () => {
     try {
       const res = await API.get("/getAllCompany");
-      setCompany(res.data.companies);
+      setCompanies(res.data.companies);
     } catch (err) {
       console.log(err);
     }
@@ -19,158 +21,55 @@ function AdminCompanyDetails() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between">
-        <h2 className="text-2xl font-bold mb-6">Company Details</h2>
+      <h2 className="text-2xl font-bold mb-6">Company Details</h2>
+
+      <div className="overflow-x-auto bg-white shadow rounded-2xl border">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">#</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Company Name</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Email</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Legal Entity</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Provider Name</th>
+              <th className="px-4 py-3 border-b text-center font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {companies.length > 0 ? (
+              companies.map((company, index) => (
+                <tr key={index} className="hover:bg-gray-50 transition">
+                  <td className="px-4 py-3 border-b">{index + 1}</td>
+                  <td className="px-4 py-3 border-b">{company.companyName}</td>
+                  <td className="px-4 py-3 border-b">{company.companyEmail}</td>
+                  <td className="px-4 py-3 border-b">{company.legalEntity}</td>
+                  <td className="px-4 py-3 border-b">{company.providerName}</td>
+                  <td className="px-4 py-3 border-b text-center">
+                    <button
+                      onClick={() =>
+                        navigate(`${company._id}`, { state: { company } })
+                      }
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center text-gray-500 py-4 border-b">
+                  No company data available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-
-      {company.map((data, index) => (
-        <div
-          key={index}
-          className="bg-white shadow rounded-2xl p-4 border hover:shadow-md transition mb-6"
-        >
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex">
-              <p className="font-medium mr-2">Company Name:</p>
-              <p>{data.companyName}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Company Email:</p>
-              <p>{data.companyEmail}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Agreement Accepted:</p>
-              <p>{data.agreementAccepted ? "Yes" : "No"}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Claims:</p>
-              <p>{data.claim?.join(", ")}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">EF Remittance:</p>
-              <p>{data.efRemittance}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Legal Entity:</p>
-              <p>{data.legalEntity}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">License Proof:</p>
-              {data.licenseProof ? (() => {
-                const fileName = data.licenseProof.includes("http")
-                  ? data.licenseProof
-                  : data.licenseProof.split(/[/\\]/).pop();
-
-                const fileUrl = fileName.startsWith("http://") || fileName.startsWith("https://")
-                  ? fileName
-                  : `${IMAGE_URL}${fileName}`;
-
-                return (
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className=" inline-block px-2 py-1 w-27 font-bold text-[12px] text-red-600 border  rounded hover:border-black transition-colors duration-200">
-                    View Document
-                  </a>
-                );
-              })() : (
-                <p className="text-gray-500">Not Uploaded</p>
-              )}
-            </div>
-
-
-            <div className="flex">
-              <p className="font-medium mr-2">Network Payer ID:</p>
-              <p>{data.networkPayerId}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Provider Name:</p>
-              <p>{data.providerName}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Provider Email:</p>
-              <p>{data.providerEmail}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Provider Number:</p>
-              <p>{data.providerNumber}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Registration Number:</p>
-              <p>{data.registrationNumber}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Service Standards:</p>
-              <p>{data.serviceStandards}</p>
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Signed Agreement:</p>
-              {data.signedAgreement ? (() => {
-                // Helper: get just the file name
-                const fileName = data.signedAgreement.includes("http")
-                  ? data.signedAgreement
-                  : data.signedAgreement.split(/[/\\]/).pop();
-
-                const fileUrl = fileName.startsWith("http://") || fileName.startsWith("https://")
-                  ? fileName
-                  : `${IMAGE_URL}${fileName}`;
-
-                return (
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className=" inline-block px-2 py-1 w-27 font-bold text-[12px] text-red-600 border  rounded hover:border-black transition-colors duration-200">
-                    View Document
-                  </a>
-                );
-              })() : (
-                <p className="text-gray-500">Not Uploaded</p>
-              )}
-            </div>
-
-            <div className="flex">
-              <p className="font-medium mr-2">Void Cheque:</p>
-              {data.voidCheque ? (() => {
-                const fileName = data.voidCheque.includes("http")
-                  ? data.voidCheque
-                  : data.voidCheque.split(/[/\\]/).pop();
-
-                const fileUrl = fileName.startsWith("http://") || fileName.startsWith("https://")
-                  ? fileName
-                  : `${IMAGE_URL}${fileName}`;
-
-                return (
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className=" inline-block px-2 py-1 w-27 font-bold text-[12px] text-red-600 rounded border hover:border-black transition-colors duration-200">
-                    View Document
-                  </a>
-                );
-              })() : (
-                <p className="text-gray-500">Not Uploaded</p>
-              )}
-            </div>
-
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
 
 export default AdminCompanyDetails;
+
