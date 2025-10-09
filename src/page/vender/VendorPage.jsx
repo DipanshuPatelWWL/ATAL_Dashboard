@@ -1,179 +1,74 @@
 import React, { useEffect, useState } from "react";
 import API from "../../API/Api";
+import { useNavigate } from "react-router-dom";
 
-function VendorPage() {
-  const [vendor, setvendor] = useState([{}]);
-  const getallvendor = async () => {
+const VendorPage = () => {
+  const [vendors, setVendors] = useState([]);
+  const navigate = useNavigate();
+
+  const getAllVendors = async () => {
     try {
       const res = await API.get("/allvendor");
-      setvendor(res.data);
+      setVendors(res.data);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching vendors:", err);
     }
   };
 
   useEffect(() => {
-    getallvendor();
+    getAllVendors();
   }, []);
+
   return (
-    <>
-      <div className="p-6">
-        <div className="flex justify-between">
-          <h2 className="text-2xl font-bold mb-6">Vendor Details</h2>
-        </div>
-        <div className="">
-          {vendor.map((data, index) => (
-            <div
-              key={index}
-              className="bg-white mb-6 shadow rounded-2xl p-4 border hover:shadow-md transition"
-            >
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex ">
-                  <p className="font-medium mr-2">Account Holder:</p>
-                  <p>{data.accountHolder}</p>
-                </div>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-6">Vendor Details</h2>
 
-                <div className="flex ">
-                  <p className="font-medium mr-2">Account Number:</p>
-                  <p>{data.accountNumber}</p>
-                </div>
+      <div className="overflow-x-auto bg-white shadow rounded-2xl border">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">#</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Company Name</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Contact Name</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Email</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Phone</th>
+              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Vendor Type</th>
+              <th className="px-4 py-3 border-b text-center font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
 
-                <div className="flex ">
-                  <p className="font-medium mr-2">Address 1:</p>
-                  <p>{data.address1}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Address 2:</p>
-                  <p>{data.address2}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Bank Name:</p>
-                  <p>{data.bankName}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Brands:</p>
-                  <p>{data.brands}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Business Number:</p>
-                  <p>{data.businessNumber}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">City:</p>
-                  <p>{data.city}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Company Name:</p>
-                  <p>{data.companyName}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Contact Email:</p>
-                  <p>{data.contactEmail}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Contact Name:</p>
-                  <p>{data.contactName}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Contact Phone:</p>
-                  <p>{data.contactPhone}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Contact Title:</p>
-                  <p>{data.contactTitle}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Country:</p>
-                  <p>{data.country}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">IBAN:</p>
-                  <p>{data.iban}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Institution Number:</p>
-                  <p>{data.institutionNumber}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Lead Times:</p>
-                  <p>{data.leadTimes}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">MOQ:</p>
-                  <p>{data.moq}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Operating Name:</p>
-                  <p>{data.operatingName}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Postal Code:</p>
-                  <p>{data.postalCode}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Remittance Email:</p>
-                  <p>{data.remittanceEmail}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Return Policy:</p>
-                  <p>{data.returnPolicy}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Shipping Terms:</p>
-                  <p>{data.shippingTerms}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">State:</p>
-                  <p>{data.state}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">SWIFT:</p>
-                  <p>{data.swift}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Transit Number:</p>
-                  <p>{data.transitNumber}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Vendor Type:</p>
-                  <p>{data.vendorType}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="font-medium mr-2">Website:</p>
-                  <p>{data.website}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+          <tbody>
+            {vendors.length > 0 ? (
+              vendors.map((vendor, index) => (
+                <tr key={index} className="hover:bg-gray-50 transition duration-200">
+                  <td className="px-4 py-3 border-b">{index + 1}</td>
+                  <td className="px-4 py-3 border-b">{vendor.companyName}</td>
+                  <td className="px-4 py-3 border-b">{vendor.contactName}</td>
+                  <td className="px-4 py-3 border-b">{vendor.contactEmail}</td>
+                  <td className="px-4 py-3 border-b">{vendor.contactPhone}</td>
+                  <td className="px-4 py-3 border-b">{vendor.vendorType}</td>
+                  <td className="px-4 py-3 border-b text-center">
+                    <button
+                      onClick={() => navigate(`${vendor._id}`, { state: { vendor } })}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center text-gray-500 py-4 border-b">
+                  No vendor data available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default VendorPage;

@@ -15,6 +15,19 @@ function FAQ() {
     category: "",
   });
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [faqdata, setfaqdata] = useState([{}]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [faqPerPage] = useState(10);
+
+
+  const indexOfLastProduct = currentPage * faqPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - faqPerPage;
+  const currentFaqs = faqdata.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(faqdata.length / faqPerPage);
+
+  const handlePageChange = (page) => setCurrentPage(page);
+
 
   const handleAddClick = () => {
     setModalType("add");
@@ -60,7 +73,6 @@ function FAQ() {
     }
   };
 
-  const [faqdata, setfaqdata] = useState([{}]);
   const fetchallfaq = async () => {
     try {
       const response = await API.get("/getallfaq", {
@@ -111,74 +123,86 @@ function FAQ() {
             <FaPlus /> ADD FAQ
           </button>
         </div>
-        <div className="overflow-x-auto w-full">
-          {/* Header Row */}
-          <div className="grid grid-cols-5 gap-x-10 bg-black text-white py-2 px-4 font-semibold">
-            <div className=" text-lg">S.NO.</div>
-            <div className=" text-lg">CATEGORY</div>
-            <div className=" text-lg">TITLE</div>
-            <div className=" text-lg">DESCRIPTION</div>
-            <div className=" text-lg">ACTION</div>
+
+        <div className="overflow-y-auto max-h-[70vh] overflow-x-auto w-full border border-gray-200 rounded-lg">
+          {/* Header Row (Sticky) */}
+          <div className="grid grid-cols-5 gap-x-10 bg-black text-white py-2 px-4 font-semibold sticky top-0 z-10">
+            <div className="text-lg">S.NO.</div>
+            <div className="text-lg">CATEGORY</div>
+            <div className="text-lg">TITLE</div>
+            <div className="text-lg">DESCRIPTION</div>
+            <div className="text-lg">ACTION</div>
           </div>
-        </div>
-        {/* FAQ Rows */}
 
-        {faqdata.map((data, index) => (
-          <div
-            key={data._id || index}
-            className="grid grid-cols-5 gap-x-10 items-start border-b border-gray-300 py-2 px-4"
-          >
-            <div>{index + 1}</div>
-            <div>{data.category}</div>
-            <div>{data.title}</div>
-
-            <div>
-              {expandedIndex === index ? (
-                <>
-                  <p>{data.description}</p>
-                  <button
-                    className="text-red-500 underline text-sm hover:cursor-pointer"
-                    onClick={() => setExpandedIndex(null)}
-                  >
-                    Show Less
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>
-                    {data.description?.length > 100
-                      ? data.description.substring(0, 10) + "..."
-                      : data.description}
-                  </p>
-                  {data.description?.length > 100 && (
-                    <button
-                      className="text-red-500 underline text-sm hover:cursor-pointer"
-                      onClick={() => setExpandedIndex(index)}
-                    >
-                      Show More
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
-            <div className="flex gap-2">
+          {/* FAQ Rows */}
+          {currentFaqs.map((data, index) => (
+            <div
+              key={data._id || index}
+              className="grid grid-cols-5 gap-x-10 items-start border-b border-gray-300 py-2 px-4 bg-white hover:bg-gray-50"
+            >
+              <div>{index + 1}</div>
+              <div>{data.category}</div>
+              <div>{data.title}</div>
               <div>
-                <button onClick={() => handleUpdateClick(data)}
-                  className="bg-blue-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
+                {expandedIndex === index ? (
+                  <>
+                    <p>{data.description}</p>
+                    <button
+                      className="text-red-500 underline text-sm"
+                      onClick={() => setExpandedIndex(null)}
+                    >
+                      Show Less
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      {data.description?.length > 100
+                        ? data.description.substring(0, 10) + "..."
+                        : data.description}
+                    </p>
+                    {data.description?.length > 100 && (
+                      <button
+                        className="text-red-500 underline text-sm"
+                        onClick={() => setExpandedIndex(index)}
+                      >
+                        Show More
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleUpdateClick(data)}
+                  className="bg-blue-500 px-3 py-1 rounded-xl text-white hover:bg-blue-600"
                 >
                   <RiEdit2Fill className="text-2xl" />
                 </button>
-              </div>
-              <div>
                 <button
-                  className="bg-red-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
+                  className="bg-red-500 px-3 py-1 rounded-xl text-white hover:bg-red-600"
                   onClick={() => handleDelete(data._id)}
                 >
                   <MdDelete className="text-2xl" />
                 </button>
               </div>
             </div>
-          </div>
+          ))}
+        </div>
+
+      </div>
+
+      {/* Pagination Buttons */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            className={`px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={() => handlePageChange(i + 1)}
+          >
+            {i + 1}
+          </button>
         ))}
       </div>
 

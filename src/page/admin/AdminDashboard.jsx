@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     { name: "Inquiries", path: "/admin/inquiries" },
     { name: "Vendor", path: "/admin/vendor" },
     { name: "Vendor Product", path: "/admin/vendor-product" },
-    { name: "Company", path: "/admin/company" },
+    { name: "Insurence Company", path: "/admin/company" },
     { name: "Eye Services", path: "/admin/eye-services" },
     { name: "Eye Check", path: "/admin/eyeCheck" },
     { name: "Eyewear Tips", path: "/admin/eyewearTips" },

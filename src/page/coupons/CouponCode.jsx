@@ -19,6 +19,10 @@ const CouponCode = () => {
   });
   const [editId, setEditId] = useState(null);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const couponsPerPage = 10;
+
   // Fetch coupons
   const fetchCoupons = async () => {
     try {
@@ -76,13 +80,26 @@ const CouponCode = () => {
 
   // Delete coupon
   const handleDelete = async (id) => {
-    try {
-      await API.delete(`/deleteCouponCode/${id}`);
-      Swal.fire("Deleted!", "Coupon deleted", "success");
-      fetchCoupons();
-    } catch (err) {
-      console.error(err);
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to undo this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await API.delete(`/deleteCouponCode/${id}`);
+          fetchCoupons();
+          Swal.fire("Deleted!", "Coupon deleted successfully!", "success");
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Error!", "Something went wrong while deleting.", "error");
+        }
+      }
+    });
   };
 
   // Edit coupon
@@ -92,9 +109,17 @@ const CouponCode = () => {
     setShowModal(true);
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(couponData.length / couponsPerPage);
+  const indexOfLast = currentPage * couponsPerPage;
+  const indexOfFirst = indexOfLast - couponsPerPage;
+  const currentCoupons = couponData.slice(indexOfFirst, indexOfLast);
+
+  const handlePageChange = (page) => setCurrentPage(page);
+
   return (
     <div className="p-6">
-      <div className="flex justify-between mb-4">
+      <div className="flex flex-col sm:flex-row justify-between mb-4 gap-2 sm:gap-0">
         <h1 className="text-2xl font-bold">Coupon Codes</h1>
         <button
           onClick={() => {
@@ -108,8 +133,8 @@ const CouponCode = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-lg overflow-hidden">
-        <div className="grid grid-cols-8 gap-x-4 bg-black text-white py-2 px-4 font-semibold">
+      <div className="border rounded-lg overflow-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-7 gap-x-4 bg-black text-white py-2 px-4 font-semibold text-sm sm:text-base min-w-[600px]">
           <div>S.NO</div>
           <div>Name</div>
           <div>Code</div>
@@ -118,12 +143,12 @@ const CouponCode = () => {
           <div>Validity</div>
           <div>Action</div>
         </div>
-        {couponData.map((c, i) => (
+        {currentCoupons.map((c, i) => (
           <div
             key={c._id}
-            className="grid grid-cols-8 gap-x-4 items-center border-b py-2 px-4"
+            className="grid grid-cols-1 sm:grid-cols-7 gap-x-4 items-center border-b py-2 px-4 text-sm sm:text-base min-w-[600px]"
           >
-            <div>{i + 1}</div>
+            <div>{indexOfFirst + i + 1}</div>
             <div>{c.applicableFor}</div>
             <div>{c.coupon}</div>
             <div>
@@ -136,28 +161,43 @@ const CouponCode = () => {
               {new Date(c.startDate).toLocaleDateString()} -{" "}
               {new Date(c.expiryDate).toLocaleDateString()}
             </div>
+
             <div className="flex gap-2">
               <button
                 onClick={() => handleUpdateClick(c)}
-                className="bg-blue-500 px-3 py-1 rounded-xl text-white"
+                className="bg-blue-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap"
               >
-                <RiEdit2Fill />
+                <RiEdit2Fill /> <span>Edit</span>
               </button>
               <button
                 onClick={() => handleDelete(c._id)}
-                className="bg-red-500 px-3 py-1 rounded-xl text-white"
+                className="bg-red-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap"
               >
-                <MdDelete />
+                <MdDelete /> <span>Delete</span>
               </button>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Pagination Buttons */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            className={`px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={() => handlePageChange(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4 my-20 relative">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center backdrop-blur-sm bg-black/50 overflow-auto p-4">
+          <div className="bg-white p-6 rounded-lg w-full sm:max-w-md shadow-xl relative">
             <h2 className="text-xl font-bold mb-4">
               {editId ? "Edit Coupon" : "Add Coupon"}
             </h2>
@@ -228,17 +268,17 @@ const CouponCode = () => {
                 />{" "}
                 Active
               </label>
-              <div className="flex justify-between mt-4">
+              <div className="flex flex-col sm:flex-row justify-between mt-4 gap-2 sm:gap-0">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded"
+                  className="bg-gray-500 text-white px-4 py-2 rounded w-full sm:w-auto"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded"
+                  className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto"
                 >
                   Submit
                 </button>
@@ -252,4 +292,3 @@ const CouponCode = () => {
 };
 
 export default CouponCode;
-

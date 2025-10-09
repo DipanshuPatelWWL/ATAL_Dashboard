@@ -6,6 +6,14 @@ import { useNavigate } from "react-router-dom";
 const CustomerClaims = () => {
     const [claims, setClaims] = useState([]);
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [claimsPerPage] = useState(10);
+
+    const indexOfLastClaim = currentPage * claimsPerPage
+    const indexOfFirstClaim = indexOfLastClaim - claimsPerPage
+    const currentClaims = claims.slice(indexOfFirstClaim, indexOfLastClaim)
+    const totalPages = Math.ceil(claims.length / claimsPerPage)
+    const handlePageChange = (page) => setCurrentPage(page)
 
     const fetchClaims = async () => {
         try {
@@ -101,7 +109,7 @@ const CustomerClaims = () => {
                 Customer Claim Requests
             </h2>
 
-            {claims.length === 0 ? (
+            {currentClaims.length === 0 ? (
                 <p className="text-gray-600 text-center">No claim requests found.</p>
             ) : (
                 <div className="overflow-x-auto rounded-lg shadow border border-gray-300">
@@ -116,7 +124,7 @@ const CustomerClaims = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {claims.map((claim) => (
+                            {currentClaims.map((claim) => (
                                 <tr key={claim._id} className="border-t hover:bg-gray-50 transition">
                                     <td className="p-3">{claim.orderId?.shippingAddress?.fullName || "N/A"}</td>
                                     <td className="p-3">{claim.orderId?._id || "N/A"}</td>
@@ -167,6 +175,24 @@ const CustomerClaims = () => {
                             ))}
                         </tbody>
                     </table>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="flex justify-center mt-4 space-x-2 pb-4">
+                            {[...Array(totalPages)].map((_, i) => (
+                                <button
+                                    key={i}
+                                    className={`px-3 py-1 border rounded transition-colors ${currentPage === i + 1
+                                        ? "bg-red-600 text-white border-red-600"
+                                        : "hover:bg-red-100"
+                                        }`}
+                                    onClick={() => handlePageChange(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
         </div>

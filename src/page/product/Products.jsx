@@ -12,6 +12,8 @@ const Products = () => {
   const [lensImage1, setLensImage1] = useState(null);
   const [lensImage2, setLensImage2] = useState(null);
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(10);
 
   const [formData, setFormData] = useState({
     cat_id: "",
@@ -88,6 +90,18 @@ const Products = () => {
   const removeExistingImage = (idx) => {
     setKeptImages((prev) => prev.filter((_, i) => i !== idx));
   };
+
+
+  // Pagination logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handlePageChange = (page) => setCurrentPage(page);
+
+
 
   const openAddModal = () => {
     setFormData({
@@ -360,7 +374,7 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((pro) => (
+          {currentProducts.map((pro) => (
             <tr key={pro._id} className="">
               <td className="border px-4 py-2 border-black text-center capitalize">
                 {pro.product_name}
@@ -417,6 +431,22 @@ const Products = () => {
           ))}
         </tbody>
       </table>
+
+
+      {/* Pagination Buttons */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            className={`px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={() => handlePageChange(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+
 
       {/* Modal */}
       {open && (
