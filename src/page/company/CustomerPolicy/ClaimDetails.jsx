@@ -42,13 +42,6 @@ const ClaimDetails = () => {
             transition={{ duration: 0.5 }}
         >
             <div className="max-w-5xl mx-auto">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="bg-gray-800 hover:bg-gray-900 text-white px-5 py-2 rounded-lg mb-6 transition-all"
-                >
-                    Back
-                </button>
-
                 <motion.div
                     className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 space-y-8"
                     initial={{ y: 30, opacity: 0 }}
@@ -56,18 +49,26 @@ const ClaimDetails = () => {
                     transition={{ duration: 0.6 }}
                 >
                     {/* Header */}
-                    <div className="text-center border-b pb-4">
-                        <h2 className="text-3xl font-bold text-gray-800">Claim Details</h2>
-                        <p className="text-gray-500 mt-1">
-                            Tracking Number:{" "}
-                            <span className="font-medium">
-                                {claim.orderId?.trackingNumber || "N/A"}
-                            </span>
-                        </p>
+                    <div className="border-b pb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <button
+                                onClick={() => navigate(-1)}
+                                className="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-lg transition-all hover:cursor-pointer"
+                            >
+                                Back
+                            </button>
+                            <div className="flex-1 text-center">
+                                <h2 className="text-3xl font-bold text-gray-800">Claim Details</h2>
+                            </div>
+                            {/* Invisible element for balance */}
+                            <div className="w-[90px]"></div>
+                        </div>
                     </div>
+
 
                     {/* Claim Summary */}
                     <section>
+
                         <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">
                             Claim Summary
                         </h3>
@@ -240,7 +241,7 @@ const ClaimDetails = () => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700">
                                         <p>
                                             <strong>Lens Type:</strong>{" "}
-                                            {product.lens.lens.lensType?.name || product.lens?.selectedLens || "N/A"}
+                                            {product.lens?.lens.lensType?.name || product.lens?.selectedLens || "N/A"}
                                         </p>
                                         <p>
                                             <strong>Prescription Method:</strong>{" "}
