@@ -132,8 +132,9 @@ const Products = () => {
       subCategoryName: product.subCategoryName || "",
       product_name: product.product_name || "",
       product_size: product.product_size
-        ? product.product_size
-          .flatMap(item => item.split(",").map(s => s.trim()))
+        ? product.product_size.flatMap((item) =>
+            item.split(",").map((s) => s.trim())
+          )
         : [],
 
       product_color: product.product_color || [],
@@ -225,7 +226,7 @@ const Products = () => {
       Swal.fire("Error", "Product price is required", "error");
       return;
     }
-    if (formData.subCategoryName === "Contact Lenses" && !formData.type) {
+    if (formData.subCat_id === "68caa86cd72068a7d3a0f0bf" && !formData.type) {
       Swal.fire("Error", "Lens type is required for contact lenses", "error");
       return;
     }
@@ -250,7 +251,7 @@ const Products = () => {
       payload.append("stockAvailability", isNaN(stockValue) ? 0 : stockValue);
 
       // Sunglasses fields
-      if (formData.subCategoryName !== "Contact Lenses") {
+      if (formData.subCat_id !== "68caa86cd72068a7d3a0f0bf") {
         payload.append("frame_material", formData.frame_material);
         payload.append("frame_shape", formData.frame_shape);
         payload.append("frame_color", formData.frame_color);
@@ -258,7 +259,7 @@ const Products = () => {
       }
 
       // Contact Lens fields
-      if (formData.subCategoryName === "Contact Lenses") {
+      if (formData.subCat_id === "68caa86cd72068a7d3a0f0bf") {
         payload.append("contact_type", formData.type);
         payload.append("material", formData.material);
         payload.append("manufacturer", formData.manufacturer);
@@ -330,7 +331,6 @@ const Products = () => {
     setFormData((prev) => ({ ...prev, product_size: updatedSizes })); //  keep formData in sync
   };
 
-
   return (
     <div className="p-6">
       {/* Header */}
@@ -349,8 +349,6 @@ const Products = () => {
         <thead>
           <tr className="bg-gray-100">
             <th className="border px-4 py-2 border-black">Name</th>
-            <th className="border px-4 py-2 border-black">Size</th>
-            <th className="border px-4 py-2 border-black">Color</th>
             <th className="border px-4 py-2 border-black">Price</th>
             <th className="border px-4 py-2 border-black">Sale Price</th>
             <th className="border px-4 py-2 border-black">Category</th>
@@ -364,12 +362,6 @@ const Products = () => {
             <tr key={pro._id} className="">
               <td className="border px-4 py-2 border-black text-center capitalize">
                 {pro.product_name}
-              </td>
-              <td className="border px-4 py-2 border-black text-center">
-                {pro.product_size}
-              </td>
-              <td className="border px-4 py-2 border-black text-center">
-                {pro.product_color}
               </td>
               <td className="border px-4 py-2 border-black text-center">
                 {pro.product_price}
@@ -465,31 +457,23 @@ const Products = () => {
                       const selectedCat = category.find(
                         (c) => c._id === formData.cat_id
                       );
-                      const selectedSub =
-                        selectedCat?.subCategories?.find(
-                          (s) => s._id === e.target.value
-                        ) || null;
-                      const selectedName =
-                        selectedCat?.subCategoryNames?.find(
-                          (s) => s === e.target.value
-                        ) || "";
+                      const selectedSubIdx =
+                        selectedCat?.subCategoryNames?.findIndex(
+                          (name) => name === e.target.value
+                        );
+
+                      const selectedSubId =
+                        selectedCat?.subCategories?.[selectedSubIdx] || "";
+
                       setFormData({
                         ...formData,
-                        subCat_id: selectedSub?._id || selectedName || "",
-                        subCategoryName:
-                          selectedSub?.name || selectedName || "",
+                        subCat_id: selectedSubId, // save ID
+                        subCategoryName: e.target.value, // save name
                       });
                     }}
                     className="w-full border rounded p-2"
                   >
                     <option value="">Select Subcategory</option>
-                    {category
-                      .find((c) => c._id === formData.cat_id)
-                      ?.subCategories?.map((sub) => (
-                        <option key={sub._id} value={sub._id}>
-                          {sub.name}
-                        </option>
-                      ))}
                     {category
                       .find((c) => c._id === formData.cat_id)
                       ?.subCategoryNames?.map((name, idx) => (
@@ -659,7 +643,7 @@ const Products = () => {
               </select>
 
               {/* Sunglasses Fields */}
-              {formData.subCategoryName !== "Contact Lenses" && (
+              {formData.subCat_id !== "68caa86cd72068a7d3a0f0bf" && (
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
@@ -697,7 +681,7 @@ const Products = () => {
               )}
 
               {/* Contact Lens Fields */}
-              {formData.subCategoryName === "Contact Lenses" && (
+              {formData.subCat_id === "68caa86cd72068a7d3a0f0bf" && (
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
