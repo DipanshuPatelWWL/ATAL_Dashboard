@@ -27,18 +27,20 @@ const CustomerClaims = () => {
     useEffect(() => {
         fetchClaims();
     }, []);
+
     const handleStatusChange = async (claimId, status) => {
         if (status === "Approved") {
+            // APPROVAL FLOW
             const { value: formValues } = await Swal.fire({
                 title: "Approve Claim",
                 html: `
-        <div class="flex flex-col gap-2">
-          <input id="claimAmount" type="number" placeholder="Enter claim settlement amount" 
-            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <textarea id="claimNotes" placeholder="Enter notes (optional)" maxlength="250"
-            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-        </div>
-      `,
+                    <div class="flex flex-col gap-2">
+                        <input id="claimAmount" type="number" placeholder="Enter claim settlement amount" 
+                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <textarea id="claimNotes" placeholder="Enter notes (optional)" maxlength="250"
+                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                `,
                 showCancelButton: true,
                 confirmButtonText: "Confirm",
                 cancelButtonText: "Cancel",
@@ -47,7 +49,6 @@ const CustomerClaims = () => {
                     const claimAmount = document.getElementById("claimAmount").value;
                     const notes = document.getElementById("claimNotes").value;
 
-                    // Condition: claimAmount must be positive number
                     if (!claimAmount || isNaN(claimAmount) || Number(claimAmount) <= 0) {
                         Swal.showValidationMessage("Please enter a valid claim amount greater than 0");
                         return false;
@@ -73,35 +74,58 @@ const CustomerClaims = () => {
                 });
                 Swal.fire(
                     "Success",
-                    `Claim approved with amount ₹${formValues.claimAmount}`,
+                    `Claim approved with amount $${formValues.claimAmount}`,
                     "success"
                 );
                 fetchClaims();
             } catch (err) {
                 Swal.fire("Error", "Failed to update claim", "error");
             }
-        } else {
-            // Rejected flow
-            const result = await Swal.fire({
-                title: `Are you sure you want to ${status.toLowerCase()} this claim?`,
-                icon: "warning",
+        } else if (status === "Rejected") {
+            // REJECTION FLOW
+            const { value: rejectionReason } = await Swal.fire({
+                title: "Reject Claim",
+                html: `
+                    <div class="flex flex-col gap-2">
+                        <label for="rejectionReason" class="text-gray-700 font-medium">Rejection Reason</label>
+                        <textarea id="rejectionReason" placeholder="Enter reason for rejection" maxlength="250"
+                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                    </div>
+                `,
                 showCancelButton: true,
-                confirmButtonText: `Yes, ${status}`,
+                confirmButtonText: "Confirm Rejection",
+                cancelButtonText: "Cancel",
+                focusConfirm: false,
+                preConfirm: () => {
+                    const reason = document.getElementById("rejectionReason").value.trim();
+                    if (!reason) {
+                        Swal.showValidationMessage("Please enter a rejection reason.");
+                        return false;
+                    }
+                    return reason;
+                },
+                customClass: {
+                    confirmButton: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded ml-2",
+                    cancelButton: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded",
+                    popup: "p-6 rounded-lg border border-gray-300 shadow-lg max-w-md w-full",
+                    title: "text-xl font-bold mb-4 text-gray-800 text-center",
+                },
             });
 
-            if (!result.isConfirmed) return;
+            if (!rejectionReason) return; // cancelled
 
             try {
-                await API.put(`/claims/${claimId}`, { status });
-                Swal.fire("Success", `Claim ${status}`, "success");
+                await API.put(`/claims/${claimId}`, {
+                    status,
+                    rejectionReason,
+                });
+                Swal.fire("Rejected", "Claim has been rejected successfully", "success");
                 fetchClaims();
             } catch (err) {
-                Swal.fire("Error", "Failed to update claim", "error");
+                Swal.fire("Error", "Failed to reject claim", "error");
             }
         }
     };
-
-
 
     return (
         <div className="p-6">
