@@ -207,10 +207,15 @@ const Inquiry = () => {
                                             setSelectedInquiry(data);
                                             setShowResponse(true);
                                         }}
-                                        className="text-white p-2 rounded bg-red-600 hover:bg-red-700 hover:cursor-pointer"
+                                        disabled={data.inquiryStatus === "close"}
+                                        className={`text-white p-2 rounded transition ${data.inquiryStatus === "close"
+                                            ? "bg-red-400 cursor-not-allowed"
+                                            : "bg-red-600 hover:bg-red-700 cursor-pointer"
+                                            }`}
                                     >
                                         Send Response
                                     </button>
+
                                 </td>
                             </tr>
                         ))}
