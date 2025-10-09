@@ -21,8 +21,10 @@ export default function PolicyManagement() {
         title: "",
     });
     const [query, setQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [policyPerPage] = useState(10);
 
-    // fetch policies
+    // Fetch policies
     useEffect(() => {
         loadPolicies();
     }, []);
@@ -45,12 +47,12 @@ export default function PolicyManagement() {
         }
     };
 
-    // handle form input
+    // Handle form input
     const handleChange = (e) => {
         setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
     };
 
-    // open add modal
+    // Open add modal
     const openAdd = () => {
         setForm({ name: "", coverage: "", price: "", durationDays: "" });
         setFormMode("add");
@@ -58,7 +60,7 @@ export default function PolicyManagement() {
         setShowFormModal(true);
     };
 
-    // open edit modal with prefill
+    // Open edit modal
     const openEdit = (policy) => {
         setForm({
             name: policy.name || "",
@@ -71,7 +73,7 @@ export default function PolicyManagement() {
         setShowFormModal(true);
     };
 
-    // submit add or update
+    // Submit add or update
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -86,7 +88,7 @@ export default function PolicyManagement() {
                     icon: "error",
                     title: "Company Details Missing",
                     text: "Please log in before adding a policy.",
-                    confirmButtonColor: "#d33", // red button
+                    confirmButtonColor: "#d33",
                 });
                 setLoading(false);
                 return;
@@ -101,13 +103,11 @@ export default function PolicyManagement() {
 
             if (formMode === "add") {
                 await API.post("/addPolicies", payload);
-                setShowFormModal(false);
-                await loadPolicies();
             } else {
                 await API.put(`/updatePolicy/${editId}`, payload);
-                setShowFormModal(false);
-                await loadPolicies();
             }
+            setShowFormModal(false);
+            await loadPolicies();
         } catch (err) {
             console.error("Save failed", err);
             Swal.fire({
@@ -121,7 +121,7 @@ export default function PolicyManagement() {
         }
     };
 
-    // delete with confirmation
+    // Delete policy
     const handleDelete = async (id) => {
         const ok = window.confirm("Are you sure you want to delete this policy?");
         if (!ok) return;
@@ -136,24 +136,30 @@ export default function PolicyManagement() {
                 icon: "error",
                 title: "Delete Failed",
                 text: err?.response?.data?.message || "Failed to delete policy. Please try again.",
-                confirmButtonColor: "#d33", // red button to match your theme
+                confirmButtonColor: "#d33",
             });
         } finally {
             setLoading(false);
         }
     };
 
-    // view full coverage
+    // View coverage modal
     const viewCoverage = (policy) => {
         setCoverageViewer({ open: true, text: policy.coverage || "", title: policy.name || "Coverage" });
     };
 
-    // filtered list
+    // Filtered + Pagination
     const filtered = policies.filter((p) =>
         p.name?.toLowerCase().includes(query.trim().toLowerCase())
     );
+    const totalPages = Math.ceil(filtered.length / policyPerPage);
+    const indexOfLastPolicy = currentPage * policyPerPage;
+    const indexOfFirstPolicy = indexOfLastPolicy - policyPerPage;
+    const currentPolicies = filtered.slice(indexOfFirstPolicy, indexOfLastPolicy);
 
-    // utility truncate
+    const handlePageChange = (page) => setCurrentPage(page);
+
+    // Truncate utility
     const truncate = (text, n = 80) =>
         !text ? "" : text.length > n ? text.slice(0, n).trim() + "…" : text;
 
@@ -164,13 +170,15 @@ export default function PolicyManagement() {
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Insurance Policies</h1>
                 </div>
-
                 <div className="flex items-center gap-3">
                     <div className="w-64">
                         <input
                             type="text"
                             value={query}
-                            onChange={(e) => setQuery(e.target.value)}
+                            onChange={(e) => {
+                                setQuery(e.target.value);
+                                setCurrentPage(1); // Reset to first page on search
+                            }}
                             placeholder="Search by policy name"
                             className="w-full px-3 py-2 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
@@ -186,9 +194,9 @@ export default function PolicyManagement() {
 
             {/* Table */}
             <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-h-[600px]">
                     <table className="min-w-full divide-y divide-gray-100 text-md">
-                        <thead className="bg-black">
+                        <thead className="bg-black sticky top-0 z-10">
                             <tr>
                                 <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase">Policy Name</th>
                                 <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase w-1/3">Coverage</th>
@@ -204,12 +212,12 @@ export default function PolicyManagement() {
                                 <tr>
                                     <td colSpan="6" className="py-8 text-center text-gray-500">Loading policies...</td>
                                 </tr>
-                            ) : filtered.length === 0 ? (
+                            ) : currentPolicies.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" className="py-8 text-center text-gray-500">No policies found</td>
                                 </tr>
                             ) : (
-                                filtered.map((p) => (
+                                currentPolicies.map((p) => (
                                     <tr key={p._id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 font-medium text-gray-900">{p.name}</td>
                                         <td className="px-6 py-4 text-gray-700">
@@ -225,7 +233,7 @@ export default function PolicyManagement() {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-900">₹{p.price}</td>
+                                        <td className="px-6 py-4 text-gray-900">${p.price}</td>
                                         <td className="px-6 py-4 text-gray-900">{p.durationDays}</td>
                                         <td className="px-6 py-4 text-gray-700">{p.companyName}</td>
                                         <td className="px-6 py-4 text-right">
@@ -249,10 +257,28 @@ export default function PolicyManagement() {
                             )}
                         </tbody>
                     </table>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="flex justify-center mt-4 space-x-2 pb-4">
+                            {[...Array(totalPages)].map((_, i) => (
+                                <button
+                                    key={i}
+                                    className={`px-3 py-1 border rounded transition-colors ${currentPage === i + 1
+                                        ? "bg-red-600 text-white border-red-600"
+                                        : "hover:bg-red-100"
+                                        }`}
+                                    onClick={() => handlePageChange(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Form Modal (Add / Edit) */}
+            {/* Form Modal */}
             {showFormModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <div className="w-full max-w-lg bg-white rounded-lg shadow-2xl overflow-hidden">

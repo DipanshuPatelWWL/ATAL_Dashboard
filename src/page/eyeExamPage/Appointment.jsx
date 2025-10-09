@@ -8,6 +8,8 @@ const Appointment = () => {
     const [filteredExam, setFilteredExam] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [filterDoctor, setFilterDoctor] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [examPerPage] = useState(8);
 
     const fetchAllExam = async () => {
         try {
@@ -24,7 +26,6 @@ const Appointment = () => {
         fetchAllExam();
     }, []);
 
-    // 🔍 Filter + Search Functionality
     useEffect(() => {
         let filtered = allExam;
 
@@ -45,7 +46,14 @@ const Appointment = () => {
         }
 
         setFilteredExam(filtered);
+        setCurrentPage(1); // reset to first page on filter
     }, [searchTerm, filterDoctor, allExam]);
+
+    // Pagination logic
+    const indexOfLastExam = currentPage * examPerPage;
+    const indexOfFirstExam = indexOfLastExam - examPerPage;
+    const currentExams = filteredExam.slice(indexOfFirstExam, indexOfLastExam);
+    const totalPages = Math.ceil(filteredExam.length / examPerPage);
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -61,7 +69,6 @@ const Appointment = () => {
 
             {/* Search & Filter */}
             <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-                {/* Search Bar */}
                 <div className="relative w-full md:w-1/2">
                     <input
                         type="text"
@@ -73,7 +80,6 @@ const Appointment = () => {
                     <FaSearch className="absolute left-3 top-3 text-gray-400" />
                 </div>
 
-                {/* Doctor Filter */}
                 <select
                     className="w-full md:w-1/4 py-2 px-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none shadow-sm"
                     value={filterDoctor}
@@ -106,8 +112,8 @@ const Appointment = () => {
                 </div>
 
                 <div className="max-h-[560px] overflow-y-auto">
-                    {filteredExam.length > 0 ? (
-                        filteredExam.map((data, idx) => (
+                    {currentExams.length > 0 ? (
+                        currentExams.map((data, idx) => (
                             <motion.div
                                 key={idx}
                                 className={`grid grid-cols-9 text-center items-center px-4 py-3 text-sm border-b border-gray-200 ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"
@@ -116,7 +122,6 @@ const Appointment = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3, delay: idx * 0.05 }}
                                 whileHover={{
-
                                     backgroundColor: "#b0b0ad39",
                                     transition: { duration: 0.2 },
                                 }}
@@ -141,6 +146,24 @@ const Appointment = () => {
                     )}
                 </div>
             </div>
+
+            {/* Pagination */}
+            {filteredExam.length > 0 && (
+                <div className="flex justify-center mt-6 gap-2 flex-wrap">
+                    {[...Array(totalPages)].map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setCurrentPage(i + 1)}
+                            className={`px-3 py-1 rounded-lg border ${currentPage === i + 1
+                                ? "bg-red-600 text-white font-semibold"
+                                : "bg-gray-100 hover:bg-gray-200"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

@@ -10,6 +10,8 @@ const AdminOrderUpdate = () => {
     const [deliveryDate, setDeliveryDate] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [allData, setAllData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [ordersPerPage] = useState(8);
 
     const navigate = useNavigate();
 
@@ -59,6 +61,12 @@ const AdminOrderUpdate = () => {
         }
     };
 
+    // Pagination logic
+    const totalPages = Math.ceil(allData.length / ordersPerPage);
+    const indexOfLast = currentPage * ordersPerPage;
+    const indexOfFirst = indexOfLast - ordersPerPage;
+    const currentOrders = allData.slice(indexOfFirst, indexOfLast);
+
     return (
         <div className="p-4">
             <h2 className="text-2xl font-bold mb-4">Admin Orders</h2>
@@ -74,19 +82,21 @@ const AdminOrderUpdate = () => {
                     <div>ACTIONS</div>
                 </div>
 
-                {allData.length === 0 ? (
+                {currentOrders.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 text-lg">
                         No Orders Found
                     </div>
                 ) : (
-                    allData.map((data, idx) => (
+                    currentOrders.map((data, idx) => (
                         <div
                             key={idx}
                             className={`grid grid-cols-6 text-center items-center px-4 py-3 border-b border-gray-200 text-sm hover:bg-gray-100 ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"
                                 }`}
                         >
                             <div className="break-words whitespace-normal">{data._id}</div>
-                            <div className="break-words whitespace-normal ml-4">{data.userId}</div>
+                            <div className="break-words whitespace-normal ml-4">
+                                {data.userId}
+                            </div>
                             <div>{data.orderStatus}</div>
                             <div>{data.trackingNumber || "-"}</div>
                             <div>
@@ -134,76 +144,24 @@ const AdminOrderUpdate = () => {
                 )}
             </div>
 
-            {/* Mobile Cards */}
-            <div className="md:hidden flex flex-col gap-4 mt-4">
-                {allData.length === 0 ? (
-                    <div className="text-center py-10 text-gray-500 text-lg">
-                        No Orders Found
-                    </div>
-                ) : (
-                    allData.map((data, idx) => (
-                        <div
-                            key={idx}
-                            className="bg-white border rounded-lg shadow p-4 flex flex-col gap-2 animate-fadeIn"
+            {/* Pagination */}
+            {allData.length > 0 && (
+                <div className="flex justify-center mt-6 gap-2 flex-wrap">
+                    {[...Array(totalPages)].map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setCurrentPage(i + 1)}
+                            className={`px-3 py-1 rounded-lg border ${currentPage === i + 1
+                                ? "bg-blue-600 text-white font-semibold"
+                                : "bg-gray-100 hover:bg-gray-200"
+                                }`}
                         >
-                            <p className="text-sm font-medium break-words">
-                                <span className="font-semibold">Order ID:</span> {data._id}
-                            </p>
-                            <p className="text-sm text-gray-600 break-words">
-                                <span className="font-semibold">User ID:</span> {data.userId}
-                            </p>
-                            <p className="text-sm text-gray-600">
-                                <span className="font-semibold">Status:</span> {data.orderStatus}
-                            </p>
-                            <p className="text-sm text-gray-600 break-words">
-                                <span className="font-semibold">Tracking:</span> {data.trackingNumber || "-"}
-                            </p>
-                            <p className="text-sm text-gray-600">
-                                <span className="font-semibold">Date:</span>{" "}
-                                {data.deliveryDate
-                                    ? new Date(data.deliveryDate).toISOString().split("T")[0]
-                                    : new Date(data.updatedAt).toISOString().split("T")[0]}
-                            </p>
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
 
-                            <div className="flex gap-2 mt-2">
-                                <button
-                                    onClick={() => {
-                                        setOrderId(data._id);
-                                        setStatus(data.orderStatus);
-                                        setTrackingNumber(data.trackingNumber || "");
-
-                                        const now = new Date();
-                                        const pad = (n) => n.toString().padStart(2, "0");
-                                        const localDateTime = `${now.getFullYear()}-${pad(
-                                            now.getMonth() + 1
-                                        )}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(
-                                            now.getMinutes()
-                                        )}`;
-
-                                        setDeliveryDate(
-                                            data.deliveryDate
-                                                ? new Date(data.deliveryDate).toISOString().slice(0, 16)
-                                                : localDateTime
-                                        );
-
-                                        setShowModal(true);
-                                    }}
-                                    className="bg-blue-500 px-4 py-2 rounded-xl text-white hover:bg-blue-600 transition w-1/2"
-                                >
-                                    Change Status
-                                </button>
-
-                                <button
-                                    onClick={() => navigate(`/admin/order-details/${data._id}`)}
-                                    className="bg-green-600 px-4 py-2 rounded-xl text-white hover:bg-green-700 transition w-1/2"
-                                >
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
 
             {/* Modal */}
             {showModal && (

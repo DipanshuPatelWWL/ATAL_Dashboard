@@ -14,7 +14,11 @@ const EyeService = () => {
         description: ""
     })
 
+    const [eyeServiceData, setEyeServiceData] = useState([])
 
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 5
 
     const handleChange = (e) => {
         setFormData(
@@ -22,14 +26,12 @@ const EyeService = () => {
         )
     }
 
-
     const handleFileChange = (e) => {
         setFormData((prev) => ({
             ...prev,
             image: e.target.files[0],
         }));
     };
-
 
     const handleUpdateClick = (service) => {
         setModalType("update")
@@ -42,8 +44,7 @@ const EyeService = () => {
         })
     }
 
-
-    //Delete API
+    // Delete API
     const handleDelete = async (id) => {
         try {
             await API.delete(`/deleteEyeService/${id}`)
@@ -51,7 +52,7 @@ const EyeService = () => {
             Swal.fire({
                 icon: "success",
                 title: "Done!",
-                text: "Eye services deleted successfully!",
+                text: "Eye service deleted successfully!",
                 timer: 2000,
                 showConfirmButton: false,
             });
@@ -66,15 +67,10 @@ const EyeService = () => {
         }
     }
 
-
-
-
-    //Get API
-    const [eyeServiceData, setEyeServiceData] = useState([])
+    // Get API
     const fetchEyeService = async () => {
         try {
             const response = await API.get("/getEyeService")
-
             setEyeServiceData(response.data.EyeServiceData)
         } catch (error) {
             console.log(error)
@@ -84,8 +80,6 @@ const EyeService = () => {
     useEffect(() => {
         fetchEyeService();
     }, [])
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -98,7 +92,7 @@ const EyeService = () => {
             if (formData.image && formData.image instanceof File) {
                 formDataToSend.append("image", formData.image);
             }
-            //Post API
+
             if (modalType === "add") {
                 await API.post("/addEyeService", formDataToSend, {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -106,24 +100,23 @@ const EyeService = () => {
                 Swal.fire({
                     icon: "success",
                     title: "Done!",
-                    text: "Eye services created successfully!",
+                    text: "Eye service created successfully!",
                     timer: 2000,
                     showConfirmButton: false,
                 });
-
             } else {
-                //Put API
                 await API.put(`/updateEyeService/${formData.id}`, formDataToSend, {
                     headers: { "Content-Type": "multipart/form-data" },
                 })
                 Swal.fire({
                     icon: "success",
                     title: "Done!",
-                    text: "Eye services update successfully!",
+                    text: "Eye service updated successfully!",
                     timer: 2000,
                     showConfirmButton: false,
                 });
             }
+
             setShowModal(false)
             setFormData({ heading: "", description: "", image: null })
             fetchEyeService()
@@ -132,15 +125,23 @@ const EyeService = () => {
         }
     }
 
+    // Pagination logic
+    const totalPages = Math.ceil(eyeServiceData.length / itemsPerPage)
+    const indexOfLast = currentPage * itemsPerPage
+    const indexOfFirst = indexOfLast - itemsPerPage
+    const currentData = eyeServiceData.slice(indexOfFirst, indexOfLast)
 
     return (
         <div className='p-4'>
-            {/* Add Eyecheck Button */}
+            {/* Add Eye Service Button */}
             <div className='flex justify-end'>
                 <button
-                    onClick={() => { setShowModal(true), setModalType("add") }}
-                    className='bg-green-500 text-white px-3 py-1 text-xl font-semibold rounded-lg mb-4 hover:cursor-pointer flex items-center gap-2 '> <FaPlus /> ADD EYESERVICE</button>
+                    onClick={() => { setShowModal(true); setModalType("add") }}
+                    className='bg-green-500 text-white px-3 py-1 text-xl font-semibold rounded-lg mb-4 hover:cursor-pointer flex items-center gap-2'>
+                    <FaPlus /> ADD EYE SERVICE
+                </button>
             </div>
+
             {/* Table Header */}
             <div className="overflow-x-auto w-full">
                 <div className="grid grid-cols-4 gap-x-10 bg-black text-white py-2 px-4 font-semibold">
@@ -151,7 +152,8 @@ const EyeService = () => {
                 </div>
             </div>
 
-            {eyeServiceData.map((data, idx) => (
+            {/* Table Rows */}
+            {currentData.map((data, idx) => (
                 <div
                     key={idx}
                     className="grid grid-cols-4 gap-x-10 items-start border-b border-gray-300 py-2 px-4">
@@ -186,32 +188,53 @@ const EyeService = () => {
                 </div>
             ))}
 
+            {/* Pagination Buttons */}
+            <div className="flex justify-center mt-4 gap-2 flex-wrap">
+                {[...Array(totalPages)].map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentPage(index + 1)}
+                        className={`px-3 py-1 rounded ${currentPage === index + 1
+                            ? "bg-green-600 text-white"
+                            : "bg-gray-200 hover:bg-gray-300"
+                            }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+            </div>
 
-
-            {/*Modal*/}
-            {showModal &&
-                <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center">
+            {/* Modal */}
+            {showModal && (
+                <div className="fixed inset-0 backdrop-blur-sm bg-black/40 flex justify-center items-center z-50">
                     <div className="bg-white rounded-lg shadow-lg w-96 p-6 relative">
-                        <h2 className="text-xl font-bold mb-4">Add Eye Service</h2>
+                        <h2 className="text-xl font-bold mb-4">
+                            {modalType === "add" ? "Add Eye Service" : "Update Eye Service"}
+                        </h2>
                         <form onSubmit={handleSubmit} className="space-y-3">
-                            <input type="text"
+                            <input
+                                type="text"
                                 name='heading'
                                 value={formData.heading}
                                 onChange={handleChange}
                                 placeholder='Heading'
-                                className="border p-2 w-full rounded" />
+                                className="border p-2 w-full rounded"
+                            />
 
                             <textarea
                                 name='description'
                                 onChange={handleChange}
                                 value={formData.description}
                                 className="border p-2 w-full rounded mt-4"
-                                placeholder='Description'></textarea>
-                            <input type="file"
+                                placeholder='Description'>
+                            </textarea>
+
+                            <input
+                                type="file"
                                 onChange={handleFileChange}
                                 name='image'
-                                className="border p-2 w-full rounded mt-3" />
-
+                                className="border p-2 w-full rounded mt-3"
+                            />
 
                             <div className="flex justify-between mt-4">
                                 <button
@@ -228,11 +251,8 @@ const EyeService = () => {
                             </div>
                         </form>
                     </div>
-
                 </div>
-            }
-
-
+            )}
         </div>
     )
 }

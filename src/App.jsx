@@ -15,6 +15,8 @@ import Appointment from "./page/eyeExamPage/Appointment";
 import VendorOrderDetails from "./page/vender/VendorOrderDetails";
 import AdminOrderDetails from "./page/ordderTracking/AdminOrderDetails";
 import ClaimDetails from "./page/company/CustomerPolicy/ClaimDetails";
+import VendorDetails from "./page/vender/VendorDetails";
+import AdminCompanyDetailsPage from "./page/company/AdminCompanyDetailsPage";
 
 // ---------- lazy imports ----------
 const Login = lazy(() => import("./page/login/Login"));
@@ -100,7 +102,9 @@ function App() {
             <Route path="review" element={<Review />} />
             <Route path="eyeCheck" element={<EyeCheck />} />
             <Route path="vendor" element={<VendorPage />} />
+            <Route path="vendor/:id" element={<VendorDetails />} />
             <Route path="company" element={<AdminCompanyDetails />} />
+            <Route path="company/:id" element={<AdminCompanyDetailsPage />} />
             <Route path="testimonials" element={<Testimonials />} />
             <Route path="eyewearTips" element={<EyewearTips />} />
             <Route path="inquiries" element={<Inquiry />} />
