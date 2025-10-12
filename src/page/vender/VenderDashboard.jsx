@@ -10,7 +10,6 @@ const VenderDashboard = () => {
         { name: "Discounted Product", path: "/vendor/discount-product" },
         { name: "Order", path: "/vendor/order" },
         { name: "Profile", path: "/vendor/profile" },
-        { name: "FAQ", path: "/vendor/faq" },
         { name: "Chat", path: "/vendor/chat" },
         { name: "Vendor Policy", path: "/vendor/privacy-policy" },
     ];
