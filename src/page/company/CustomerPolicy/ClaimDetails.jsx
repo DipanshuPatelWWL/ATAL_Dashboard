@@ -311,7 +311,7 @@ const ClaimDetails = () => {
                         className="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-2xl"
                     />
                     <button
-                        className="absolute top-6 right-8 text-white text-4xl hover:text-red-500"
+                        className="absolute top-6 right-8 text-white text-4xl hover:text-red-500 hover:cursor-pointer"
                         onClick={() => setFullscreenImage(null)}
                     >
                         &times;

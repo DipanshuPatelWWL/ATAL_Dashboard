@@ -406,7 +406,7 @@ const Login = () => {
                       onChange={(e) => setResetEmail(e.target.value)}
                     />
                     <button
-                      className="w-full bg-blue-600 text-white py-2 rounded"
+                      className="w-full bg-blue-600 text-white py-2 rounded hover:cursor-pointer"
                       onClick={sendOtp}
                     >
                       Send OTP
@@ -425,7 +425,7 @@ const Login = () => {
                       onChange={(e) => setOtp(e.target.value)}
                     />
                     <button
-                      className="w-full bg-blue-600 text-white py-2 rounded"
+                      className="w-full bg-blue-600 text-white py-2 rounded hover:cursor-pointer"
                       onClick={verifyOtp}
                     >
                       Verify OTP
@@ -444,7 +444,7 @@ const Login = () => {
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
                     <button
-                      className="w-full bg-blue-600 text-white py-2 rounded"
+                      className="w-full bg-blue-600 text-white py-2 rounded hover:cursor-pointer"
                       onClick={resetPassword}
                     >
                       Reset Password

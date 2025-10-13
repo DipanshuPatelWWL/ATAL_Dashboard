@@ -363,7 +363,7 @@ const DoctorSchedule = () => {
                                 ))}
                                 <button
                                     type="button"
-                                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                                    className="bg-blue-500 text-white px-3 py-1 rounded hover:cursor-pointer"
                                     onClick={addTimeField}
                                 >
                                     + Add Time

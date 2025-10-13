@@ -185,7 +185,7 @@ export default function PolicyManagement() {
                     </div>
                     <button
                         onClick={openAdd}
-                        className="px-4 py-2 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition-shadow shadow-sm"
+                        className="px-4 py-2 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition-shadow shadow-sm hover:cursor-pointer"
                     >
                         Add Policy
                     </button>
@@ -226,7 +226,7 @@ export default function PolicyManagement() {
                                                 {p.coverage && p.coverage.length > 80 && (
                                                     <button
                                                         onClick={() => viewCoverage(p)}
-                                                        className="text-sm underline ml-1 text-red-600 hover:text-red-700"
+                                                        className="text-sm underline ml-1 text-red-600 hover:text-red-700 hover:cursor-pointer"
                                                     >
                                                         View
                                                     </button>
@@ -240,13 +240,13 @@ export default function PolicyManagement() {
                                             <div className="inline-flex items-center gap-2">
                                                 <button
                                                     onClick={() => openEdit(p)}
-                                                    className="px-3 py-1.5 rounded-md border border-gray-200 text-sm text-white font-medium bg-blue-600 hover:bg-blue-700"
+                                                    className="px-3 py-1.5 rounded-md border border-gray-200 text-sm text-white font-medium bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(p._id)}
-                                                    className="px-3 py-1.5 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700"
+                                                    className="px-3 py-1.5 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700 hover:cursor-pointer"
                                                 >
                                                     Delete
                                                 </button>
@@ -288,7 +288,7 @@ export default function PolicyManagement() {
                             </h2>
                             <button
                                 onClick={() => setShowFormModal(false)}
-                                className="text-sm text-gray-500 hover:text-gray-700"
+                                className="text-sm text-gray-500 hover:text-gray-700 hover:cursor-pointer"
                             >
                                 Close
                             </button>
@@ -348,14 +348,14 @@ export default function PolicyManagement() {
                                 <button
                                     type="button"
                                     onClick={() => setShowFormModal(false)}
-                                    className="px-4 py-2 rounded-md border border-gray-200 text-sm text-gray-700 hover:bg-gray-50"
+                                    className="px-4 py-2 rounded-md border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 hover:cursor-pointer"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="px-4 py-2 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700"
+                                    className="px-4 py-2 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700 hover:cursor-pointer"
                                 >
                                     {loading ? "Saving..." : formMode === "add" ? "Add Policy" : "Save Changes"}
                                 </button>
@@ -373,7 +373,7 @@ export default function PolicyManagement() {
                             <h3 className="text-lg font-semibold text-gray-900">{coverageViewer.title}</h3>
                             <button
                                 onClick={() => setCoverageViewer({ open: false, text: "", title: "" })}
-                                className="text-sm text-gray-600 hover:text-gray-800"
+                                className="text-sm text-gray-600 hover:text-gray-800 hover:cursor-pointer"
                             >
                                 Close
                             </button>
@@ -384,7 +384,7 @@ export default function PolicyManagement() {
                         <div className="px-6 py-4 border-t flex justify-end">
                             <button
                                 onClick={() => setCoverageViewer({ open: false, text: "", title: "" })}
-                                className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+                                className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 hover:cursor-pointer"
                             >
                                 Close
                             </button>

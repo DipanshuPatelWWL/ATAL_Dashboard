@@ -126,7 +126,7 @@ const CouponCode = () => {
             setShowModal(true);
             setEditId(null);
           }}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:cursor-pointer"
         >
           Add Coupon
         </button>
@@ -165,13 +165,13 @@ const CouponCode = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => handleUpdateClick(c)}
-                className="bg-blue-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap"
+                className="bg-blue-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap hover:cursor-pointer"
               >
                 <RiEdit2Fill /> <span>Edit</span>
               </button>
               <button
                 onClick={() => handleDelete(c._id)}
-                className="bg-red-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap"
+                className="bg-red-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap hover:cursor-pointer"
               >
                 <MdDelete /> <span>Delete</span>
               </button>
@@ -272,13 +272,13 @@ const CouponCode = () => {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded w-full sm:w-auto"
+                  className="bg-gray-500 text-white px-4 py-2 rounded w-full sm:w-auto hover:cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+                  className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto hover:cursor-pointer"
                 >
                   Submit
                 </button>

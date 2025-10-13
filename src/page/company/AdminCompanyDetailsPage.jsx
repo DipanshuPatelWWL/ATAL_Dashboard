@@ -13,8 +13,8 @@ const CompanyDetailsPage = () => {
       if (!company) {
         try {
           const res = await API.get(`/getCompany/${id}`);
-        
-          
+
+
           setCompany(res.data);
         } catch (error) {
           console.error("Error fetching company:", error);
@@ -63,9 +63,9 @@ const CompanyDetailsPage = () => {
     "businessNumber",
     "address1",
     "address2",
-    "province", 
-    "city", 
-    "postalCode", 
+    "province",
+    "city",
+    "postalCode",
     "website",
   ];
   const knownFields = [...importantFields, ...companyFields];
@@ -103,7 +103,7 @@ const CompanyDetailsPage = () => {
     <div className="p-6">
       <button
         onClick={() => navigate(-1)}
-        className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded mb-4"
+        className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded mb-4 hover:cursor-pointer"
       >
         ← Back
       </button>
