@@ -127,14 +127,14 @@ const AdminOrderUpdate = () => {
 
                                         setShowModal(true);
                                     }}
-                                    className="bg-blue-500 px-4 py-2 rounded-xl text-white hover:bg-blue-600 transition"
+                                    className="bg-blue-500 px-4 py-2 rounded-xl text-white hover:bg-blue-600 transition hover:cursor-pointer"
                                 >
                                     Change Status
                                 </button>
 
                                 <button
                                     onClick={() => navigate(`/admin/order-details/${data._id}`)}
-                                    className="bg-green-600 px-4 py-2 rounded-xl text-white hover:bg-green-700 transition"
+                                    className="bg-green-600 px-4 py-2 rounded-xl text-white hover:bg-green-700 transition hover:cursor-pointer"
                                 >
                                     View Details
                                 </button>
@@ -151,7 +151,7 @@ const AdminOrderUpdate = () => {
                         <button
                             key={i}
                             onClick={() => setCurrentPage(i + 1)}
-                            className={`px-3 py-1 rounded-lg border ${currentPage === i + 1
+                            className={`px-3 py-1 rounded-lg border hover:cursor-pointer ${currentPage === i + 1
                                 ? "bg-blue-600 text-white font-semibold"
                                 : "bg-gray-100 hover:bg-gray-200"
                                 }`}

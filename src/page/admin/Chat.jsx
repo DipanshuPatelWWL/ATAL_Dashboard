@@ -112,9 +112,8 @@ const Chat = () => {
           <div
             key={vendor._id}
             onClick={() => setSelectedUser(vendor)}
-            className={`p-4 cursor-pointer border-b hover:bg-gray-100 ${
-              selectedUser?._id === vendor._id ? "bg-gray-200" : ""
-            }`}
+            className={`p-4 cursor-pointer border-b hover:bg-gray-100 ${selectedUser?._id === vendor._id ? "bg-gray-200" : ""
+              }`}
           >
             <p className="font-semibold">{vendor.contactName}</p>
             <p className="text-sm text-gray-500">{vendor.contactEmail}</p>
@@ -126,9 +125,8 @@ const Chat = () => {
           <div
             key={ins._id}
             onClick={() => setSelectedUser(ins)}
-            className={`p-4 cursor-pointer border-b hover:bg-gray-100 ${
-              selectedUser?._id === ins._id ? "bg-gray-200" : ""
-            }`}
+            className={`p-4 cursor-pointer border-b hover:bg-gray-100 ${selectedUser?._id === ins._id ? "bg-gray-200" : ""
+              }`}
           >
             <p className="font-semibold">{ins.companyName}</p>
             <p className="text-sm text-gray-500">{ins.contactEmail}</p>
@@ -156,20 +154,18 @@ const Chat = () => {
             messages.map((msg) => (
               <div
                 key={msg._id}
-                className={`flex ${
-                  msg.sender === selectedUser.userId
+                className={`flex ${msg.sender === selectedUser.userId
                     ? "justify-start"
                     : "justify-end"
-                } relative`}
+                  } relative`}
                 onMouseEnter={() => setActiveMsgMenu(msg._id)}
                 onMouseLeave={() => setActiveMsgMenu(null)}
               >
                 <div
-                  className={`px-4 py-2 rounded-lg max-w-xs break-words relative ${
-                    msg.sender === selectedUser.userId
+                  className={`px-4 py-2 rounded-lg max-w-xs break-words relative ${msg.sender === selectedUser.userId
                       ? "bg-gray-200 text-gray-800"
                       : "bg-green-500 text-white"
-                  }`}
+                    }`}
                 >
                   <div>{msg.text}</div>
 
@@ -210,11 +206,10 @@ const Chat = () => {
             disabled={!selectedUser}
           />
           <button
-            className={`px-4 py-2 rounded-r ${
-              selectedUser
+            className={`px-4 py-2 rounded-r ${selectedUser
                 ? "bg-blue-500 text-white hover:bg-blue-600"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
+                : "bg-gray-300 text-gray-500 cursor-not-allowed hover:cursor-pointer"
+              }`}
             onClick={handleSend}
             disabled={!selectedUser}
           >

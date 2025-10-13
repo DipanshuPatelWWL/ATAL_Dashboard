@@ -127,7 +127,7 @@ const AddInsurancePolicy = () => {
               coverageItems: ""
             });
           }}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:cursor-pointer"
         >
           Add Policy
         </button>
@@ -160,13 +160,13 @@ const AddInsurancePolicy = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => handleUpdateClick(p)}
-                className="bg-blue-500 px-3 py-1 rounded-xl text-white"
+                className="bg-blue-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
               >
                 <RiEdit2Fill />
               </button>
               <button
                 onClick={() => handleDelete(p._id)}
-                className="bg-red-500 px-3 py-1 rounded-xl text-white"
+                className="bg-red-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
               >
                 <MdDelete />
               </button>
@@ -235,13 +235,13 @@ const AddInsurancePolicy = () => {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded"
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded"
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:cursor-pointer"
                 >
                   Submit
                 </button>

@@ -167,14 +167,14 @@ const VendorApprovalProduct = () => {
                             <td className="border px-4 py-2 text-center space-x-2">
                                 <button
                                     onClick={() => handleApprove(pro._id)}
-                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 hover:cursor-pointer"
                                 >
                                     Approve
                                 </button>
 
                                 <button
                                     onClick={() => handleReject(pro._id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
                                 >
                                     Reject
                                 </button>

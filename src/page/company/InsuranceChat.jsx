@@ -3,7 +3,7 @@ import API from "../../API/Api";
 import { useAuth } from "../../authContext/AuthContext";
 
 const InsuranceChat = () => {
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [activeMsgMenu, setActiveMsgMenu] = useState(null); // hovered message
@@ -91,9 +91,8 @@ const InsuranceChat = () => {
               onMouseLeave={() => setActiveMsgMenu(null)}
             >
               <div
-                className={`px-4 py-2 rounded-lg max-w-xs break-words relative ${
-                  msg.sender === user._id ? "bg-green-500 text-white" : "bg-gray-200 text-gray-800"
-                }`}
+                className={`px-4 py-2 rounded-lg max-w-xs break-words relative ${msg.sender === user._id ? "bg-green-500 text-white" : "bg-gray-200 text-gray-800"
+                  }`}
               >
                 <div>{msg.text}</div>
                 <div className="text-xs opacity-70 mt-1">
@@ -130,7 +129,7 @@ const InsuranceChat = () => {
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 hover:cursor-pointer"
           onClick={handleSend}
         >
           Send
