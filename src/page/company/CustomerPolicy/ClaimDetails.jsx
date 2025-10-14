@@ -104,7 +104,7 @@ const ClaimDetails = () => {
                 </p>
                 <p>
                   <strong>Claim Settlement Amount:</strong>{" "}
-                  <span>₹{claim.claimAmount}</span>
+                  <span>${claim.claimAmount}</span>
                 </p>
                 <p>
                   <strong>Claim Settlement Note:</strong>{" "}
@@ -239,7 +239,7 @@ const ClaimDetails = () => {
                       <strong>Quantity:</strong> {product.quantity || 0}
                     </p>
                     <p>
-                      <strong>Total Price:</strong> ₹{claim.orderId?.total}
+                      <strong>Total Price:</strong> ${claim.orderId?.total}
                     </p>
                   </div>
                 </div>
@@ -252,17 +252,17 @@ const ClaimDetails = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700">
                     <p>
                       <strong>Lens Type:</strong>{" "}
-                      {product.lens?.lens.lensType?.name ||
+                      {product.lens?.lens?.lensType?.name ||
                         product.lens?.selectedLens ||
                         "N/A"}
                     </p>
                     <p>
                       <strong>Prescription Method:</strong>{" "}
-                      {product.lens?.lens.prescriptionMethod || "N/A"}
+                      {product.lens?.lens?.prescriptionMethod || "N/A"}
                     </p>
                     <p>
                       <strong>Prescription</strong>{" "}
-                      {product.lens?.lens.prescription || "N/A"}
+                      {product.lens?.lens?.prescription || "N/A"}
                     </p>
                     <p>
                       <strong>Enhancement:</strong> <br />

@@ -116,18 +116,12 @@ export default function VendorHome() {
       {/* Quick Navigation */}
       <div>
         <h2 className="text-xl font-bold mb-4 text-gray-800">Quick Navigation</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <Link
             to="/vendor/profile"
             className="bg-blue-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-blue-600 transition hover:cursor-pointer"
           >
             Manage Profile
-          </Link>
-          <Link
-            to="/vendor"
-            className="bg-green-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-green-600 transition hover:cursor-pointer"
-          >
-            Manage Services
           </Link>
           <Link
             to="/vendor/product"
@@ -136,16 +130,16 @@ export default function VendorHome() {
             Manage Products
           </Link>
           <Link
+            to="/vendor/discount-product"
+            className="bg-green-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-green-600 transition hover:cursor-pointer"
+          >
+            Manage Discount
+          </Link>
+          <Link
             to="/vendor/order"
             className="bg-red-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-red-600 transition hover:cursor-pointer"
           >
             Manage Orders
-          </Link>
-          <Link
-            to="/vendor"
-            className="bg-purple-500 text-white text-center py-4 px-6 rounded-xl shadow hover:bg-purple-600 transition hover:cursor-pointer"
-          >
-            Manage Payments
           </Link>
         </div>
       </div>
