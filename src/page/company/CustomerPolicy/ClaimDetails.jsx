@@ -99,7 +99,7 @@ const ClaimDetails = () => {
                                 </p>
                                 <p>
                                     <strong>Claim Settlement Amount:</strong>{" "}
-                                    <span>₹{claim.claimAmount}</span>
+                                    <span>${claim.claimAmount}</span>
                                 </p>
                                 <p>
                                     <strong>Claim Settlement Note:</strong>{" "}
@@ -228,7 +228,7 @@ const ClaimDetails = () => {
                                             <strong>Quantity:</strong> {product.quantity || 0}
                                         </p>
                                         <p>
-                                            <strong>Total Price:</strong> ₹{claim.orderId?.total}
+                                            <strong>Total Price:</strong> ${claim.orderId?.total}
                                         </p>
                                     </div>
                                 </div>

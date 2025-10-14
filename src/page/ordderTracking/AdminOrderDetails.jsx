@@ -58,9 +58,9 @@ const AdminOrderDetails = () => {
                     <p><strong>Status:</strong> {order.orderStatus}</p>
                     <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
                     <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
-                    <p><strong>Total:</strong> ₹{order.total}</p>
-                    <p><strong>Subtotal:</strong> ₹{order.subtotal}</p>
-                    <p><strong>Tax:</strong> ₹{order.tax}</p>
+                    <p><strong>Total:</strong> ${order.total}</p>
+                    <p><strong>Subtotal:</strong> ${order.subtotal}</p>
+                    <p><strong>Tax:</strong> ${order.tax}</p>
                     <p><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</p>
                     <p><strong>Updated At:</strong> {new Date(order.updatedAt).toLocaleString()}</p>
                 </div>
