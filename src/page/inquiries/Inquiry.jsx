@@ -142,7 +142,7 @@ const Inquiry = () => {
             <hr className="w-42 border-t-2 border-red-600" />
 
             {/* Dropdown + Total count */}
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between mt-4 relative z-20">
                 <div className="relative w-60" ref={dropdownRef}>
                     <button
                         onClick={() => setOpen(!open)}
@@ -156,12 +156,20 @@ const Inquiry = () => {
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                         >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                            />
                         </svg>
                     </button>
 
                     {open && (
-                        <div className="absolute z-10 mt-1 w-full rounded-lg border border-red-600 bg-white shadow-lg">
+                        <div
+                            className="absolute z-50 mt-1 w-full rounded-lg border border-red-600 bg-white shadow-lg"
+                            style={{ top: "110%" }}
+                        >
                             <ul className="max-h-48 overflow-auto rounded-lg">
                                 {options.map((option) => (
                                     <li
@@ -183,10 +191,10 @@ const Inquiry = () => {
             </div>
 
             {/* Table */}
-            <div className="overflow-y-auto mt-6">
+            <div className="overflow-y-auto mt-6 max-h-[500px]">
                 <table className="table-auto border-collapse border border-gray-500 w-full text-center">
-                    <thead>
-                        <tr className="bg-gray-200">
+                    <thead className="sticky top-0 bg-gray-200 z-10">
+                        <tr>
                             <th className="border px-4 py-2">Inquiry Number</th>
                             <th className="border px-4 py-2">User Type</th>
                             <th className="border px-4 py-2">Name</th>
@@ -202,7 +210,7 @@ const Inquiry = () => {
                                 <td className="border px-4 py-2">{data.inquiryNumber}</td>
                                 <td className="border px-4 py-2">{data.userType}</td>
                                 <td className="border px-4 py-2">{data.name}</td>
-                                <td className="border px-4 py-2">{data.email}</td>
+                                <td className="border px-4 py-2 break-words">{data.email}</td>
                                 <td className="border px-4 py-2">
                                     {data.userType === "company"
                                         ? data.registrationNumber
@@ -228,25 +236,26 @@ const Inquiry = () => {
                         ))}
                     </tbody>
                 </table>
-
-                {/* Pagination Controls */}
-                {totalPages > 1 && (
-                    <div className="flex justify-center items-center gap-2 mt-6">
-                        {Array.from({ length: totalPages }, (_, i) => (
-                            <button
-                                key={i}
-                                onClick={() => paginate(i + 1)}
-                                className={`px-3 py-1 border rounded ${currentPage === i + 1
-                                    ? "bg-red-600 text-white"
-                                    : "bg-white hover:bg-red-100"
-                                    }`}
-                            >
-                                {i + 1}
-                            </button>
-                        ))}
-                    </div>
-                )}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-6">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => paginate(i + 1)}
+                            className={`px-3 py-1 border rounded ${currentPage === i + 1
+                                ? "bg-red-600 text-white"
+                                : "bg-white hover:bg-red-100"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
+
 
             {/* Response Modal */}
             {showResponse && selectedInquiry && (
