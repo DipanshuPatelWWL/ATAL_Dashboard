@@ -8,11 +8,14 @@ const Inquiry = () => {
     const [selectedInquiry, setSelectedInquiry] = useState(null);
     const [showResponse, setShowResponse] = useState(false);
     const [formData, setFormData] = useState({ message: "" });
-
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("All Inquiries");
     const dropdownRef = useRef(null);
+
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const inquiriesPerPage = 10;
 
     const options = ["All Inquiries", "Vendor", "Company", "Open", "Close"];
 
@@ -33,31 +36,30 @@ const Inquiry = () => {
         });
     };
 
-    // filter logic
+    // Filter logic
     const handleFilter = (option) => {
         setSelected(option);
         setOpen(false);
 
-        if (option === "All Inquiries") {
-            setFilteredInquiries(inquiry);
-        } else if (option === "Vendor" || option === "Company") {
-            setFilteredInquiries(
-                inquiry.filter(
-                    (i) => i.userType?.toLowerCase() === option.toLowerCase()
-                )
+        let filtered = inquiry;
+
+        if (option === "Vendor" || option === "Company") {
+            filtered = inquiry.filter(
+                (i) => i.userType?.toLowerCase() === option.toLowerCase()
             );
         } else if (option === "Open" || option === "Close") {
-            setFilteredInquiries(
-                inquiry.filter(
-                    (i) => i.inquiryStatus?.toLowerCase() === option.toLowerCase()
-                )
+            filtered = inquiry.filter(
+                (i) => i.inquiryStatus?.toLowerCase() === option.toLowerCase()
             );
         }
+
+        setFilteredInquiries(filtered);
+        setCurrentPage(1); // Reset to first page
     };
 
     // Send Response Only
     const handleSend = async () => {
-        setLoading(true); // show loader
+        setLoading(true);
         try {
             await API.post("/sendResponse", {
                 inquiryId: selectedInquiry._id,
@@ -71,24 +73,26 @@ const Inquiry = () => {
                 timer: 2000,
                 showConfirmButton: false,
             });
+
             setFormData({ message: "" });
             setShowResponse(false);
             getAllInquiry();
         } catch (error) {
             console.error("Error sending response", error);
         } finally {
-            setLoading(false); // hide loader
+            setLoading(false);
         }
     };
 
     // Send Response + Register
     const handleSendNReg = async () => {
-        setLoading(true); // show loader
+        setLoading(true);
         try {
             await API.post("/sendResponseAndRegister", {
                 inquiryId: selectedInquiry._id,
                 message: formData.message,
             });
+
             Swal.fire({
                 title: "Success!",
                 text: "Response sent & user registered successfully!",
@@ -96,13 +100,14 @@ const Inquiry = () => {
                 timer: 2000,
                 showConfirmButton: false,
             });
+
             setFormData({ message: "" });
             setShowResponse(false);
             getAllInquiry();
         } catch (error) {
             console.error("Error in Send & Register", error);
         } finally {
-            setLoading(false); // hide loader
+            setLoading(false);
         }
     };
 
@@ -121,6 +126,14 @@ const Inquiry = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // Pagination logic
+    const indexOfLast = currentPage * inquiriesPerPage;
+    const indexOfFirst = indexOfLast - inquiriesPerPage;
+    const currentInquiries = filteredInquiries.slice(indexOfFirst, indexOfLast);
+    const totalPages = Math.ceil(filteredInquiries.length / inquiriesPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div className="max-w-6xl mx-auto p-6 mt-10 mb-10 bg-white shadow-md rounded-lg">
             <h2 className="text-3xl font-bold text-left mb-6 text-red-600">
@@ -129,7 +142,7 @@ const Inquiry = () => {
             <hr className="w-42 border-t-2 border-red-600" />
 
             {/* Dropdown + Total count */}
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between mt-4 relative z-20">
                 <div className="relative w-60" ref={dropdownRef}>
                     <button
                         onClick={() => setOpen(!open)}
@@ -153,7 +166,10 @@ const Inquiry = () => {
                     </button>
 
                     {open && (
-                        <div className="absolute z-10 mt-1 w-full rounded-lg border border-red-600 bg-white shadow-lg">
+                        <div
+                            className="absolute z-50 mt-1 w-full rounded-lg border border-red-600 bg-white shadow-lg"
+                            style={{ top: "110%" }}
+                        >
                             <ul className="max-h-48 overflow-auto rounded-lg">
                                 {options.map((option) => (
                                     <li
@@ -175,10 +191,10 @@ const Inquiry = () => {
             </div>
 
             {/* Table */}
-            <div className="overflow-y-auto mt-6">
+            <div className="overflow-y-auto mt-6 max-h-[500px]">
                 <table className="table-auto border-collapse border border-gray-500 w-full text-center">
-                    <thead>
-                        <tr className="bg-gray-200">
+                    <thead className="sticky top-0 bg-gray-200 z-10">
+                        <tr>
                             <th className="border px-4 py-2">Inquiry Number</th>
                             <th className="border px-4 py-2">User Type</th>
                             <th className="border px-4 py-2">Name</th>
@@ -189,12 +205,12 @@ const Inquiry = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredInquiries.map((data, index) => (
+                        {currentInquiries.map((data, index) => (
                             <tr key={index}>
                                 <td className="border px-4 py-2">{data.inquiryNumber}</td>
                                 <td className="border px-4 py-2">{data.userType}</td>
                                 <td className="border px-4 py-2">{data.name}</td>
-                                <td className="border px-4 py-2">{data.email}</td>
+                                <td className="border px-4 py-2 break-words">{data.email}</td>
                                 <td className="border px-4 py-2">
                                     {data.userType === "company"
                                         ? data.registrationNumber
@@ -215,13 +231,31 @@ const Inquiry = () => {
                                     >
                                         Send Response
                                     </button>
-
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-6">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => paginate(i + 1)}
+                            className={`px-3 py-1 border rounded ${currentPage === i + 1
+                                ? "bg-red-600 text-white"
+                                : "bg-white hover:bg-red-100"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
+
 
             {/* Response Modal */}
             {showResponse && selectedInquiry && (

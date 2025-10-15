@@ -50,10 +50,10 @@ const VendorOrderDetails = () => {
                         <p><strong>Status:</strong> {order.orderStatus || "N/A"}</p>
                         <p><strong>Payment Method:</strong> {order.paymentMethod || "N/A"}</p>
                         <p><strong>Payment Status:</strong> {order.paymentStatus || "N/A"}</p>
-                        <p><strong>Subtotal:</strong> ₹{order.subtotal || 0}</p>
-                        <p><strong>Tax:</strong> ₹{order.tax || 0}</p>
-                        <p><strong>Shipping:</strong> ₹{order.shipping || 0}</p>
-                        <p><strong>Total:</strong> ₹{order.total || 0}</p>
+                        <p><strong>Subtotal:</strong> ${order.subtotal || 0}</p>
+                        <p><strong>Tax:</strong> ${order.tax || 0}</p>
+                        <p><strong>Shipping:</strong> ${order.shipping || 0}</p>
+                        <p><strong>Total:</strong> ${order.total || 0}</p>
                         <p><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</p>
                     </div>
                 </motion.div>
@@ -126,7 +126,7 @@ const VendorOrderDetails = () => {
 
                                     <div className="flex-1 text-gray-700">
                                         <p><strong>Name:</strong> {item.name}</p>
-                                        <p><strong>Price:</strong> ₹{item.price}</p>
+                                        <p><strong>Price:</strong> ${item.price}</p>
                                         <p><strong>Quantity:</strong> {item.quantity}</p>
                                         <p><strong>Product ID:</strong> {item.productId}</p>
 
