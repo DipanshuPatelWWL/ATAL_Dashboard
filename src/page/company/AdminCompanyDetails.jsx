@@ -23,16 +23,16 @@ function AdminCompanyDetails() {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Company Details</h2>
 
-      <div className="overflow-x-auto bg-white shadow rounded-2xl border">
-        <table className="min-w-full border-collapse">
-          <thead className="bg-gray-100">
+      <div className="overflow-auto max-h-[60vh] border rounded">
+        <table className="w-full border-collapse">
+          <thead className="bg-black text-white sticky top-0 z-10">
             <tr>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">#</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Company Name</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Email</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Legal Entity</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Provider Name</th>
-              <th className="px-4 py-3 border-b text-center font-semibold text-gray-700">Actions</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">#</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Company Name</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Email</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Legal Entity</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Provider Name</th>
+              <th className="px-4 py-3 border-b text-center font-semibold">Actions</th>
             </tr>
           </thead>
 

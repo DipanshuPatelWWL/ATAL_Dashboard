@@ -252,7 +252,7 @@ const UpdateVendorProfile = () => {
             {/* Company Info */}
             <section>
                 <h3 className="text-lg font-semibold border-b pb-1 mb-3">Company Info</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label htmlFor="companyName" className="block font-medium text-gray-700">
                             Company Legal Name
@@ -327,7 +327,7 @@ const UpdateVendorProfile = () => {
             {/* Contact */}
             <section>
                 <h3 className="text-lg font-semibold border-b pb-1 mb-3">Primary Contact</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label htmlFor="contactName" className="block font-medium text-gray-700">
                             Full Name
@@ -403,7 +403,7 @@ const UpdateVendorProfile = () => {
             {/* Address */}
             <section>
                 <h3 className="text-lg font-semibold border-b pb-1 mb-3">Business Address</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label htmlFor="address1" className="block font-medium text-gray-700">
                             Address Line 1
@@ -502,7 +502,7 @@ const UpdateVendorProfile = () => {
             {/* Products */}
             <section>
                 <h3 className="text-lg font-semibold border-b pb-1 mb-3">Products</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block font-medium text-gray-700">Categories</label>
                         <input value={categoriesInput}
@@ -523,7 +523,7 @@ const UpdateVendorProfile = () => {
             {/* Shipping */}
             <section>
                 <h3 className="text-lg font-semibold border-b pb-1 mb-3">Shipping & Policies</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label htmlFor="shippingTerms" className="block font-medium text-gray-700">
                             Shipping Terms
@@ -582,7 +582,7 @@ const UpdateVendorProfile = () => {
             {/* Banking */}
             <section>
                 <h3 className="text-lg font-semibold border-b pb-1 mb-3">Bank / EFT Details</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[
                         "accountHolder",
                         "bankName",
@@ -629,21 +629,48 @@ const UpdateVendorProfile = () => {
                 />
                 {Array.isArray(certificationFiles) && certificationFiles.length > 0 && (
                     <ul className="mt-2 text-sm text-gray-700">
-                        {certificationFiles.map((file, idx) => (
-                            <li key={idx} className="flex items-center gap-2">
-                                <span> {file.name || file}</span>
-                                <button
-                                    type="button"
-                                    onClick={() => removeFile("certifications", idx)}
-                                    className="text-red-500 hover:underline hover:cursor-pointer"
+                        {certificationFiles.map((file, idx) => {
+                            // Generate file URL for preview
+                            const fileUrl =
+                                typeof file === "string"
+                                    ? file.startsWith("http")
+                                        ? file
+                                        : `${IMAGE_URL}${file}`
+                                    : URL.createObjectURL(file);
+
+                            return (
+                                <li
+                                    key={idx}
+                                    className="flex items-center justify-content bg-gray-50 p-2 pr-150 rounded mb-1"
                                 >
-                                    Remove
-                                </button>
-                            </li>
-                        ))}
+                                    <span className="truncate w-1/2">{file.name || file}</span>
+
+                                    <div className="flex gap-3">
+                                        {/* View Document */}
+                                        <button
+                                            type="button"
+                                            onClick={() => window.open(fileUrl, "_blank")}
+                                            className="text-blue-600 hover:underline hover:cursor-pointer"
+                                        >
+                                            View
+                                        </button>
+
+                                        {/* Remove */}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFile("certifications", idx)}
+                                            className="text-red-500 hover:underline hover:cursor-pointer"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </section>
+
 
             {/* Certificates */}
             <section>
@@ -660,18 +687,41 @@ const UpdateVendorProfile = () => {
                 />
                 {Array.isArray(certificateFiles) && certificateFiles.length > 0 && (
                     <ul className="mt-2 text-sm text-gray-700">
-                        {certificateFiles.map((file, idx) => (
-                            <li key={idx} className="flex items-center gap-2">
-                                <span> {file.name || file}</span>
-                                <button
-                                    type="button"
-                                    onClick={() => removeFile("certificates", idx)}
-                                    className="text-red-500 hover:underline hover:cursor-pointer"
-                                >
-                                    Remove
-                                </button>
-                            </li>
-                        ))}
+                        {certificateFiles.map((file, idx) => {
+                            // Determine the file URL
+                            const fileUrl =
+                                typeof file === "string"
+                                    ? file.startsWith("http")
+                                        ? file
+                                        : `${IMAGE_URL}${file}`
+                                    : URL.createObjectURL(file);
+
+                            return (
+                                <li key={idx} className="flex items-center justify-content bg-gray-50 p-2 pr-150 rounded mb-1">
+                                    <span className="truncate w-1/2">{file.name || file}</span>
+
+                                    <div className="flex gap-3">
+                                        {/* View Document Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => window.open(fileUrl, "_blank")}
+                                            className="text-blue-600 hover:underline hover:cursor-pointer"
+                                        >
+                                            View
+                                        </button>
+
+                                        {/* Remove Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFile("certificates", idx)}
+                                            className="text-red-500 hover:underline hover:cursor-pointer"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </section>
@@ -690,15 +740,7 @@ const UpdateVendorProfile = () => {
                     htmlFor="termsAccepted"
                     className="text-sm font-medium text-gray-700"
                 >
-                    I accept the{" "}
-                    <a href="/terms" className="text-blue-600 underline">
-                        Terms & Conditions
-                    </a>{" "}
-                    and{" "}
-                    <a href="/privacy" className="text-blue-600 underline">
-                        Privacy Policy
-                    </a>
-                    .
+                    I accept the Terms & Conditions and Privacy Policy.
                 </label>
                 {errors.termsAccepted && (
                     <p className="text-red-500 text-sm">{errors.termsAccepted}</p>

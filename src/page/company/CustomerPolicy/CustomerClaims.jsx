@@ -8,11 +8,17 @@ const CustomerClaims = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [claimsPerPage] = useState(10);
-
+    const [statusFilter, setStatusFilter] = useState("All");
     const indexOfLastClaim = currentPage * claimsPerPage
     const indexOfFirstClaim = indexOfLastClaim - claimsPerPage
-    const currentClaims = claims.slice(indexOfFirstClaim, indexOfLastClaim)
-    const totalPages = Math.ceil(claims.length / claimsPerPage)
+
+    // NEW: Filter claims based on status before pagination
+    const filteredClaims = statusFilter === "All"
+        ? claims
+        : claims.filter((claim) => claim.status === statusFilter);
+
+    const currentClaims = filteredClaims.slice(indexOfFirstClaim, indexOfLastClaim)
+    const totalPages = Math.ceil(filteredClaims.length / claimsPerPage)
     const handlePageChange = (page) => setCurrentPage(page)
 
     const fetchClaims = async () => {
@@ -30,7 +36,6 @@ const CustomerClaims = () => {
 
     const handleStatusChange = async (claimId, status) => {
         if (status === "Approved") {
-            // APPROVAL FLOW
             const { value: formValues } = await Swal.fire({
                 title: "Approve Claim",
                 html: `
@@ -64,7 +69,7 @@ const CustomerClaims = () => {
                 },
             });
 
-            if (!formValues) return; // user cancelled
+            if (!formValues) return;
 
             try {
                 await API.put(`/claims/${claimId}`, {
@@ -82,7 +87,6 @@ const CustomerClaims = () => {
                 Swal.fire("Error", "Failed to update claim", "error");
             }
         } else if (status === "Rejected") {
-            // REJECTION FLOW
             const { value: rejectionReason } = await Swal.fire({
                 title: "Reject Claim",
                 html: `
@@ -112,7 +116,7 @@ const CustomerClaims = () => {
                 },
             });
 
-            if (!rejectionReason) return; // cancelled
+            if (!rejectionReason) return;
 
             try {
                 await API.put(`/claims/${claimId}`, {
@@ -129,16 +133,33 @@ const CustomerClaims = () => {
 
     return (
         <div className="p-6">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+            <h2 className="text-3xl font-bold text-gray-800 text-center">
                 Customer Claim Requests
             </h2>
+
+            {/* NEW: Dropdown filter */}
+            <div className="mb-4">
+                <select
+                    value={statusFilter}
+                    onChange={(e) => {
+                        setStatusFilter(e.target.value);
+                        setCurrentPage(1);
+                    }}
+                    className="border border-gray-400 rounded p-2"
+                >
+                    <option value="All">All</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
 
             {currentClaims.length === 0 ? (
                 <p className="text-gray-600 text-center">No claim requests found.</p>
             ) : (
                 <div className="overflow-x-auto rounded-lg shadow border border-gray-300">
                     <table className="min-w-[1000px] w-full text-left border-collapse">
-                        <thead className="bg-gray-100 text-gray-700">
+                        <thead className="bg-black sticky top-0 z-10 text-white">
                             <tr>
                                 <th className="p-3">Customer</th>
                                 <th className="p-3">Order ID</th>
@@ -200,7 +221,6 @@ const CustomerClaims = () => {
                         </tbody>
                     </table>
 
-                    {/* Pagination */}
                     {totalPages > 1 && (
                         <div className="flex justify-center mt-4 space-x-2 pb-4">
                             {[...Array(totalPages)].map((_, i) => (

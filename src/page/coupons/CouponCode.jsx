@@ -133,20 +133,20 @@ const CouponCode = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-lg overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-7 gap-x-4 bg-black text-white py-2 px-4 font-semibold text-sm sm:text-base min-w-[600px]">
+      {/* <div className="border rounded overflow-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-7 bg-black text-white py-2 px-4 font-semibold min-w-[600px]">
           <div>S.NO</div>
           <div>Name</div>
           <div>Code</div>
           <div>Discount</div>
           <div>Min Purchase</div>
           <div>Validity</div>
-          <div>Action</div>
+          <div className="text-center">Action</div>
         </div>
         {currentCoupons.map((c, i) => (
           <div
             key={c._id}
-            className="grid grid-cols-1 sm:grid-cols-7 gap-x-4 items-center border-b py-2 px-4 text-sm sm:text-base min-w-[600px]"
+            className="grid grid-cols-1 sm:grid-cols-7 items-center border-b py-2 px-4 min-w-[600px]"
           >
             <div>{indexOfFirst + i + 1}</div>
             <div>{c.applicableFor}</div>
@@ -178,7 +178,62 @@ const CouponCode = () => {
             </div>
           </div>
         ))}
+      </div> */}
+
+      <div className="overflow-auto border rounded max-h-[70vh]">
+        <table className="w-full border-collapse min-w-[600px]">
+          {/* Table Head */}
+          <thead className="bg-black text-white sticky top-0 z-10">
+            <tr>
+              <th className="px-4 py-2">S.NO</th>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Code</th>
+              <th className="px-4 py-2">Discount</th>
+              <th className="px-4 py-2">Min Purchase</th>
+              <th className="px-4 py-2">Validity</th>
+              <th className="px-4 py-2 text-center">Action</th>
+            </tr>
+          </thead>
+
+          {/* Table Body */}
+          <tbody>
+            {currentCoupons.map((c, i) => (
+              <tr key={c._id} className="border-b">
+                <td className="border px-4 py-2 text-center">{indexOfFirst + i + 1}</td>
+                <td className="border px-4 py-2">{c.applicableFor}</td>
+                <td className="border px-4 py-2">{c.coupon}</td>
+                <td className="border px-4 py-2">
+                  {c.discountType === "percentage"
+                    ? `${c.discountValue}%`
+                    : `$${c.discountValue}`}
+                </td>
+                <td className="border px-4 py-2">${c.minPurchase}</td>
+                <td className="border px-4 py-2">
+                  {new Date(c.startDate).toLocaleDateString()} -{" "}
+                  {new Date(c.expiryDate).toLocaleDateString()}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  <div className="flex justify-center gap-2">
+                    <button
+                      onClick={() => handleUpdateClick(c)}
+                      className="bg-blue-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap hover:cursor-pointer"
+                    >
+                      <RiEdit2Fill /> <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(c._id)}
+                      className="bg-red-500 px-3 py-1 rounded text-white flex items-center gap-1 whitespace-nowrap hover:cursor-pointer"
+                    >
+                      <MdDelete /> <span>Delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+
 
       {/* Pagination Buttons */}
       <div className="flex justify-center mt-4 space-x-2">
