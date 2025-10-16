@@ -126,63 +126,65 @@ const VendorApprovalProduct = () => {
             </div>
 
             {/* Product Table */}
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2 border-black">Name</th>
-                        <th className="border px-4 py-2 border-black">SKU</th>
-                        <th className="border px-4 py-2 border-black">Price</th>
-                        <th className="border px-4 py-2 border-black">Sale Price</th>
-                        <th className="border px-4 py-2 border-black">Category</th>
-                        <th className="border px-4 py-2 border-black">Subcategory</th>
-                        <th className="border px-4 py-2 border-black">Image(s)</th>
-                        <th className="border px-4 py-2 border-black">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map((pro) => (
-                        <tr key={pro._id}>
-                            <td className="border px-4 py-2 text-center capitalize">{pro.product_name}</td>
-                            <td className="border px-4 py-2 text-center">{pro.product_sku}</td>
-                            <td className="border px-4 py-2 text-center">{pro.product_price}</td>
-                            <td className="border px-4 py-2 text-center">{pro.product_sale_price}</td>
-                            <td className="border px-4 py-2 text-center">{pro.cat_sec}</td>
-                            <td className="border px-4 py-2 text-center">{pro.subCategoryName}</td>
-                            <td className="border px-4 py-2">
-                                {pro.product_image_collection?.length ? (
-                                    <div className="grid grid-cols-3">
-                                        {pro.product_image_collection.map((img, i) => (
-                                            <img
-                                                key={i}
-                                                src={img.startsWith("http") ? img : IMAGE_URL + img}
-                                                alt="product"
-                                                className="w-20 h-12 object-cover rounded"
-                                            />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    "No Images"
-                                )}
-                            </td>
-                            <td className="border px-4 py-2 text-center space-x-2">
-                                <button
-                                    onClick={() => handleApprove(pro._id)}
-                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 hover:cursor-pointer"
-                                >
-                                    Approve
-                                </button>
-
-                                <button
-                                    onClick={() => handleReject(pro._id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
-                                >
-                                    Reject
-                                </button>
-                            </td>
+            <div className="overflow-auto max-h-[60vh] border rounded">
+                <table className="w-full border-collapse">
+                    <thead className="bg-black text-white sticky top-0 z-10">
+                        <tr>
+                            <th className="border px-4 py-2 border-black">Name</th>
+                            <th className="border px-4 py-2 border-black">SKU</th>
+                            <th className="border px-4 py-2 border-black">Price</th>
+                            <th className="border px-4 py-2 border-black">Sale Price</th>
+                            <th className="border px-4 py-2 border-black">Category</th>
+                            <th className="border px-4 py-2 border-black">Subcategory</th>
+                            <th className="border px-4 py-2 border-black">Image(s)</th>
+                            <th className="border px-4 py-2 border-black">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {products.map((pro) => (
+                            <tr key={pro._id}>
+                                <td className="border px-4 py-2 text-center capitalize">{pro.product_name}</td>
+                                <td className="border px-4 py-2 text-center">{pro.product_sku}</td>
+                                <td className="border px-4 py-2 text-center">{pro.product_price}</td>
+                                <td className="border px-4 py-2 text-center">{pro.product_sale_price}</td>
+                                <td className="border px-4 py-2 text-center">{pro.cat_sec}</td>
+                                <td className="border px-4 py-2 text-center">{pro.subCategoryName}</td>
+                                <td className="border px-4 py-2">
+                                    {pro.product_image_collection?.length ? (
+                                        <div className="grid grid-cols-3">
+                                            {pro.product_image_collection.map((img, i) => (
+                                                <img
+                                                    key={i}
+                                                    src={img.startsWith("http") ? img : IMAGE_URL + img}
+                                                    alt="product"
+                                                    className="w-20 h-12 object-cover rounded"
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        "No Images"
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2 text-center space-x-2">
+                                    <button
+                                        onClick={() => handleApprove(pro._id)}
+                                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 hover:cursor-pointer"
+                                    >
+                                        Approve
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleReject(pro._id)}
+                                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
+                                    >
+                                        Reject
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

@@ -14,6 +14,7 @@ const Disclaimer = () => {
         description: "",
         image: null
     })
+    const [expanded, setExpanded] = useState({}); // track expanded
 
 
     //File Change
@@ -137,6 +138,14 @@ const Disclaimer = () => {
         }
     }
 
+    // Toggle description expand
+    const toggleExpand = (id) => {
+        setExpanded((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
 
     return (
         <div className="p-4">
@@ -162,36 +171,59 @@ const Disclaimer = () => {
                 </div>
             </div>
 
-            {discData.map((data, idx) => (
-                <div
-                    key={idx}
-                    className="grid grid-cols-3 gap-x-10 items-start border-b border-gray-300 py-2 px-4">
-                    <h1>{data.description}</h1>
-                    {data.image && (
-                        <img
-                            src={
-                                data.image.startsWith("http")
-                                    ? data.image
-                                    : `${IMAGE_URL + data.image}`
-                            }
-                            alt={data.title}
-                            className="w-16 h-16 object-cover rounded" />
-                    )}
 
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => handleUpdateClick(data)}
-                            className="bg-blue-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer">
-                            <RiEdit2Fill className="text-2xl" />
-                        </button>
-                        <button
-                            className="bg-red-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
-                            onClick={() => handleDelete(data._id)}>
-                            <MdDelete className="text-2xl" />
-                        </button>
+            {discData.map((data, idx) => {
+                const isExpanded = expanded[data._id] || false;
+                return (
+                    <div
+                        key={idx}
+                        className="grid grid-cols-3 gap-x-10 items-start border-b border-gray-300 py-2 px-4"
+                    >
+                        <div>
+                            {isExpanded
+                                ? data.description
+                                : data.description.slice(0, 20) +
+                                (data.description.length > 20 ? "..." : "")}
+                            {data.description.length > 20 && (
+                                <button
+                                    onClick={() => toggleExpand(data._id)}
+                                    className="text-red-600 ml-2 hover:underline hover:cursor-pointer"
+                                >
+                                    {isExpanded ? "Show Less" : "Show More"}
+                                </button>
+                            )}
+                        </div>
+                        <div>
+                            {data.image && (
+                                <img
+                                    src={
+                                        data.image.startsWith("http")
+                                            ? data.image
+                                            : `${IMAGE_URL + data.image}`
+                                    }
+                                    alt={data.title}
+                                    className="w-16 h-16 object-cover rounded"
+                                />
+                            )}
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => handleUpdateClick(data)}
+                                className="bg-blue-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
+                            >
+                                <RiEdit2Fill className="text-2xl" />
+                            </button>
+                            <button
+                                className="bg-red-500 px-3 py-1 rounded-xl text-white hover:cursor-pointer"
+                                onClick={() => handleDelete(data._id)}
+                            >
+                                <MdDelete className="text-2xl" />
+                            </button>
+                        </div>
                     </div>
-                </div>
-            ))}
+                );
+            })}
+
 
 
             {/* Modal */}

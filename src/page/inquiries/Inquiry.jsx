@@ -191,17 +191,17 @@ const Inquiry = () => {
             </div>
 
             {/* Table */}
-            <div className="overflow-y-auto mt-6 max-h-[500px]">
-                <table className="table-auto border-collapse border border-gray-500 w-full text-center">
-                    <thead className="sticky top-0 bg-gray-200 z-10">
+            <div className="overflow-auto max-h-[60vh] border mt-6 rounded">
+                <table className="w-full border-collapse">
+                    <thead className="bg-black text-white sticky top-0 z-10">
                         <tr>
-                            <th className="border px-4 py-2">Inquiry Number</th>
-                            <th className="border px-4 py-2">User Type</th>
-                            <th className="border px-4 py-2">Name</th>
-                            <th className="border px-4 py-2">Email</th>
-                            <th className="border px-4 py-2">Business/Reg No.</th>
-                            <th className="border px-4 py-2">Inquiry Status</th>
-                            <th className="border px-4 py-2">Action</th>
+                            <th className="px-4 py-2">Inquiry Number</th>
+                            <th className="px-4 py-2">User Type</th>
+                            <th className="px-4 py-2">Name</th>
+                            <th className="px-4 py-2">Email</th>
+                            <th className="px-4 py-2">Business/Reg No.</th>
+                            <th className="px-4 py-2">Inquiry Status</th>
+                            <th className="px-4 py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>

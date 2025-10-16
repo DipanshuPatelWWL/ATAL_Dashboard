@@ -14,6 +14,7 @@ const Products = () => {
     const [products, setProducts] = useState([]);
     const [showRejectionModal, setShowRejectionModal] = useState(false);
     const [rejectionMessage, setRejectionMessage] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
     const [formData, setFormData] = useState({
         cat_id: "",
         cat_sec: "",
@@ -41,6 +42,22 @@ const Products = () => {
     });
     const [editId, setEditId] = useState(null);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10; // rows per page
+
+
+    // filter peoduct with Pagination logic
+    const filteredProducts =
+        statusFilter === "All"
+            ? products
+            : products.filter((pro) => pro.productStatus === statusFilter);
+
+    const indexOfLastProduct = currentPage * itemsPerPage
+    const indexOfFirstProduct = indexOfLastProduct - itemsPerPage
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const handlePageClick = (page) => setCurrentPage(page);
 
     // Fetch products (only pending & not sent for approval)
     const fetchVendorProducts = async () => {
@@ -286,7 +303,23 @@ const Products = () => {
         <div className="p-6">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Products</h2>
+
+                {/* Dropdown filter */}
+                <div className="mb-4">
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => {
+                            setStatusFilter(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        className="border border-gray-400 rounded p-2"
+                    >
+                        <option value="All">All</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
                 <button
                     onClick={openAddModal}
                     className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer"
@@ -296,89 +329,113 @@ const Products = () => {
             </div>
 
             {/* Product Table */}
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2 border-black">Name</th>
-                        <th className="border px-4 py-2 border-black">Price</th>
-                        <th className="border px-4 py-2 border-black">Sale Price</th>
-                        <th className="border px-4 py-2 border-black">Category</th>
-                        <th className="border px-4 py-2 border-black">Subcategory</th>
-                        <th className="border px-4 py-2 border-black">Image(s)</th>
-                        <th className="border px-4 py-2 border-black">Product Status</th>
-                        <th className="border px-4 py-2 border-black">Actions</th>
+            <table className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg">
+                <thead className="sticky top-0 z-10 bg-black text-white font-semibold">
+                    <tr>
+                        <th className="px-4 py-2 text-center">Name</th>
+                        <th className="px-4 py-2 text-center">Price</th>
+                        <th className="px-4 py-2 text-center">Sale Price</th>
+                        <th className="px-4 py-2 text-center">Category</th>
+                        <th className="px-4 py-2 text-center">Subcategory</th>
+                        <th className="px-4 py-2 text-center">Image(s)</th>
+                        <th className="px-4 py-2 text-center">Product Status</th>
+                        <th className="px-4 py-2 text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {products.map((pro) => (
-                        <tr key={pro._id}>
-                            <td className="border px-4 py-2 border-black text-center capitalize">
-                                {pro.product_name}
-                            </td>
-                            <td className="border px-4 py-2 border-black text-center">{pro.product_price}</td>
-                            <td className="border px-4 py-2 border-black text-center">{pro.product_sale_price}</td>
-                            <td className="border px-4 py-2 border-black text-center">{pro.cat_sec}</td>
-                            <td className="border px-4 py-2 border-black text-center">{pro.subCategoryName}</td>
-                            <td className="border px-4 py-2 border-black">
-                                {pro.product_image_collection?.length ? (
-                                    <div className="grid grid-cols-3 scroll-my-0">
-                                        {pro.product_image_collection.map((img, i) => (
-                                            <img
-                                                key={i}
-                                                src={img.startsWith("http") ? img : IMAGE_URL + img}
-                                                alt="product"
-                                                className="w-20 h-12 object-cover rounded"
-                                            />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    "No Images"
-                                )}
-                            </td>
-                            <td className="border px-4 py-2 border-black text-center">{pro.productStatus}</td>
-                            <td className="border space-x-1 border-black mx-1">
-                                {pro.productStatus !== "Rejected" && (
+
+                <tbody className="bg-white">
+                    {currentProducts.length > 0 ? (
+                        currentProducts.map((pro) => (
+                            <tr key={pro._id} className="text-center hover:bg-gray-50">
+                                <td className="border px-4 py-2 capitalize">{pro.product_name}</td>
+                                <td className="border px-4 py-2">{pro.product_price}</td>
+                                <td className="border px-4 py-2">{pro.product_sale_price}</td>
+                                <td className="border px-4 py-2">{pro.cat_sec}</td>
+                                <td className="border px-4 py-2">{pro.subCategoryName}</td>
+                                <td className="border px-4 py-2">
+                                    {pro.product_image_collection?.length ? (
+                                        <div className="flex flex-wrap gap-1 justify-center">
+                                            {pro.product_image_collection.map((img, i) => (
+                                                <img
+                                                    key={i}
+                                                    src={img.startsWith("http") ? img : IMAGE_URL + img}
+                                                    alt="product"
+                                                    className="w-20 h-12 object-cover rounded"
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        "No Images"
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2">{pro.productStatus}</td>
+                                <td className="border px-4 py-2 space-x-1">
+                                    {pro.productStatus !== "Rejected" && (
+                                        <button
+                                            onClick={() => openEditModal(pro)}
+                                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                                        >
+                                            <FaEdit />
+                                        </button>
+                                    )}
                                     <button
-                                        onClick={() => openEditModal(pro)}
-                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer text-center"
+                                        onClick={() => {
+                                            if (pro.productStatus === "Rejected") {
+                                                setRejectionMessage(pro.rejectionReason || "This product was rejected.");
+                                                setShowRejectionModal(true);
+                                            } else {
+                                                handleSendApproval(pro._id);
+                                            }
+                                        }}
+                                        disabled={pro.isSentForApproval && pro.productStatus !== "Rejected"}
+                                        className={`px-3 py-1 rounded text-white ${pro.productStatus === "Rejected"
+                                            ? "bg-yellow-500 hover:bg-yellow-600"
+                                            : pro.isSentForApproval
+                                                ? "bg-red-400 cursor-not-allowed"
+                                                : "bg-red-600 hover:bg-red-700"
+                                            }`}
                                     >
-                                        <FaEdit />
+                                        {pro.productStatus === "Rejected"
+                                            ? "Show Message"
+                                            : pro.isSentForApproval
+                                                ? "Sent"
+                                                : "Send For Approval"}
                                     </button>
-                                )}
-                                <button
-                                    onClick={() => {
-                                        if (pro.productStatus === "Rejected") {
-                                            setRejectionMessage(pro.rejectionReason || "This product was rejected.");
-                                            setShowRejectionModal(true);
-                                        } else {
-                                            handleSendApproval(pro._id);
-                                        }
-                                    }}
-                                    disabled={pro.isSentForApproval && pro.productStatus !== "Rejected"}
-                                    className={`px-4 py-2 rounded text-white ${pro.productStatus === "Rejected"
-                                        ? "bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
-                                        : pro.isSentForApproval
-                                            ? "bg-red-400 cursor-not-allowed"
-                                            : "bg-red-600 hover:bg-red-700 cursor-pointer"
-                                        }`}
-                                >
-                                    {pro.productStatus === "Rejected"
-                                        ? "Show Message"
-                                        : pro.isSentForApproval
-                                            ? "Sent"
-                                            : "Send For Approval"}
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(pro._id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
-                                >
-                                    <FaTrash />
-                                </button>
+                                    <button
+                                        onClick={() => handleDelete(pro._id)}
+                                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                    >
+                                        <FaTrash />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8" className="py-4 text-center text-gray-500">
+                                No products found.
                             </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
+            {/* ===== PAGINATION ===== */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                            key={page}
+                            onClick={() => handlePageClick(page)}
+                            className={`px-3 py-1 rounded border ${currentPage === page
+                                ? "bg-black text-white border-black"
+                                : "bg-white border-gray-400 hover:bg-gray-100"
+                                }`}
+                        >
+                            {page}
+                        </button>
+                    ))}
+                </div>
+            )}
 
 
             {showRejectionModal && (

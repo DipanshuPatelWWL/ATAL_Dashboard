@@ -14,6 +14,15 @@ const VendorProductDiscount = () => {
     });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [calculatedPrice, setCalculatedPrice] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10; // rows per page
+
+    // Pagination logic
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentProducts = products.slice(startIndex, startIndex + itemsPerPage);
+
+    const handlePageClick = (page) => setCurrentPage(page);
 
     // Fetch all vendor products
     const fetchAllProduct = async () => {
@@ -148,67 +157,94 @@ const VendorProductDiscount = () => {
         <div className="p-5">
             <h2 className="text-2xl font-semibold mb-4">Vendor Products Discount</h2>
 
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Price</th>
-                        <th className="border px-4 py-2">Sale Price</th>
-                        <th className="border px-4 py-2">Discounted Price</th>
-                        <th className="border px-4 py-2">Discount Type</th>
-                        <th className="border px-4 py-2">Discount</th>
-                        <th className="border px-4 py-2">Image</th>
-                        <th className="border px-4 py-2">Action</th>
+            <table className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg">
+                <thead className="sticky top-0 z-10 bg-black text-white font-semibold">
+                    <tr>
+                        <th className="px-4 py-2 text-center">Name</th>
+                        <th className="px-4 py-2 text-center">Price</th>
+                        <th className="px-4 py-2 text-center">Sale Price</th>
+                        <th className="px-4 py-2 text-center">Discounted Price</th>
+                        <th className="px-4 py-2 text-center">Discount Type</th>
+                        <th className="px-4 py-2 text-center">Discount</th>
+                        <th className="px-4 py-2 text-center">Image</th>
+                        <th className="px-4 py-2 text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map((pro) => (
-                        <tr key={pro._id}>
-                            <td className="border px-4 py-2 text-center capitalize">{pro.product_name}</td>
-                            <td className="border px-4 py-2 text-center">${pro.product_price}</td>
-                            <td className="border px-4 py-2 text-center">${pro.product_sale_price || "-"}</td>
-                            <td className="border px-4 py-2 text-center">${getDiscountedPrice(pro)}</td>
-                            <td className="border px-4 py-2 text-center">
-                                {pro.discountType
-                                    ? pro.discountType === "percentage"
-                                        ? "Percentage"
-                                        : "Flat"
-                                    : "No Discount"}
-                            </td>
-                            <td className="border px-4 py-2 text-center">
-                                {pro.discountType
-                                    ? pro.discountType === "percentage"
-                                        ? `${pro.discountValue}%`
-                                        : `$${pro.discountValue}`
-                                    : "No Discount"}
-                            </td>
-                            <td className="border px-4 py-2 text-center">
-                                {pro.product_image_collection?.length > 0 ? (
-                                    <img
-                                        src={
-                                            pro.product_image_collection[0].startsWith("http")
-                                                ? pro.product_image_collection[0]
-                                                : IMAGE_URL + pro.product_image_collection[0]
-                                        }
-                                        alt="product"
-                                        className="w-20 h-12 object-cover rounded"
-                                    />
-                                ) : (
-                                    "No Image"
-                                )}
-                            </td>
-                            <td className="border px-4 py-2 text-center">
-                                <button
-                                    onClick={() => handleOpenModal(pro)}
-                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2"
-                                >
-                                    <FaPlus /> Add Discount
-                                </button>
+                    {currentProducts.length > 0 ? (
+                        currentProducts.map((pro) => (
+                            <tr key={pro._id}>
+                                <td className="border px-4 py-2 border-black capitalize">{pro.product_name}</td>
+                                <td className="border px-4 py-2 border-black">${pro.product_price}</td>
+                                <td className="border px-4 py-2 border-black">${pro.product_sale_price || "-"}</td>
+                                <td className="border px-4 py-2 border-black">${getDiscountedPrice(pro)}</td>
+                                <td className="border px-4 py-2 border-black">
+                                    {pro.discountType
+                                        ? pro.discountType === "percentage"
+                                            ? "Percentage"
+                                            : "Flat"
+                                        : "No Discount"}
+                                </td>
+                                <td className="border px-4 py-2 border-black">
+                                    {pro.discountType
+                                        ? pro.discountType === "percentage"
+                                            ? `${pro.discountValue}%`
+                                            : `$${pro.discountValue}`
+                                        : "No Discount"}
+                                </td>
+                                <td className="border px-4 py-2 border-black">
+                                    {pro.product_image_collection?.length > 0 ? (
+                                        <img
+                                            src={
+                                                pro.product_image_collection[0].startsWith("http")
+                                                    ? pro.product_image_collection[0]
+                                                    : IMAGE_URL + pro.product_image_collection[0]
+                                            }
+                                            alt="product"
+                                            className="w-20 h-12 object-cover rounded"
+                                        />
+                                    ) : (
+                                        "No Image"
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2 border-black">
+                                    <button
+                                        onClick={() => handleOpenModal(pro)}
+                                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2"
+                                    >
+                                        <FaPlus /> Add Discount
+                                    </button>
+                                </td>
+                            </tr>
+
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8" className="py-4 text-center text-gray-500">
+                                No products found.
                             </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
+
+            {/* ===== PAGINATION ===== */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                            key={page}
+                            onClick={() => handlePageClick(page)}
+                            className={`px-3 py-1 rounded border ${currentPage === page
+                                ? "bg-black text-white border-black"
+                                : "bg-white border-gray-400 hover:bg-gray-100"
+                                }`}
+                        >
+                            {page}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {/* Modal */}
             {openAddModal && selectedProduct && (

@@ -198,12 +198,12 @@ export default function PolicyManagement() {
                     <table className="min-w-full divide-y divide-gray-100 text-md">
                         <thead className="bg-black sticky top-0 z-10">
                             <tr>
-                                <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase">Policy Name</th>
-                                <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase w-1/3">Coverage</th>
-                                <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase">Price</th>
-                                <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase">Duration (days)</th>
-                                <th className="text-left px-6 py-3 text-xs font-semibold text-white uppercase">Company</th>
-                                <th className="text-right px-6 py-3 text-xs font-semibold text-white uppercase">Actions</th>
+                                <th className="text-left px-6 py-3 font-semibold text-white uppercase">Policy Name</th>
+                                <th className="text-left px-6 py-3 font-semibold text-white uppercase">Coverage</th>
+                                <th className="text-left px-6 py-3 font-semibold text-white uppercase">Price</th>
+                                <th className="text-left px-6 py-3 font-semibold text-white uppercase">Duration (days)</th>
+                                <th className="text-center px-6 py-3 font-semibold text-white uppercase">Company</th>
+                                <th className="text-center px-6 py-3 font-semibold text-white uppercase">Actions</th>
                             </tr>
                         </thead>
 
