@@ -24,16 +24,16 @@ const VendorOrderDetails = () => {
             <div className="max-w-5xl mx-auto">
                 <Link
                     to="/vendor/order"
-                    className="text-blue-600 hover:underline mb-6 inline-block text-sm font-medium"
+                     className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded hover:cursor-pointer"
                 >
-                    ← Back to Orders
+                    ← Back
                 </Link>
 
                 <motion.h2
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="text-3xl font-bold mb-8 text-gray-800"
+                    className="text-3xl font-bold mb-8 mt-6 text-gray-800"
                 >
                     Order Details - #{order._id}
                 </motion.h2>
