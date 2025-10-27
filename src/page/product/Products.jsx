@@ -14,6 +14,8 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterSubCategory, setFilterSubCategory] = useState("");
 
   const [formData, setFormData] = useState({
     cat_id: "",
@@ -92,13 +94,17 @@ const Products = () => {
   };
 
 
-  // Pagination logic
+  // Pagination + Filtering Logic
+  const filteredProducts = products.filter((pro) => {
+    const matchCategory = filterCategory ? pro.cat_id === filterCategory : true;
+    const matchSubCategory = filterSubCategory ? pro.subCat_id === filterSubCategory : true;
+    return matchCategory && matchSubCategory;
+  });
+
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const totalPages = Math.ceil(products.length / productsPerPage);
-
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const handlePageChange = (page) => setCurrentPage(page);
 
 
@@ -349,7 +355,51 @@ const Products = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Products</h2>
+
+        {/* Filters */}
+        <div className="flex gap-4">
+          {/* Category Filter */}
+          <div className="flex flex-col">
+            <select
+              value={filterCategory}
+              onChange={(e) => {
+                setFilterCategory(e.target.value);
+                setFilterSubCategory(""); // Reset subcategory when category changes
+              }}
+              className="border rounded-lg p-2 border-red-600"
+            >
+              <option value="">All Categories</option>
+              {category.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.categoryName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Subcategory Filter */}
+          <div className="flex flex-col">
+            <select
+              value={filterSubCategory}
+              onChange={(e) => setFilterSubCategory(e.target.value)}
+              className="border rounded-lg p-2 border-red-600"
+              disabled={!filterCategory} // disable until a category is chosen
+            >
+              <option value="">All Subcategories</option>
+              {category
+                .find((c) => c._id === filterCategory)
+                ?.subCategories?.map((subId, idx) => (
+                  <option key={subId} value={subId}>
+                    {
+                      category.find((c) => c._id === filterCategory)
+                        ?.subCategoryNames?.[idx]
+                    }
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+
         <button
           onClick={openAddModal}
           className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer"
