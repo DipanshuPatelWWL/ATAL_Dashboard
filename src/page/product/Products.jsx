@@ -235,7 +235,7 @@ const Products = () => {
       return;
     }
     if (!formData.product_size) {
-      Swal.fire("Error", "Product SKU is required", "error");
+      Swal.fire("Error", "Product Size is required", "error");
       return;
     }
     if (!formData.product_color) {

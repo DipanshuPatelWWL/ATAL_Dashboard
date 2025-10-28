@@ -21,7 +21,8 @@ const Products = () => {
         subCat_id: "",
         subCategoryName: "",
         product_name: "",
-        product_sku: "",
+        product_size: [],
+        product_color: [],
         product_price: "",
         product_sale_price: "",
         product_description: "",
@@ -108,7 +109,8 @@ const Products = () => {
             subCat_id: "",
             subCategoryName: "",
             product_name: "",
-            product_sku: "",
+            product_size: [],
+            product_color: [],
             product_price: "",
             product_sale_price: "",
             product_description: "",
@@ -141,7 +143,12 @@ const Products = () => {
             subCat_id: product.subCat_id || "",
             subCategoryName: product.subCategoryName || "",
             product_name: product.product_name || "",
-            product_sku: product.product_sku || "",
+            product_size: product.product_size
+                ? product.product_size.flatMap((item) =>
+                    item.split(",").map((s) => s.trim())
+                )
+                : [],
+            product_color: product.product_color || [],
             product_price: product.product_price || "",
             product_sale_price: product.product_sale_price || "",
             product_description: product.product_description || "",
@@ -208,14 +215,28 @@ const Products = () => {
     };
 
 
+
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!formData.product_size) {
+            Swal.fire("Error", "Product Size is required", "error");
+            return;
+        }
+        if (!formData.product_color) {
+            Swal.fire("Error", "Product Color is required", "error");
+            return;
+        }
         try {
             const payload = new FormData();
 
-            // Append all fields except stockAvailability
+            // Append all fields except arrays (we’ll handle them separately)
             Object.keys(formData).forEach((key) => {
-                if (key !== "stockAvailability") {
+                if (
+                    !["product_size", "product_color", "stockAvailability"].includes(key)
+                ) {
                     payload.append(key, formData[key] ?? "");
                 }
             });
@@ -225,6 +246,10 @@ const Products = () => {
             if (stock !== "" && stock !== null && stock !== undefined) {
                 payload.append("stockAvailability", stock.toString());
             }
+
+            // Append arrays correctly
+            formData.product_size.forEach((size) => payload.append("product_size", size));
+            formData.product_color.forEach((color) => payload.append("product_color", color));
 
             // Existing images
             keptImages.forEach((img) =>
@@ -253,12 +278,82 @@ const Products = () => {
                 });
                 Swal.fire("Success", "Product added successfully!", "success");
             }
+
             fetchVendorProducts();
             setOpen(false);
         } catch (err) {
             Swal.fire("Error", err.response?.data?.message || "Operation failed", "error");
         }
     };
+
+
+
+
+
+
+
+
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     if (!formData.product_size) {
+    //         Swal.fire("Error", "Product Size is required", "error");
+    //         return;
+    //     }
+    //     if (!formData.product_color) {
+    //         Swal.fire("Error", "Product Color is required", "error");
+    //         return;
+    //     }
+    //     try {
+    //         const payload = new FormData();
+
+    //         // Append all fields except stockAvailability
+    //         Object.keys(formData).forEach((key) => {
+    //             if (key !== "stockAvailability") {
+    //                 payload.append(key, formData[key] ?? "");
+    //             }
+    //         });
+
+    //         // Append stockAvailability only if user entered it
+    //         const stock = formData.stockAvailability;
+    //         if (stock !== "" && stock !== null && stock !== undefined) {
+    //             payload.append("stockAvailability", stock.toString());
+    //         }
+    //         payload.append("product_size", formData.product_size);
+    //         payload.append("product_color", formData.product_color);
+    //         // Existing images
+    //         keptImages.forEach((img) =>
+    //             payload.append("existingImages", img.replace(IMAGE_URL, ""))
+    //         );
+
+    //         // New images
+    //         images.forEach((file) =>
+    //             payload.append("product_image_collection", file)
+    //         );
+
+    //         // Lens images
+    //         if (lensImage1 && typeof lensImage1 !== "string")
+    //             payload.append("product_lens_image1", lensImage1);
+    //         if (lensImage2 && typeof lensImage2 !== "string")
+    //             payload.append("product_lens_image2", lensImage2);
+
+    //         if (editId) {
+    //             await API.put(`/updateVendorProduct/${editId}`, payload, {
+    //                 headers: { "Content-Type": "multipart/form-data" },
+    //             });
+    //             Swal.fire("Success", "Product updated successfully!", "success");
+    //         } else {
+    //             await API.post("/addProduct", payload, {
+    //                 headers: { "Content-Type": "multipart/form-data" },
+    //             });
+    //             Swal.fire("Success", "Product added successfully!", "success");
+    //         }
+    //         fetchVendorProducts();
+    //         setOpen(false);
+    //     } catch (err) {
+    //         Swal.fire("Error", err.response?.data?.message || "Operation failed", "error");
+    //     }
+    // };
 
     const handleSendApproval = async (productId) => {
         try {
@@ -329,17 +424,17 @@ const Products = () => {
             </div>
 
             {/* Product Table */}
-            <table className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg">
+            <table className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg table-fixed">
                 <thead className="sticky top-0 z-10 bg-black text-white font-semibold">
                     <tr>
-                        <th className="px-4 py-2 text-center">Name</th>
-                        <th className="px-4 py-2 text-center">Price</th>
-                        <th className="px-4 py-2 text-center">Sale Price</th>
-                        <th className="px-4 py-2 text-center">Category</th>
-                        <th className="px-4 py-2 text-center">Subcategory</th>
-                        <th className="px-4 py-2 text-center">Image(s)</th>
-                        <th className="px-4 py-2 text-center">Product Status</th>
-                        <th className="px-4 py-2 text-center">Actions</th>
+                        <th className="px-4 py-2 text-center w-[12%]">Name</th>
+                        <th className="px-4 py-2 text-center w-[8%]">Price</th>
+                        <th className="px-4 py-2 text-center w-[8%]">Sale Price</th>
+                        <th className="px-4 py-2 text-center w-[10%]">Category</th>
+                        <th className="px-4 py-2 text-center w-[10%]">Subcategory</th>
+                        <th className="px-4 py-2 text-center w-[20%]">Image(s)</th>
+                        <th className="px-4 py-2 text-center w-[10%]">Product Status</th>
+                        <th className="px-4 py-2 text-center w-[22%]">Actions</th>
                     </tr>
                 </thead>
 
@@ -381,7 +476,9 @@ const Products = () => {
                                     <button
                                         onClick={() => {
                                             if (pro.productStatus === "Rejected") {
-                                                setRejectionMessage(pro.rejectionReason || "This product was rejected.");
+                                                setRejectionMessage(
+                                                    pro.rejectionReason || "This product was rejected."
+                                                );
                                                 setShowRejectionModal(true);
                                             } else {
                                                 handleSendApproval(pro._id);
@@ -413,7 +510,9 @@ const Products = () => {
                     ) : (
                         <tr>
                             <td colSpan="8" className="py-4 text-center text-gray-500">
-                                No products found.
+                                {statusFilter === "Rejected"
+                                    ? "No rejected product found."
+                                    : "No product found."}
                             </td>
                         </tr>
                     )}
@@ -535,14 +634,53 @@ const Products = () => {
                                     className="w-full border p-2 rounded"
                                     disabled={editingProduct?.isSentForApproval}
                                 />
+                                <div>
+                                    <label className="block text-gray-700 font-medium mb-2">
+                                        Product Sizes
+                                    </label>
+                                    <div className="flex gap-4">
+                                        {["S", "M", "L"].map((size) => (
+                                            <label key={size} className="flex items-center gap-1">
+                                                <input
+                                                    type="checkbox"
+                                                    value={size}
+                                                    checked={formData.product_size.includes(size)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setFormData({
+                                                                ...formData,
+                                                                product_size: [...formData.product_size, size],
+                                                            });
+                                                        } else {
+                                                            setFormData({
+                                                                ...formData,
+                                                                product_size: formData.product_size.filter(
+                                                                    (s) => s !== size
+                                                                ),
+                                                            });
+                                                        }
+                                                    }}
+                                                />
+                                                <span>{size}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 <input
                                     type="text"
-                                    name="product_sku"
-                                    value={formData.product_sku}
-                                    onChange={handleChange}
-                                    placeholder="Product SKU"
+                                    name="product_color"
+                                    value={(formData.product_color || []).join(", ")}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            product_color: e.target.value
+                                                .split(",")
+                                                .map((c) => c.trim()), // string → array
+                                        })
+                                    }
+                                    placeholder="Enter colors (Black, Red, Blue)"
                                     className="w-full border p-2 rounded"
-                                    disabled={editingProduct?.isSentForApproval}
                                 />
                                 <div className="grid grid-cols-2 gap-4">
                                     <input
