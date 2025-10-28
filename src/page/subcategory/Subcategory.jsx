@@ -16,6 +16,10 @@ const Subcategory = () => {
   });
   const [editId, setEditId] = useState(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // show 5 rows per page
+
   // Fetch categories
   const fetchCategories = async () => {
     try {
@@ -48,13 +52,9 @@ const Subcategory = () => {
 
   // Open Add Modal
   const openAddModal = () => {
-    setFormData({
-      cat_sec: "",
-      subCategoryName: "",
-      description: "",
-    });
-    setImage(""),
-      setEditId(null);
+    setFormData({ cat_sec: "", subCategoryName: "", description: "" });
+    setImage(null);
+    setEditId(null);
     setOpen(true);
   };
 
@@ -69,7 +69,7 @@ const Subcategory = () => {
     setOpen(true);
   };
 
-  //  Delete Product
+  // Delete Subcategory
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -84,7 +84,7 @@ const Subcategory = () => {
         try {
           await API.delete(`/deletesubcategory/${id}`);
           Swal.fire("Deleted!", "Product deleted successfully!", "success");
-          fetchsubCategories()
+          fetchsubCategories();
         } catch (err) {
           Swal.fire("Error", "Failed to delete product", "error");
         }
@@ -99,27 +99,22 @@ const Subcategory = () => {
       payload.append("cat_sec", formData.cat_sec);
       payload.append("subCategoryName", formData.subCategoryName);
       payload.append("description", formData.description);
-
-      if (Image) {
-        payload.append("image", Image);
-      }
+      if (Image) payload.append("image", Image);
 
       if (editId) {
-        // Update existing subcategory
         await API.put(`/updatesubcategory/${editId}`, payload, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         Swal.fire("Success", "Subcategory updated successfully!", "success");
       } else {
-        // Add new subcategory
         await API.post("/addsubcategory", payload, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         Swal.fire("Success", "Subcategory added successfully!", "success");
       }
 
-      fetchsubCategories(); // refresh list
-      setOpen(false); // close modal
+      fetchsubCategories();
+      setOpen(false);
     } catch (err) {
       Swal.fire(
         "Error",
@@ -128,6 +123,13 @@ const Subcategory = () => {
       );
     }
   };
+
+  // Pagination logic
+  const totalPages = Math.ceil(subcategory.length / itemsPerPage);
+  const currentData = subcategory.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="p-6">
@@ -143,48 +145,62 @@ const Subcategory = () => {
       </div>
 
       {/* Product Table */}
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-4 py-2 border-black">Category Name</th>
-            <th className="border px-4 py-2 border-black">SubCategory Name</th>
-            <th className="border px-4 py-2 border-black">Description</th>
-            <th className="border px-4 py-2 border-black">Image</th>
-            <th className="border px-4 py-2 border-black">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {subcategory.map((data, index) => (
-            <tr key={index}>
-              <td className="border px-4 py-2 border-black text-center capitalize">{data.cat_sec}</td>
-              <td className="border px-4 py-2 border-black text-center">{data.subCategoryName}</td>
-              <td className="border px-4 py-2 border-black text-center">{data.description}</td>
-              <td className="border px-4 py-2 border-black text-center">  {data.image && (
-                <img
-                  src={`${IMAGE_URL + data.image}`}
-                  alt="review"
-                  className="w-12 h-12 object-cover rounded"
-                />
-              )}</td>
-              <td className="border space-x-1 border-black mx-1">
-                <button
-                  onClick={() => openEditModal(data)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer text-center"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => handleDelete(data._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
-                >
-                  <FaTrash />
-                </button>
-              </td>
+      <div className="overflow-auto max-h-[60vh] border rounded">
+        <table className="w-full border-collapse">
+          <thead className="bg-black text-white sticky top-0 z-10">
+            <tr>
+              <th className="px-4 py-2">Category Name</th>
+              <th className="px-4 py-2">SubCategory Name</th>
+              <th className="px-4 py-2">Description</th>
+              <th className="px-4 py-2">Image</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {currentData.map((data, index) => (
+              <tr key={index}>
+                <td className="border px-4 py-2 text-center capitalize">{data.cat_sec}</td>
+                <td className="border px-4 py-2 text-center">{data.subCategoryName}</td>
+                <td className="border px-4 py-2 text-center">{data.description}</td>
+                <td className="border px-4 py-2 text-center">
+                  {data.image && (
+                    <img
+                      src={`${IMAGE_URL + data.image}`}
+                      alt="review"
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  )}
+                </td>
+                <td className="border space-x-1 mx-1">
+                  <button onClick={() => openEditModal(data)} className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer text-center">
+                    <FaEdit />
+                  </button>
+                  <button onClick={() => handleDelete(data._id)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer">
+                    <FaTrash />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-        </tbody>
-      </table>
+
+      {/* Pagination */}
+      <div className="flex justify-center space-x-2 mt-4">
+        {Array.from({ length: totalPages }, (_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentPage(idx + 1)}
+            className={`px-3 py-1 rounded ${currentPage === idx + 1
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+              }`}
+          >
+            {idx + 1}
+          </button>
+        ))}
+      </div>
 
       {/* Modal */}
       {open && (
@@ -219,7 +235,7 @@ const Subcategory = () => {
                 </select>
               </div>
 
-              {/*  Subcategory Dropdown */}
+              {/* Subcategory Dropdown */}
               {formData.cat_sec && (
                 <div>
                   <label className="block text-gray-700">Subcategory</label>
@@ -230,7 +246,8 @@ const Subcategory = () => {
                     className="w-full border rounded p-2"
                   >
                     <option value="">Select Subcategory</option>
-                    {category.find((c) => c.categoryName === formData.cat_sec)
+                    {category
+                      .find((c) => c.categoryName === formData.cat_sec)
                       ?.subCategoryNames.map((sub, idx) => (
                         <option key={idx} value={sub}>
                           {sub}
@@ -258,7 +275,6 @@ const Subcategory = () => {
                 />
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer"

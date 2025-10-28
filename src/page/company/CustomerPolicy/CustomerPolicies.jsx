@@ -24,9 +24,9 @@ const CustomerPolicies = () => {
         const expiryDate = item.expiryDate
           ? new Date(item.expiryDate)
           : new Date(
-              new Date(item.createdAt).getTime() +
-                (item.durationDays || 0) * 24 * 60 * 60 * 1000
-            );
+            new Date(item.createdAt).getTime() +
+            (item.durationDays || 0) * 24 * 60 * 60 * 1000
+          );
 
         // Auto mark as expired if date passed
         const isExpired = expiryDate < today;
@@ -58,9 +58,13 @@ const CustomerPolicies = () => {
     }
 
     if (statusFilter !== "All") {
-      filtered = filtered.filter(
-        (item) => item?.status?.toLowerCase() === statusFilter.toLowerCase()
-      );
+      filtered = filtered.filter((item) => {
+        const status = item?.status?.toLowerCase();
+        if (statusFilter.toLowerCase() === "inactive") {
+          return status === "inactive" || status === "expired";
+        }
+        return status === statusFilter.toLowerCase();
+      });
     }
 
     setFilteredPolicies(filtered);
@@ -100,11 +104,11 @@ const CustomerPolicies = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="border border-black rounded-lg px-4 py-2 w-52 md:w-64 text-sm md:text-base truncate focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             <option value="All">All Policies</option>
             <option value="Active">Active Policies</option>
-            <option value="Inactive">Inactive Policies</option>
+            <option value="Inactive">Inactive / Expired Policies</option>
           </select>
         </div>
       </div>
@@ -112,7 +116,7 @@ const CustomerPolicies = () => {
       {/* Policies Table */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg max-h-[500px]">
         <table className="min-w-full table-auto">
-          <thead className="bg-red-600 text-white sticky top-0 z-10">
+          <thead className="bg-black text-white sticky top-0 z-10">
             <tr>
               <th className="px-4 py-3 text-left">Policy Name</th>
               <th className="px-4 py-3 text-left">Price</th>
@@ -151,13 +155,12 @@ const CustomerPolicies = () => {
                   <td className="px-4 py-3">{item?.durationDays || "-"}</td>
                   <td className="px-4 py-3">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        item?.status === "Active"
-                          ? "bg-green-100 text-green-700"
-                          : item?.status === "Expired"
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${item?.status === "Active"
+                        ? "bg-green-100 text-green-700"
+                        : item?.status === "Expired"
                           ? "bg-yellow-100 text-yellow-700"
                           : "bg-red-100 text-red-700"
-                      }`}
+                        }`}
                     >
                       {item?.status || "-"}
                     </span>
@@ -183,11 +186,10 @@ const CustomerPolicies = () => {
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i}
-                className={`px-3 py-1 border rounded transition-colors ${
-                  currentPage === i + 1
-                    ? "bg-red-600 text-white border-red-600"
-                    : "hover:bg-red-100"
-                }`}
+                className={`px-3 py-1 border rounded transition-colors ${currentPage === i + 1
+                  ? "bg-red-600 text-white border-red-600"
+                  : "hover:bg-red-100"
+                  }`}
                 onClick={() => handlePageChange(i + 1)}
               >
                 {i + 1}

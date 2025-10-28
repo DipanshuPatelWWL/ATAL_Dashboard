@@ -136,10 +136,6 @@ const Inquiry = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-6 mt-10 mb-10 bg-white shadow-md rounded-lg">
-            <h2 className="text-3xl font-bold text-left mb-6 text-red-600">
-                Inquiry List
-            </h2>
-            <hr className="w-42 border-t-2 border-red-600" />
 
             {/* Dropdown + Total count */}
             <div className="flex items-center justify-between mt-4 relative z-20">
@@ -191,17 +187,17 @@ const Inquiry = () => {
             </div>
 
             {/* Table */}
-            <div className="overflow-y-auto mt-6 max-h-[500px]">
-                <table className="table-auto border-collapse border border-gray-500 w-full text-center">
-                    <thead className="sticky top-0 bg-gray-200 z-10">
+            <div className="overflow-auto max-h-[60vh] border mt-6 rounded">
+                <table className="w-full border-collapse">
+                    <thead className="bg-black text-white sticky top-0 z-10">
                         <tr>
-                            <th className="border px-4 py-2">Inquiry Number</th>
-                            <th className="border px-4 py-2">User Type</th>
-                            <th className="border px-4 py-2">Name</th>
-                            <th className="border px-4 py-2">Email</th>
-                            <th className="border px-4 py-2">Business/Reg No.</th>
-                            <th className="border px-4 py-2">Inquiry Status</th>
-                            <th className="border px-4 py-2">Action</th>
+                            <th className="px-4 py-2">Inquiry Number</th>
+                            <th className="px-4 py-2">User Type</th>
+                            <th className="px-4 py-2">Name</th>
+                            <th className="px-4 py-2">Email</th>
+                            <th className="px-4 py-2">Business/Reg No.</th>
+                            <th className="px-4 py-2">Inquiry Status</th>
+                            <th className="px-4 py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>

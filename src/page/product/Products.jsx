@@ -14,6 +14,8 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterSubCategory, setFilterSubCategory] = useState("");
 
   const [formData, setFormData] = useState({
     cat_id: "",
@@ -92,13 +94,17 @@ const Products = () => {
   };
 
 
-  // Pagination logic
+  // Pagination + Filtering Logic
+  const filteredProducts = products.filter((pro) => {
+    const matchCategory = filterCategory ? pro.cat_id === filterCategory : true;
+    const matchSubCategory = filterSubCategory ? pro.subCat_id === filterSubCategory : true;
+    return matchCategory && matchSubCategory;
+  });
+
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const totalPages = Math.ceil(products.length / productsPerPage);
-
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const handlePageChange = (page) => setCurrentPage(page);
 
 
@@ -147,8 +153,8 @@ const Products = () => {
       product_name: product.product_name || "",
       product_size: product.product_size
         ? product.product_size.flatMap((item) =>
-            item.split(",").map((s) => s.trim())
-          )
+          item.split(",").map((s) => s.trim())
+        )
         : [],
 
       product_color: product.product_color || [],
@@ -349,7 +355,51 @@ const Products = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Products</h2>
+
+        {/* Filters */}
+        <div className="flex gap-4">
+          {/* Category Filter */}
+          <div className="flex flex-col">
+            <select
+              value={filterCategory}
+              onChange={(e) => {
+                setFilterCategory(e.target.value);
+                setFilterSubCategory(""); // Reset subcategory when category changes
+              }}
+              className="border rounded-lg p-2 border-red-600"
+            >
+              <option value="">All Categories</option>
+              {category.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.categoryName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Subcategory Filter */}
+          <div className="flex flex-col">
+            <select
+              value={filterSubCategory}
+              onChange={(e) => setFilterSubCategory(e.target.value)}
+              className="border rounded-lg p-2 border-red-600"
+              disabled={!filterCategory} // disable until a category is chosen
+            >
+              <option value="">All Subcategories</option>
+              {category
+                .find((c) => c._id === filterCategory)
+                ?.subCategories?.map((subId, idx) => (
+                  <option key={subId} value={subId}>
+                    {
+                      category.find((c) => c._id === filterCategory)
+                        ?.subCategoryNames?.[idx]
+                    }
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+
         <button
           onClick={openAddModal}
           className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer"
@@ -359,70 +409,73 @@ const Products = () => {
       </div>
 
       {/* Product Table */}
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-4 py-2 border-black">Name</th>
-            <th className="border px-4 py-2 border-black">Price</th>
-            <th className="border px-4 py-2 border-black">Sale Price</th>
-            <th className="border px-4 py-2 border-black">Category</th>
-            <th className="border px-4 py-2 border-black">Subcategory</th>
-            <th className="border px-4 py-2 border-black">Image(s)</th>
-            <th className="border px-4 py-2 border-black">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentProducts.map((pro) => (
-            <tr key={pro._id} className="">
-              <td className="border px-4 py-2 border-black text-center capitalize">
-                {pro.product_name}
-              </td>
-              <td className="border px-4 py-2 border-black text-center">
-                {pro.product_price}
-              </td>
-              <td className="border px-4 py-2 border-black text-center">
-                {pro.product_sale_price}
-              </td>
-              <td className="border px-4 py-2 border-black text-center">
-                {pro.cat_sec}
-              </td>
-              <td className="border px-4 py-2 border-black text-center">
-                {pro.subCategoryName}
-              </td>
-              <td className="border px-4 py-2 border-black">
-                {pro.product_image_collection?.length ? (
-                  <div className="grid grid-cols-3 scroll-my-0 ">
-                    {pro.product_image_collection.map((img, i) => (
-                      <img
-                        key={i}
-                        src={img.startsWith("http") ? img : IMAGE_URL + img}
-                        alt="product"
-                        className="w-20 h-12 object-cover rounded "
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  "No Images"
-                )}
-              </td>
-              <td className="border space-x-1 border-black mx-1">
-                <button
-                  onClick={() => openEditModal(pro)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer text-center"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => handleDelete(pro._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
-                >
-                  <FaTrash />
-                </button>
-              </td>
+      <div className="overflow-auto max-h-[60vh] border rounded">
+        <table className="w-full border-collapse">
+          <thead className="bg-black text-white sticky top-0 z-10">
+            <tr>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Price</th>
+              <th className="px-4 py-2">Sale Price</th>
+              <th className="px-4 py-2">Category</th>
+              <th className="px-4 py-2">Subcategory</th>
+              <th className="px-4 py-2">Image(s)</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentProducts.map((pro) => (
+              <tr key={pro._id}>
+                <td className="border px-4 py-2 text-center capitalize">
+                  {pro.product_name}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {pro.product_price}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {pro.product_sale_price}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {pro.cat_sec}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {pro.subCategoryName}
+                </td>
+                <td className="border px-4 py-2">
+                  {pro.product_image_collection?.length ? (
+                    <div className="grid grid-cols-3 gap-1">
+                      {pro.product_image_collection.map((img, i) => (
+                        <img
+                          key={i}
+                          src={img.startsWith("http") ? img : IMAGE_URL + img}
+                          alt="product"
+                          className="w-20 h-12 object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    "No Images"
+                  )}
+                </td>
+                <td className="border space-x-1 mx-1">
+                  <button
+                    onClick={() => openEditModal(pro)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer text-center"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(pro._id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 hover:cursor-pointer"
+                  >
+                    <FaTrash />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
 
 
       {/* Pagination Buttons */}

@@ -141,7 +141,7 @@ function Testimonial() {
 
             {/* Table Section */}
             <div className='overflow-y-auto max-h-[70vh] border rounded-md'>
-                <div className='grid grid-cols-6 gap-x-6 bg-black text-white px-4 py-2 font-semibold sticky top-0 z-10'>
+                <div className='grid grid-cols-6 gap-x-6 bg-black text-white px-4 py-2 font-semibold sticky top-0'>
                     <div className='text-lg'>Name</div>
                     <div className='text-lg'>Heading</div>
                     <div className='text-lg'>Description</div>

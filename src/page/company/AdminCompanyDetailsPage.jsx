@@ -68,7 +68,17 @@ const CompanyDetailsPage = () => {
     "postalCode",
     "website",
   ];
-  const knownFields = [...importantFields, ...companyFields];
+  // Exclude system or sensitive fields
+  const excludedFields = [
+    "__v",
+    "_id",
+    "createdAt",
+    "updatedAt",
+    "companyPassword",
+    "agreementAccepted",
+    "profileImage"
+  ];
+  const knownFields = [...importantFields, ...companyFields, ...excludedFields];
   const otherFields = Object.keys(company).filter(
     (key) => !knownFields.includes(key)
   );

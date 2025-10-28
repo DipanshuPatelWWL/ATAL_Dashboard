@@ -208,7 +208,7 @@ function FAQ() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-90 z-50">
+        <div className="fixed inset-0 flex items-center backdrop-blur-sm justify-center bg-opacity-90 z-50">
           <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md relative">
             <button
               onClick={handleCloseModal}

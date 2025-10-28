@@ -115,43 +115,45 @@ const Category = () => {
       </div>
 
       {/* Category List */}
-      <table className="w-full ">
-        <thead>
-          <tr className="">
-            <th className="border border-black px-4 py-2">Category Name</th>
-            <th className="border border-black px-4 py-2">Sub Category</th>
-            <th className="border border-black px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map((cat) => (
-            <tr key={cat._id} className="border border-black">
-              <td className="border border-black px-4 py-2">
-                {cat.categoryName}
-              </td>
-              <td className="border border-black px-4 py-2">
-                {cat.subCategoryNames?.join(", ") || "—"}
-              </td>
-              <td className=" px-4 py-4 space-x-2 flex justify-center">
-                <button
-                  onClick={() => openEditModal(cat)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 flex items-center hover:cursor-pointer"
-                >
-                  <FaEdit />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(cat._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center hover:cursor-pointer"
-                >
-                  <FaTrash />
-                  Delete
-                </button>
-              </td>
+      <div className="overflow-auto max-h-[60vh] border rounded">
+        <table className="w-full border-collapse">
+          <thead className="bg-black text-white sticky top-0 z-10">
+            <tr className="bg-black text-white">
+              <th className="px-4 py-2">Category Name</th>
+              <th className="px-4 py-2">Sub Category</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {categories.map((cat) => (
+              <tr key={cat._id} className="border">
+                <td className="border px-4 py-2">
+                  {cat.categoryName}
+                </td>
+                <td className="border px-4 py-2">
+                  {cat.subCategoryNames?.join(", ") || "—"}
+                </td>
+                <td className="px-4 py-4 space-x-2 flex justify-center">
+                  <button
+                    onClick={() => openEditModal(cat)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 flex items-center hover:cursor-pointer"
+                  >
+                    <FaEdit />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cat._id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center hover:cursor-pointer"
+                  >
+                    <FaTrash />
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Modal */}
       {showModal && (

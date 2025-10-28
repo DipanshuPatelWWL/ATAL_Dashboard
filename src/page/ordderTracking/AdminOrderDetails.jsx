@@ -130,7 +130,7 @@ const AdminOrderDetails = () => {
                                 </p>
 
                             )}
-                            <p><strong>Company:</strong> {item.policy.companyName}</p>
+                            <p><strong>Company:</strong> {item.policy?.companyName}</p>
                         </div>
                     </motion.div>
                 ))}

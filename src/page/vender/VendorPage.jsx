@@ -23,17 +23,17 @@ const VendorPage = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Vendor Details</h2>
 
-      <div className="overflow-x-auto bg-white shadow rounded-2xl border">
+      <div className="overflow-x-auto rounded border">
         <table className="min-w-full border-collapse">
-          <thead className="bg-gray-100">
+          <thead className="bg-black text-white">
             <tr>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">#</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Company Name</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Contact Name</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Email</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Phone</th>
-              <th className="px-4 py-3 border-b text-left font-semibold text-gray-700">Vendor Type</th>
-              <th className="px-4 py-3 border-b text-center font-semibold text-gray-700">Actions</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">#</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Company Name</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Contact Name</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Email</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Phone</th>
+              <th className="px-4 py-3 border-b text-left font-semibold">Vendor Type</th>
+              <th className="px-4 py-3 border-b text-center font-semibold">Actions</th>
             </tr>
           </thead>
 
