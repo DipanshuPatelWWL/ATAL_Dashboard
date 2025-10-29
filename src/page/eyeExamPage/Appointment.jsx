@@ -154,7 +154,7 @@ const Appointment = () => {
                         <button
                             key={i}
                             onClick={() => setCurrentPage(i + 1)}
-                            className={`px-3 py-1 rounded-lg border ${currentPage === i + 1
+                            className={`px-3 py-1 rounded-lg border hover:cursor-pointer ${currentPage === i + 1
                                 ? "bg-red-600 text-white font-semibold"
                                 : "bg-gray-100 hover:bg-gray-200"
                                 }`}

@@ -235,7 +235,7 @@ const VendorProductDiscount = () => {
                         <button
                             key={page}
                             onClick={() => handlePageClick(page)}
-                            className={`px-3 py-1 rounded border ${currentPage === page
+                            className={`px-3 py-1 rounded border hover:cursor-pointer ${currentPage === page
                                 ? "bg-black text-white border-black"
                                 : "bg-white border-gray-400 hover:bg-gray-100"
                                 }`}
