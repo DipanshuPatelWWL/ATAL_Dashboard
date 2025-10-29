@@ -485,7 +485,7 @@ const Products = () => {
         {[...Array(totalPages)].map((_, i) => (
           <button
             key={i}
-            className={`px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+            className={`px-3 py-1 border rounded hover:cursor-pointer ${currentPage === i + 1 ? "bg-blue-500 text-white" : ""
               }`}
             onClick={() => handlePageChange(i + 1)}
           >
