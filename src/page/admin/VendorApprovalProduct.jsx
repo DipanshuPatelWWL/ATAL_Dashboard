@@ -34,9 +34,7 @@ const VendorApprovalProduct = () => {
             if (res.data.success) {
                 Swal.fire("Approved", "Product approved successfully!", "success");
                 fetchProducts();
-            }
-
-            else {
+            } else {
                 Swal.fire({
                     toast: true,
                     icon: 'error',
@@ -165,15 +163,17 @@ const VendorApprovalProduct = () => {
                                     <td className="border px-4 py-2">{pro.subCategoryName}</td>
                                     <td className="border px-4 py-2">
                                         {pro.product_image_collection?.length ? (
-                                            <div className="grid grid-cols-3 gap-1 justify-center">
-                                                {pro.product_image_collection.map((img, i) => (
-                                                    <img
-                                                        key={i}
-                                                        src={img.startsWith("http") ? img : IMAGE_URL + img}
-                                                        alt="product"
-                                                        className="w-20 h-12 object-cover rounded"
-                                                    />
-                                                ))}
+                                            <div className="flex flex-wrap gap-1 justify-center">
+                                                {/* Show only first image */}
+                                                <img
+                                                    src={
+                                                        pro.product_image_collection[0].startsWith("http")
+                                                            ? pro.product_image_collection[0]
+                                                            : IMAGE_URL + pro.product_image_collection[0]
+                                                    }
+                                                    alt="product"
+                                                    className="w-20 h-12 object-cover rounded"
+                                                />
                                             </div>
                                         ) : (
                                             "No Images"
