@@ -287,74 +287,6 @@ const Products = () => {
     };
 
 
-
-
-
-
-
-
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     if (!formData.product_size) {
-    //         Swal.fire("Error", "Product Size is required", "error");
-    //         return;
-    //     }
-    //     if (!formData.product_color) {
-    //         Swal.fire("Error", "Product Color is required", "error");
-    //         return;
-    //     }
-    //     try {
-    //         const payload = new FormData();
-
-    //         // Append all fields except stockAvailability
-    //         Object.keys(formData).forEach((key) => {
-    //             if (key !== "stockAvailability") {
-    //                 payload.append(key, formData[key] ?? "");
-    //             }
-    //         });
-
-    //         // Append stockAvailability only if user entered it
-    //         const stock = formData.stockAvailability;
-    //         if (stock !== "" && stock !== null && stock !== undefined) {
-    //             payload.append("stockAvailability", stock.toString());
-    //         }
-    //         payload.append("product_size", formData.product_size);
-    //         payload.append("product_color", formData.product_color);
-    //         // Existing images
-    //         keptImages.forEach((img) =>
-    //             payload.append("existingImages", img.replace(IMAGE_URL, ""))
-    //         );
-
-    //         // New images
-    //         images.forEach((file) =>
-    //             payload.append("product_image_collection", file)
-    //         );
-
-    //         // Lens images
-    //         if (lensImage1 && typeof lensImage1 !== "string")
-    //             payload.append("product_lens_image1", lensImage1);
-    //         if (lensImage2 && typeof lensImage2 !== "string")
-    //             payload.append("product_lens_image2", lensImage2);
-
-    //         if (editId) {
-    //             await API.put(`/updateVendorProduct/${editId}`, payload, {
-    //                 headers: { "Content-Type": "multipart/form-data" },
-    //             });
-    //             Swal.fire("Success", "Product updated successfully!", "success");
-    //         } else {
-    //             await API.post("/addProduct", payload, {
-    //                 headers: { "Content-Type": "multipart/form-data" },
-    //             });
-    //             Swal.fire("Success", "Product added successfully!", "success");
-    //         }
-    //         fetchVendorProducts();
-    //         setOpen(false);
-    //     } catch (err) {
-    //         Swal.fire("Error", err.response?.data?.message || "Operation failed", "error");
-    //     }
-    // };
-
     const handleSendApproval = async (productId) => {
         try {
             const response = await API.put(`/products/send-for-approval/${productId}`);
@@ -427,12 +359,12 @@ const Products = () => {
             <table className="hidden md:block relative overflow-y-auto max-h-[560px] w-full mt-6 border rounded-lg table-fixed">
                 <thead className="sticky top-0 z-10 bg-black text-white font-semibold">
                     <tr>
-                        <th className="px-4 py-2 text-center w-[12%]">Name</th>
+                        <th className="px-4 py-2 text-center w-[18%]">Name</th>
                         <th className="px-4 py-2 text-center w-[8%]">Price</th>
                         <th className="px-4 py-2 text-center w-[8%]">Sale Price</th>
                         <th className="px-4 py-2 text-center w-[10%]">Category</th>
                         <th className="px-4 py-2 text-center w-[10%]">Subcategory</th>
-                        <th className="px-4 py-2 text-center w-[20%]">Image(s)</th>
+                        <th className="px-4 py-2 text-center w-[14%]">Image(s)</th>
                         <th className="px-4 py-2 text-center w-[10%]">Product Status</th>
                         <th className="px-4 py-2 text-center w-[22%]">Actions</th>
                     </tr>
@@ -450,14 +382,16 @@ const Products = () => {
                                 <td className="border px-4 py-2">
                                     {pro.product_image_collection?.length ? (
                                         <div className="flex flex-wrap gap-1 justify-center">
-                                            {pro.product_image_collection.map((img, i) => (
-                                                <img
-                                                    key={i}
-                                                    src={img.startsWith("http") ? img : IMAGE_URL + img}
-                                                    alt="product"
-                                                    className="w-20 h-12 object-cover rounded"
-                                                />
-                                            ))}
+                                            {/* Show only the first image */}
+                                            <img
+                                                src={
+                                                    pro.product_image_collection[0].startsWith("http")
+                                                        ? pro.product_image_collection[0]
+                                                        : IMAGE_URL + pro.product_image_collection[0]
+                                                }
+                                                alt="product"
+                                                className="w-20 h-12 object-cover rounded"
+                                            />
                                         </div>
                                     ) : (
                                         "No Images"
@@ -485,7 +419,7 @@ const Products = () => {
                                             }
                                         }}
                                         disabled={pro.isSentForApproval && pro.productStatus !== "Rejected"}
-                                        className={`px-3 py-1 rounded text-white ${pro.productStatus === "Rejected"
+                                        className={`px-3 py-1 rounded text-white mb-1 ${pro.productStatus === "Rejected"
                                             ? "bg-yellow-500 hover:bg-yellow-600"
                                             : pro.isSentForApproval
                                                 ? "bg-red-400 cursor-not-allowed"
@@ -525,7 +459,7 @@ const Products = () => {
                         <button
                             key={page}
                             onClick={() => handlePageClick(page)}
-                            className={`px-3 py-1 rounded border ${currentPage === page
+                            className={`px-3 py-1 rounded border hover:cursor-pointer ${currentPage === page
                                 ? "bg-black text-white border-black"
                                 : "bg-white border-gray-400 hover:bg-gray-100"
                                 }`}
