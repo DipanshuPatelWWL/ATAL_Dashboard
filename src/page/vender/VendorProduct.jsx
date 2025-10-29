@@ -499,10 +499,8 @@ const Products = () => {
                                             disabled={editingProduct?.isSentForApproval}
                                             onChange={(e) => {
                                                 const selectedCat = category.find((c) => c._id === formData.cat_id);
-                                                const selectedSub =
-                                                    selectedCat?.subCategories?.find((s) => s._id === e.target.value) || null;
-                                                const selectedName =
-                                                    selectedCat?.subCategoryNames?.find((s) => s === e.target.value) || "";
+                                                const selectedSub = selectedCat?.subCategories?.find((s) => s._id === e.target.value) || null;
+                                                const selectedName = selectedCat?.subCategoryNames?.find((s) => s === e.target.value) || "";
                                                 setFormData({
                                                     ...formData,
                                                     subCat_id: selectedSub?._id || selectedName || "",
@@ -512,19 +510,30 @@ const Products = () => {
                                             className="w-full border rounded p-2"
                                         >
                                             <option value="">Select Subcategory</option>
-                                            {category.find((c) => c._id === formData.cat_id)?.subCategories?.map((sub) => (
-                                                <option key={sub._id} value={sub._id}>
-                                                    {sub.name}
-                                                </option>
-                                            ))}
-                                            {category.find((c) => c._id === formData.cat_id)?.subCategoryNames?.map((name, idx) => (
-                                                <option key={idx} value={name}>
-                                                    {name}
-                                                </option>
-                                            ))}
+
+                                            {/* Render subCategories */}
+                                            {category
+                                                .find((c) => c._id === formData.cat_id)
+                                                ?.subCategories?.filter((sub) => sub?.name?.trim()) // remove blank/space names
+                                                .map((sub) => (
+                                                    <option key={sub._id} value={sub._id}>
+                                                        {sub.name.trim()}
+                                                    </option>
+                                                ))}
+
+                                            {/* Render subCategoryNames (unique + trimmed) */}
+                                            {[...(category.find((c) => c._id === formData.cat_id)?.subCategoryNames || [])]
+                                                .map((name) => name?.trim())
+                                                .filter((name) => name) // remove empty strings
+                                                .map((name, idx) => (
+                                                    <option key={idx} value={name}>
+                                                        {name}
+                                                    </option>
+                                                ))}
                                         </select>
                                     </div>
                                 )}
+
 
                                 <input
                                     type="text"
