@@ -129,7 +129,6 @@ const VendorApprovalProduct = () => {
                     <thead className="bg-black text-white sticky top-0 z-10">
                         <tr>
                             <th className="border px-4 py-2 border-black">Name</th>
-                            <th className="border px-4 py-2 border-black">SKU</th>
                             <th className="border px-4 py-2 border-black">Price</th>
                             <th className="border px-4 py-2 border-black">Sale Price</th>
                             <th className="border px-4 py-2 border-black">Category</th>
@@ -154,7 +153,6 @@ const VendorApprovalProduct = () => {
                                     <td className="border px-4 py-2 capitalize">
                                         {pro.product_name}
                                     </td>
-                                    <td className="border px-4 py-2">{pro.product_sku}</td>
                                     <td className="border px-4 py-2">{pro.product_price}</td>
                                     <td className="border px-4 py-2">
                                         {pro.product_sale_price}
